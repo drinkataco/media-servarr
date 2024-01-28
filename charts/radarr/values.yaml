@@ -1,0 +1,132 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+secrets:
+  - name: 'apiKey'
+    value: 'e71e2f1da39e4918ba0a9c5355166268'
+
+#
+# Application Config
+#
+application:
+  config:
+    # Filename of configuration
+    filename: 'config.xml'
+    # Configuration file contents
+    contents: |
+      <Config>
+          <LogLevel>info</LogLevel>
+          <EnableSsl>False</EnableSsl>
+          <Port>7878</Port>
+          <UrlBase>radarr</UrlBase>
+          <BindAddress>*</BindAddress>
+          <ApiKey>$apiKey</ApiKey>
+          <AnalyticsEnabled>False</AnalyticsEnabled>
+          <AuthenticationMethod>External</AuthenticationMethod>
+          <UpdateMechanism>Docker</UpdateMechanism>
+          <Branch>main</Branch>
+          <InstanceName>Radarr</InstanceName>
+        </Config>
+    # Secrets to inject - if any - to the config. In the config they must be defined as $secret
+    secrets: [ 'apiKey' ]
+    # Path the file will be mounted to in the config
+    mountPath: '/config/config.xml'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  replicaCount: 1
+
+  podAnnotations: {}
+  podLabels: {}
+
+  # podSecurityContext: {}
+    # fsGroup: 2000
+
+  container:
+    image:
+      repository: 'lscr.io/linuxserver/radarr'
+      tag: '5.2.6.8376-ls200' # TODO: default to appversion
+      pullPolicy: 'IfNotPresent'
+
+    ports:
+      - name: 'http'
+        containerPort: 7878
+        protocol: 'TCP'
+
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+
+    # securityContext: {}
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
+      - name: 'film'
+        mountPath: '/film'
+
+  volumes:
+    - name: 'config'
+      nfs:
+       server: 'lovelace'
+       path: '/srv/storage/services/radarr'
+    - name: 'downloads'
+      nfs:
+       server: 'lovelace'
+       path: '/srv/downloads'
+    - name: 'film'
+      nfs:
+       server: 'lovelace'
+       path: '/srv/media/film'
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+service:
+  type: 'ClusterIP'
+  ports:
+    - port: 80
+      targetPort: 'http'
+      protocol: 'TCP'
+      name: 'http'
+
+ingress:
+  enabled: false
+  className: ''
+  annotations: {}
+  hosts:
+    - host: 'radarr.local'
+      paths:
+        - path: '/'
+          pathType: 'ImplementationSpecific'
+  tls: []
+

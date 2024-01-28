@@ -1,0 +1,116 @@
+{{- define "media-servarr-base.deployment" -}}
+
+apiVersion: 'apps/v1'
+kind: 'Deployment'
+metadata:
+  name: '{{ include "media-servarr-base.fullname" . }}'
+  labels:
+    {{- include "media-servarr-base.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "media-servarr-base.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.deployment.podAnnotations }}
+      annotations:
+        '{{- toYaml . | nindent 8 }}'
+      {{- end }}
+      labels:
+        {{- include "media-servarr-base.labels" . | nindent 8 }}
+        {{- with .Values.deployment.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: '{{ include "media-servarr-base.serviceAccountName" . }}'
+      securityContext:
+        {{- toYaml .Values.deployment.podSecurityContext | nindent 8 -}}
+        {{/*
+        We can use config maps to use configuraton as code.
+        If application.config includes valus, we'll use an init container to also set secrets, if
+          applicable, and add to a temporary rw storage (as servarr apps often crash if these files are ro
+        */}}
+      {{- if .Values.application.config }}
+      initContainers:
+        - name: 'prepare-config'
+          image: 'alpine'
+          volumeMounts:
+            - name: 'config-map'
+              mountPath: '/config-map'
+            - name: 'config-map-processed'
+              mountPath: '/config-processed'
+          env:
+            {{- if .Values.application.config.secrets }}
+            {{- $context := . }}
+            {{- range .Values.application.config.secrets }}
+            - name: '{{ . }}'
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ include "media-servarr-base.fullname" $context }}'
+                  key: '{{ . }}'
+            {{- end }}
+            {{- end }}
+          command: ["/bin/sh"]
+          args:
+            - '-c'
+            - |
+              #!/bin/sh
+              {{- if gt (len (default list .Values.application.config.secrets)) 0 }}
+              # Inject secrets in config if set
+              sed \
+                {{- range .Values.application.config.secrets }}
+                's/\${{ . }}/${{ . }}/g' \
+                {{- end }}
+                '/config-map/{{ .Values.application.config.filename }}' > \
+                '/config-processed/{{ .Values.application.config.filename }}'
+              {{- else }}
+              cp \
+                '/config-map/{{ .Values.application.config.filename }}' \
+                '/config-processed/{{ .Values.application.config.filename }}'
+              {{ end }}
+      {{- end }}
+      containers:
+        - name: '{{ .Chart.Name }}'
+          securityContext:
+            {{- toYaml .Values.deployment.container.securityContext | nindent 12 }}
+          image: '{{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag | default .Chart.AppVersion }}'
+          imagePullPolicy: '{{ .Values.deployment.container.image.pullPolicy }}'
+          ports:
+            {{- toYaml .Values.deployment.container.ports | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.deployment.container.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.deployment.container.readinessProbe | nindent 12 }}
+          volumeMounts:
+            {{- toYaml .Values.deployment.container.volumeMounts | nindent 12 }}
+            {{- if .Values.application.config }}
+            - name: 'config-map-processed'
+              mountPath: '{{ .Values.application.config.mountPath }}'
+              subPath: '{{ .Values.application.config.filename }}'
+            {{- end }}
+      volumes:
+        {{- toYaml .Values.deployment.volumes | nindent 8 }}
+        {{- if .Values.application.config }}
+        - name: 'config-map'
+          configMap:
+            name: '{{ include "media-servarr-base.fullname" . }}'
+            items:
+              - key: '{{ .Values.application.config.filename }}'
+                path: '{{ .Values.application.config.filename }}'
+        - name: 'config-map-processed'
+          emptyDir: {}
+        {{- end }}
+      {{- with .Values.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

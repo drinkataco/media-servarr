@@ -1,0 +1,17 @@
+{{- define "media-servarr-base.configmap" -}}
+{{- if .Values.application.config }}
+---
+
+apiVersion: 'v1'
+kind: 'ConfigMap'
+metadata:
+  name: '{{ include "media-servarr-base.fullname" . }}'
+  labels:
+    {{- include "media-servarr-base.labels" . | nindent 4 }}
+data:
+{{- with .Values.application.config }}
+  {{ .filename }}: |
+{{ .contents | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end -}}
