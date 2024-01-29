@@ -41,15 +41,9 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
-  podAnnotations: {}
-  podLabels: {}
-
-  podSecurityContext: {}
-
   container:
     image:
       repository: 'lscr.io/linuxserver/radarr'
-      pullPolicy: 'IfNotPresent'
 
     env:
       - name: 'PGID'
@@ -61,15 +55,6 @@ deployment:
       - name: 'http'
         containerPort: 7878
         protocol: 'TCP'
-
-    livenessProbe:
-      httpGet:
-        path: '/'
-        port: 'http'
-    readinessProbe:
-      httpGet:
-        path: '/'
-        port: 'http'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:

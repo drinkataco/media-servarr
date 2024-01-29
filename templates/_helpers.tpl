@@ -66,6 +66,23 @@ default
 {{- end }}
 
 {{/*
+Merge global, default, values, and custom values
+*/}}
+{{- define "media-servarr-base.prepareValues" -}}
+{{- /* Access the subchart values using index for keys with dashes */ -}}
+{{- $subchartValues := index .Subcharts "media-servarr-base" -}}
+
+{{- /* Merge custom values into .Values */ -}}
+{{- /* Ensure that the subchart values are being accessed correctly */ -}}
+{{/* {{- $mergedValues := merge $subchartValues.Values .Values -}} */}}
+{{- $mergedValues := merge .Values $subchartValues.Values -}}
+
+{{- /* Set the merged values as a global variable */ -}}
+{{- /* Use set to modify the scope variable */ -}}
+{{- $_ := set $ "Values" $mergedValues -}}
+{{- end }}
+
+{{/*
 Main templator function
 Use all default templates and logic
 */}}
