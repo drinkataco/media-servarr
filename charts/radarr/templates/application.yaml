@@ -1,5 +1,2 @@
-{{/* Architecture of Radarr prohibits multiple replicas :( */}}
-{{ $_ := set .Values.deployment "replicaCount" 1 }}
-
 {{/* Run templater */}}
 {{ include "media-servarr-base.template" . }}

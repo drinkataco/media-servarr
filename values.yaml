@@ -34,8 +34,6 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
-  replicaCount: 1
-
   podAnnotations: {}
   podLabels: {}
 

@@ -7,7 +7,6 @@ metadata:
   labels:
     {{- include "media-servarr-base.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicaCount }}
   selector:
     matchLabels:
       {{- include "media-servarr-base.selectorLabels" . | nindent 6 }}
@@ -74,6 +73,10 @@ spec:
         - name: '{{ .Chart.Name }}'
           securityContext:
             {{- toYaml .Values.deployment.container.securityContext | nindent 12 }}
+          {{- with .Values.deployment.env }}
+          env:
+            {{- toYaml . | nindent 14 }}
+          {{- end }}
           image: '{{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag | default .Chart.AppVersion }}'
           imagePullPolicy: '{{ .Values.deployment.container.image.pullPolicy }}'
           ports:

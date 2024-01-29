@@ -41,19 +41,22 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
-  replicaCount: 1
-
   podAnnotations: {}
   podLabels: {}
 
-  # podSecurityContext: {}
-    # fsGroup: 2000
+  podSecurityContext: {}
 
   container:
     image:
       repository: 'lscr.io/linuxserver/radarr'
       tag: '5.2.6.8376-ls200' # TODO: default to appversion
       pullPolicy: 'IfNotPresent'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
 
     ports:
       - name: 'http'
@@ -69,7 +72,8 @@ deployment:
         path: '/'
         port: 'http'
 
-    # securityContext: {}
+    securityContext: {}
+      # readOnlyRootFilesystem: true
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -120,13 +124,12 @@ service:
       name: 'http'
 
 ingress:
-  enabled: false
-  className: ''
+  enabled: true
   annotations: {}
   hosts:
-    - host: 'radarr.local'
+    - host: 'media-servarr.local'
       paths:
-        - path: '/'
+        - path: '/radarr/'
           pathType: 'ImplementationSpecific'
   tls: []
 

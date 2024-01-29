@@ -1,0 +1,4 @@
+{{- define "media-servarr-base.notes" -}}
+
+Managed by media-servarr helm collection
+{{- end }}
