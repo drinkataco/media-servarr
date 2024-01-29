@@ -69,7 +69,6 @@ application:
     config: null
 ```
 
-
 ### Volumes
 
 Three volumes are available by default:
