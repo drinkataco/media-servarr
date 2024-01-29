@@ -118,7 +118,7 @@ serviceAccount:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 80
+    - port: 7878
       targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
