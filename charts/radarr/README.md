@@ -1,4 +1,4 @@
-# media-servarr Radarr Helm Chart
+# Radarr Helm Chart
 
 This Helm chart installs Radarr, a movie collection manager, in a Kubernetes cluster.
 
