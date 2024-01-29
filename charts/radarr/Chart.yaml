@@ -3,7 +3,7 @@ name: 'radarr'
 description: 'Chart for Radarr'
 type: 'application'
 version: 0.1.0
-appVersion: 'v5.3.2.8504'
+appVersion: '5.3.2.8504-ls200'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'

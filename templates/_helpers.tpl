@@ -54,10 +54,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "media-servarr-base.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
+{{- if .Values.serviceAccount }}
+  {{- if .Values.serviceAccount.create }}
 {{- default (include "media-servarr-base.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+  {{- else }}
+    {{- default "default" .Values.serviceAccount.name }}
+  {{- end }}
+{{- else -}}
+default
 {{- end }}
 {{- end }}
 

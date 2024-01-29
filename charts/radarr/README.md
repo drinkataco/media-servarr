@@ -43,6 +43,8 @@ secrets:
     value: 'your-api-key-here'
 ```
 
+By not setting this value, and leaving it blank, Radarr will automatically generate a key on start.
+
 ### Application Configuration
 
 By default, base configuration is defined using a ConfigMap - defined by default in `./values.yaml` in `application.config`. You can change values in the contents, such as the url base in your custom `values.yaml`

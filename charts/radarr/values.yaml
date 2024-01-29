@@ -7,7 +7,7 @@ fullnameOverride: ''
 #
 secrets:
   - name: 'apiKey'
-    value: 'e71e2f1da39e4918ba0a9c5355166268'
+    value: '' # Leaving blank will auto generate
 
 #
 # Application Config
@@ -49,7 +49,6 @@ deployment:
   container:
     image:
       repository: 'lscr.io/linuxserver/radarr'
-      tag: '5.2.6.8376-ls200' # TODO: default to appversion
       pullPolicy: 'IfNotPresent'
 
     env:
@@ -71,9 +70,6 @@ deployment:
       httpGet:
         path: '/'
         port: 'http'
-
-    securityContext: {}
-      # readOnlyRootFilesystem: true
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -98,23 +94,6 @@ deployment:
        server: 'lovelace'
        path: '/srv/media/film'
 
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
-
 service:
   type: 'ClusterIP'
   ports:
@@ -130,6 +109,7 @@ ingress:
     - host: 'media-servarr.local'
       paths:
         - path: '/radarr/'
-          pathType: 'ImplementationSpecific'
+          pathType: 'Prefix'
+          port: 7878
   tls: []
 

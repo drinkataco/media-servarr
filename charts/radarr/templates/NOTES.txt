@@ -30,4 +30,4 @@ For more information on using this chart, refer to the [Helm Chart Documentation
 
 Happy film collecting!
 
-{{- include "media-servarr-base.notes" -}}
+{{- include "media-servarr-base.notes" . -}}
