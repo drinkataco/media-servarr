@@ -20,7 +20,7 @@ Radarr has been installed!
 
 4. Persisting Data:
 
-   By default, your Radarr installation is configured to store data in a persistent volume at `/path/to/your/data`. Ensure that this path is backed up regularly.
+   By default, your Radarr installation is configured to store data in a local persistent volume.
 
 5. Documentation:
 
