@@ -1,6 +1,6 @@
 {{- define "media-servarr-base.persistentvolumeclaim" -}}
 {{- $context := . }}
-{{- range $key, $value := .Values.deployment.volumes }}
+{{- range $key, $value := .Values.persistentVolumeClaims }}
 ---
 
 apiVersion: 'v1'
