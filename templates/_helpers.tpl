@@ -34,20 +34,20 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "media-servarr-base.labels" -}}
-helm.sh/chart: {{ include "media-servarr-base.chart" . }}
+helm.sh/chart: {{ include "media-servarr-base.chart" . | quote }}
 {{ include "media-servarr-base.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "media-servarr-base.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "media-servarr-base.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "media-servarr-base.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end }}
 
 {{/*
