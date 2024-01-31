@@ -6,6 +6,16 @@ This repository contains a collection of similar applications under the [servarr
 
 The aim of this repository is to be featureful, use repeatable code, and to be a testbed for me to play with a kubernetes helm chart.
 
+## Usage
+
+Add the repository using:
+
+```bash
+helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
+```
+
+Use `helm search repo media-servarr` to view all repositories
+
 ## The Charts
 
 There are a number of charts available under the [./charts](./charts) directory for the following applications:
@@ -16,11 +26,6 @@ There are a number of charts available under the [./charts](./charts) directory 
 - Readarr - [readarr.com](https://readarr.com/)
 - Homarr - [homarr.dev](https://homarr.dev/)
 
-Add the repository using:
-
-```bash
-helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
-```
 
 It will be helpful to check out each application in [./charts](./charts) and its README for more information.
 
