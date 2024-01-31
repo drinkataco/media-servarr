@@ -7,7 +7,7 @@ fullnameOverride: ''
 #
 secrets:
   - name: 'apiKey'
-    value: '' # Leaving blank will auto generate
+    value: ''
 
 #
 # Application Config
@@ -66,18 +66,20 @@ deployment:
         mountPath: '/film'
 
   volumes:
-    - name: 'config'
-      nfs:
-       server: 'lovelace'
-       path: '/srv/storage/services/radarr'
-    - name: 'downloads'
-      nfs:
-       server: 'lovelace'
-       path: '/srv/downloads'
-    - name: 'film'
-      nfs:
-       server: 'lovelace'
-       path: '/srv/media/film'
+    config:
+      persistentVolumeClaim:
+        claimName: 'radarr-config'
+    downloads:
+      emptyDir: {}
+    film:
+      emptyDir: {}
+
+persistentVolumeClaims:
+  radarr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    storageClassName: 'manual'
+    selector: {}
 
 service:
   type: 'ClusterIP'

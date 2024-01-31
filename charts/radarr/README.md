@@ -55,8 +55,8 @@ application:
     filename: 'config.xml'
     contents: |
       <Config>
-          <UrlBase>film</UrlBase>
-          <ApiKey>$apiKey</ApiKey>
+        <UrlBase>film</UrlBase>
+        <ApiKey>$apiKey</ApiKey>
       </Config>
     secrets: [ 'apiKey' ]
     mountPath: '/config/config.xml'
@@ -66,7 +66,7 @@ You can prevent a ConfigMap being create and the configuration being managed as 
 
 ```yaml
 application:
-    config: null
+  config: null
 ```
 
 ### Volumes
@@ -79,10 +79,37 @@ Three volumes are available by default:
 
 
 ```yaml
+deployment:
+  ...
   volumes:
-    - name: 'config'
-    - name: 'downloads'
-    - name: 'film'
+    config: # The key will be the volume name
+      persistentVolumeClaim:
+        name: 'radarr-config'
+    downloads:
+      nfs:
+        server: 'fileserver.local'
+        path: '/srv/downloads/'
+    film:
+      nfs:
+        server: 'fileserver.local'
+        path: '/srv/media/film/'
+```
+
+By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads and film - but it is recommended enable some type of PVC and PV!
+
+It is highly recommended that you do not use NFS for your config volume - because of the loose implementation of NFS protocol that causes issue with file locking causing detrimental effects on the SQlite database.
+
+You can define basic persistent volume claims in code to help you get started. You just need to pass to the pvc name (which is the key) is an empty object (`{}`)
+
+```yaml
+persistentVolumeClaims:
+  radarr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    storageClassName: 'manual'
+    selector:
+      matchLabels:
+        type: 'local'
 ```
 
 ### Ingress Configuration

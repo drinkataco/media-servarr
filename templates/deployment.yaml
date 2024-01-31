@@ -93,7 +93,10 @@ spec:
               subPath: '{{ .Values.application.config.filename }}'
             {{- end }}
       volumes:
-        {{- toYaml .Values.deployment.volumes | nindent 8 }}
+        {{- range $key, $value := .Values.deployment.volumes }}
+        - name: '{{ $key }}'
+          {{- toYaml $value | nindent 10 }}
+        {{- end }}
         {{- if .Values.application.config }}
         - name: 'config-map'
           configMap:
