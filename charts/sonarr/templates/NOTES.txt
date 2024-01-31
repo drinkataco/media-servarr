@@ -1,8 +1,8 @@
-Radarr has been installed!
+Sonarr has been installed!
 
 1. If you enabled ingress, access using:
 
-    http://media-servarr.local/radarr/
+    http://media-servarr.local/sonarr/
 
     You may need to point `media-servarr.local` to your kubernetes host first!
 
@@ -14,19 +14,19 @@ Radarr has been installed!
 
 3. Configure Radarr:
 
-   - You can start adding movies by clicking on "Add Movies" in the Radarr web UI.
-   - To automate movie downloads, configure indexers and download clients in the Settings menu.
-   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/radarr/settings for more information.
+   - You can start adding telvision shows by clicking on "Add New Series" in the Sonarr web UI.
+   - To automate tv downloads, configure indexers and download clients in the Settings menu.
+   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/sonarr/settings for more information.
 
 4. Persisting Data:
 
-   By default, your Radarr installation is configured to store data in a persistent volume at `/path/to/your/data`. Ensure that this path is backed up regularly.
+   By default, your Sonarr installation is configured to store data in a local persistent volume.
 
 5. Documentation:
 
-   Learn more about Radarr and its features by visiting the official Radarr documentation: [Radarr Wiki](https://wiki.servarr.com/radarr/settings)
+   Learn more about Sonarr and its features by visiting the official Sonarr documentation: [Sonarr Wiki](https://wiki.servarr.com/sonarr/settings)
 
-For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/radarr).
+For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/sonarr).
 
 Happy film collecting!
 
