@@ -10,7 +10,9 @@ metadata:
   labels:
     {{- include "media-servarr-base.labels" $context | nindent 4 }}
 spec:
+  {{- if $value.storageClassName }}
   storageClassName: '{{ $value.storageClassName }}'
+  {{- end }}
   accessModes:
     - '{{ $value.accessMode | default "ReadWriteOnce" }}'
   resources:
