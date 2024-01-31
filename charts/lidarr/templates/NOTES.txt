@@ -14,7 +14,7 @@ Lidarr has been installed!
 
 3. Configure Lidarr:
 
-   - You can start adding movies by clicking on "Add Movies" in the Lidarr web UI.
+   - You can start adding movies by clicking on "Add New Artist" in the Lidarr web UI.
    - To automate music downloads, configure indexers and download clients in the Settings menu.
    - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/lidarr/settings for more information.
 
