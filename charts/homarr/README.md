@@ -1,6 +1,6 @@
 # Homarr Helm Chart
 
-This Helm chart installs Homarr, a movie collection manager, in a Kubernetes cluster.
+This Helm chart installs Homarr, a server dashboard, in a Kubernetes cluster.
 
 This README covers the basics of customising and installation
 

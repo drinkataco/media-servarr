@@ -1,6 +1,6 @@
 # Transmission Helm Chart
 
-This Helm chart installs Transmission, a movie collection manager, in a Kubernetes cluster.
+This Helm chart installs Transmission, a bittorrent download client, in a Kubernetes cluster.
 
 This README covers the basics of customising and installation
 

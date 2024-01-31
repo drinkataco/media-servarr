@@ -1,10 +1,10 @@
-# Sonarr Helm Chart
+# Prowlarr Helm Chart
 
-This Helm chart installs Sonarr, a movie collection manager, in a Kubernetes cluster.
+This Helm chart installs Prowlarr, a music collection manager, in a Kubernetes cluster.
 
 This README covers the basics of customising and installation
 
-![Sonarr](./icon.png)
+![Prowlarr](./icon.png)
 
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)
@@ -26,7 +26,7 @@ Install this helm chart using the following command:
 ```bash
 helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
 
-helm install sonarr media-servarr/sonarr -f myvalues.yaml -f mysecrets.yaml
+helm install prowlarr media-servarr/prowlarr -f myvalues.yaml -f mysecrets.yaml
 ```
 
 ## Configuration
@@ -43,7 +43,7 @@ secrets:
     value: 'your-api-key-here'
 ```
 
-By not setting this value, and leaving it blank, Sonarr will automatically generate a key on start.
+By not setting this value, and leaving it blank, Prowlarr will automatically generate a key on start.
 
 ### Application Configuration
 
@@ -55,7 +55,7 @@ application:
     filename: 'config.xml'
     contents: |
       <Config>
-        <UrlBase>tv</UrlBase>
+        <UrlBase>indexer</UrlBase>
         <ApiKey>$apiKey</ApiKey>
       </Config>
     secrets: [ 'apiKey' ]
@@ -75,8 +75,6 @@ Three volumes are available by default:
 
 - **config** - General config data, where the sqlite database exists, for example
 - **downloads** - Downloads folder for monitoring
-- **tv** - Location of television shows
-
 
 ```yaml
 deployment:
@@ -84,18 +82,14 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'sonarr-config'
+        name: 'prowlarr-config'
     downloads:
       nfs:
         server: 'fileserver.local'
         path: '/srv/downloads/'
-    tv:
-      nfs:
-        server: 'fileserver.local'
-        path: '/srv/media/tv/'
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads and film - but it is recommended enable some type of PVC and PV!
+By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads - but it is recommended enable some type of PVC and PV!
 
 It is highly recommended that you do not use NFS for your config volume - because of the loose implementation of NFS protocol that causes issue with file locking causing detrimental effects on the SQlite database.
 
@@ -103,7 +97,7 @@ You can define basic persistent volume claims in code to help you get started. Y
 
 ```yaml
 persistentVolumeClaims:
-  sonarr-config:
+  prowlarr-config:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
     storageClassName: 'manual'
@@ -122,7 +116,7 @@ ingress:
   hosts:
     - host: 'mymedia.example.com'
       paths:
-        - path: '/sonarr/'
+        - path: '/prowlarr/'
           pathType: 'ImplementationSpecific'
   tls:
     # Your TLS settings...
@@ -141,15 +135,15 @@ Have a look at the parent charts default `values.yaml` for a comprehensive list 
 To upgrade the deployment:
 
 ```bash
-helm upgrade sonarr media-servarr/sonarr -f myvalues.yaml -f mysecrets.yaml
+helm upgrade prowlarr media-servarr/prowlarr -f myvalues.yaml -f mysecrets.yaml
 ```
 
 ## Uninstallation
 
-To uninstall/delete the `my-sonarr` deployment:
+To uninstall/delete the `prowlarr` deployment:
 
 ```bash
-helm delete sonarr
+helm delete prowlarr
 ```
 
 ## Support
