@@ -1,0 +1,191 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+secrets:
+  - name: 'rpcPassword'
+    value: 'password'
+
+#
+# Application Config
+#
+application:
+  config:
+    # Filename of configuration
+    filename: 'settings.json'
+    # Configuration file contents
+    contents: |
+      {
+        "alt-speed-down": 50,
+        "alt-speed-enabled": false,
+        "alt-speed-time-begin": 540,
+        "alt-speed-time-day": 127,
+        "alt-speed-time-enabled": false,
+        "alt-speed-time-end": 1020,
+        "alt-speed-up": 50,
+        "announce-ip": "",
+        "announce-ip-enabled": false,
+        "anti-brute-force-enabled": false,
+        "anti-brute-force-threshold": 100,
+        "bind-address-ipv4": "0.0.0.0",
+        "bind-address-ipv6": "::",
+        "blocklist-enabled": true,
+        "blocklist-url": "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz",
+        "cache-size-mb": 4,
+        "default-trackers": "",
+        "dht-enabled": true,
+        "download-dir": "/downloads/complete",
+        "download-queue-enabled": true,
+        "download-queue-size": 5,
+        "encryption": 1,
+        "idle-seeding-limit": 30,
+        "idle-seeding-limit-enabled": false,
+        "incomplete-dir": "/downloads/incomplete",
+        "incomplete-dir-enabled": true,
+        "lpd-enabled": false,
+        "message-level": 2,
+        "peer-congestion-algorithm": "",
+        "peer-id-ttl-hours": 6,
+        "peer-limit-global": 300,
+        "peer-limit-per-torrent": 50,
+        "peer-port": 51413,
+        "peer-port-random-high": 51413,
+        "peer-port-random-low": 51413,
+        "peer-port-random-on-start": false,
+        "peer-socket-tos": "le",
+        "pex-enabled": false,
+        "port-forwarding-enabled": true,
+        "preallocation": 1,
+        "prefetch-enabled": true,
+        "queue-stalled-enabled": true,
+        "queue-stalled-minutes": 30,
+        "ratio-limit": 2,
+        "ratio-limit-enabled": false,
+        "rename-partial-files": true,
+        "rpc-authentication-required": false,
+        "rpc-bind-address": "0.0.0.0",
+        "rpc-enabled": true,
+        "rpc-host-whitelist": "",
+        "rpc-host-whitelist-enabled": false,
+        "rpc-password": "$rpcPassword",
+        "rpc-port": 9091,
+        "rpc-socket-mode": "0750",
+        "rpc-url": "/transmission/",
+        "rpc-username": "",
+        "rpc-whitelist": "",
+        "rpc-whitelist-enabled": false,
+        "scrape-paused-torrents-enabled": true,
+        "script-torrent-added-enabled": false,
+        "script-torrent-added-filename": "",
+        "script-torrent-done-enabled": false,
+        "script-torrent-done-filename": "",
+        "script-torrent-done-seeding-enabled": false,
+        "script-torrent-done-seeding-filename": "",
+        "seed-queue-enabled": false,
+        "seed-queue-size": 10,
+        "speed-limit-down": 10024,
+        "speed-limit-down-enabled": true,
+        "speed-limit-up": 5012,
+        "speed-limit-up-enabled": true,
+        "start-added-torrents": true,
+        "tcp-enabled": true,
+        "torrent-added-verify-mode": "fast",
+        "trash-original-torrent-files": false,
+        "umask": "002",
+        "upload-slots-per-torrent": 14,
+        "utp-enabled": false,
+        "watch-dir": "/watch",
+        "watch-dir-enabled": true
+      }
+    # # Secrets to inject - if any - to the config. In the config they must be defined as $secret
+    # secrets: [ 'rpcPassword' ]
+    # # Path the file will be mounted to in the config
+    mountPath: '/config/settings.json'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'lscr.io/linuxserver/transmission'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+
+    ports:
+      - name: 'http'
+        containerPort: 9091
+        protocol: 'TCP'
+      - name: 'peer'
+        containerPort: 51413
+        protocol: 'TCP'
+      - name: 'peer-udp'
+        containerPort: 51413
+        protocol: 'UDP'
+
+    livenessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/'
+        port: 'http'
+      initialDelaySeconds: 15
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/downloads'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'transmission-config'
+    downloads:
+      emptyDir: {}
+
+persistentVolumeClaims:
+  transmission-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+service:
+  type: 'LoadBalancer'
+  externalTrafficPolicy: 'Local' # TODO: does this work
+  ports:
+    - port: 9091
+      targetPort: 'http'
+      protocol: 'TCP'
+      name: 'http'
+    - port: 51413
+      targetPort: 'peer'
+      protocol: 'TCP'
+      name: 'peer'
+    - port: 51413
+      targetPort: 'peer-udp'
+      protocol: 'UDP'
+      name: 'peer-udp'
+
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: 'media-servarr.local'
+      paths:
+        - path: '/transmission'
+          pathType: 'Prefix'
+          port: 9091
+  tls: []
