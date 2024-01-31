@@ -73,9 +73,9 @@ spec:
         - name: '{{ .Chart.Name }}'
           securityContext:
             {{- toYaml .Values.deployment.container.securityContext | nindent 12 }}
-          {{- with .Values.deployment.env }}
+          {{- with .Values.deployment.container.env }}
           env:
-            {{- toYaml . | nindent 14 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           image: '{{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag | default .Chart.AppVersion }}'
           imagePullPolicy: '{{ .Values.deployment.container.image.pullPolicy }}'

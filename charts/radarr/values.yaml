@@ -78,7 +78,6 @@ persistentVolumeClaims:
   radarr-config:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
-    storageClassName: 'manual'
     selector: {}
 
 service:
@@ -99,4 +98,3 @@ ingress:
           pathType: 'Prefix'
           port: 7878
   tls: []
-

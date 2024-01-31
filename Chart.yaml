@@ -3,4 +3,3 @@ name: 'media-servarr-base'
 description: 'Base chart for media-servarr charts'
 type: 'application'
 version: 0.1.0
-appVersion: 'v5.3.2.8504'
