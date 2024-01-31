@@ -14,7 +14,11 @@ Add the repository using:
 helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
 ```
 
-Use `helm search repo media-servarr` to view all repositories
+And then view all available charts with
+
+```bash
+helm search repo media-servarr
+```
 
 ## The Charts
 
@@ -24,8 +28,9 @@ There are a number of charts available under the [./charts](./charts) directory 
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
 - Lidarr - [lidarr.audio](https://lidarr.audio/)
 - Readarr - [readarr.com](https://readarr.com/)
+- Prowlarr - [prowlarr.com](https://prowlarr.com/)
+- Transmission - [transmissionbt.com](https://transmissionbt.com)
 - Homarr - [homarr.dev](https://homarr.dev/)
-
 
 It will be helpful to check out each application in [./charts](./charts) and its README for more information.
 
