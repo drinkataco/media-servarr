@@ -1,0 +1,65 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'ghcr.io/ajnart/homarr'
+
+    ports:
+      - name: 'http'
+        containerPort: 7575
+        protocol: 'TCP'
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'app-data-configs'
+        mountPath: '/app/data/configs'
+      - name: 'data'
+        mountPath: '/data'
+      - name: 'app-data-icons'
+        mountPath: '/app/data/icons'
+
+  volumes:
+    app-data-configs:
+      persistentVolumeClaim:
+        claimName: 'homarr-configs'
+    data:
+      persistentVolumeClaim:
+        claimName: 'homarr-data'
+    app-data-icons:
+      emptyDir: {}
+
+persistentVolumeClaims:
+  homarr-configs:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+  homarr-data:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+service:
+  type: 'ClusterIP'
+  ports:
+    - port: 7575
+      targetPort: 'http'
+      protocol: 'TCP'
+      name: 'http'
+
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: 'media-servarr.local'
+      paths:
+        - path: '/'
+          pathType: 'Prefix'
+          port: 7575
+  tls: []
