@@ -1,0 +1,33 @@
+Readarr has been installed!
+
+1. If you enabled ingress, access using:
+
+    http://media-servarr.local/readarr/
+
+    You may need to point `media-servarr.local` to your kubernetes host first!
+
+2. Login Details:
+
+  By default, AuthenticationMethod is set to External - meaning no authentication required. You can change this by changing the `application.config`.
+
+  If you are planning on allowing access over the intern **add authentication**
+
+3. Configure Readarr:
+
+   - You can start adding movies by clicking on "Add Books" in the Readarr web UI.
+   - To automate movie downloads, configure indexers and download clients in the Settings menu.
+   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/readarr/settings for more information.
+
+4. Persisting Data:
+
+   By default, your Readarr installation is configured to store data in a local persistent volume.
+
+5. Documentation:
+
+   Learn more about Readarr and its features by visiting the official Readarr documentation: [Readarr Wiki](https://wiki.servarr.com/readarr/settings)
+
+For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/readarr).
+
+Happy Reading!
+
+{{- include "media-servarr-base.notes" . -}}
