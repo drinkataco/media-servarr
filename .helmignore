@@ -2,3 +2,4 @@ charts/
 .DS_Store
 .git
 .helmignore
+dist/
