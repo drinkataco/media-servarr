@@ -1,0 +1,19 @@
+name: 'Test Helm'
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: 'actions/checkout@v4'
+
+    # Set up Helm
+    - name: 'Set up Helm'
+      uses: 'azure/setup-helm@v3'
+
+    # Test Helm charts
+    - name: 'Test helm charts'
+      run: 'make test'

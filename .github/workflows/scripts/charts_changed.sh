@@ -86,6 +86,11 @@ update_helm_dependencies() {
 
   for chart in $charts; do
     echo "update $chart dependency to $1"
+    cd "$chart" || exit 5
+
+    sed -i '/- name: '"'"'media-servarr-base'"'"'/!b;n;s/version: .*/version: 0.2.100/' 'Chart.yaml'
+
+    cd - || exit 6
   done
 }
 

@@ -1,0 +1,34 @@
+name: 'Package Charts'
+
+on:
+  # ON RELEASE
+  # This uses the release description to find realms to build and package
+  # Packages are then uploaded to that release
+  release:
+    types:
+      - 'published'
+
+jobs:
+  package:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: 'actions/checkout@v4'
+
+    - name: 'Set up Helm'
+      uses: 'azure/setup-helm@v3'
+
+    - name: 'Capture chart changes'
+      run: |
+        echo 'run script'
+
+    - name: 'Automatically update chart version'
+      run: 'echo TODO - maj/min/patch update, and descriptor'
+
+    - name: 'Package Charts'
+      run: 'echo TODO'
+
+    - name: 'Update Chart Index'
+      run: 'echo TODO'
+
+    - name: 'Upload Artefacts'
+      run: 'echo TODO'
