@@ -130,7 +130,7 @@ main() {
   # current_tag="${GITHUB_REF#refs/tags/}"
   previous_tag="main^^"
   current_tag="main^^^"
-  previous_tag="main^^^^^^^^^^^^^^^^^^^^^^^^"
+  previous_tag="ee43066"
   current_tag="main^"
 
   update_all=$(updated_charts \

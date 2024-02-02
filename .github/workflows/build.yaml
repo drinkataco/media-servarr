@@ -4,31 +4,48 @@ on:
   # ON RELEASE
   # This uses the release description to find realms to build and package
   # Packages are then uploaded to that release
-  release:
-    types:
-      - 'published'
+  # release:
+  #   types:
+  #     - 'published'
   # test:
   push:
+  # workflow_dispatch:
 
 jobs:
   package:
     runs-on: 'ubuntu-latest'
+
     defaults:
       run:
         working-directory: './.github/workflows/scripts'
+
     steps:
       - uses: 'actions/checkout@v4'
+        with:
+          fetch-depth: 0
 
-    - name: 'Set up Helm'
-      run: |
-        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-        sudo apt-get install apt-transport-https --yes
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-        sudo apt-get update
-        sudo apt-get install helm
+      - name: 'test'
+        run: 'echo ttttttest'
+
+      - name: 'Set up Helm'
+        run: |
+          curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+          sudo apt-get install apt-transport-https --yes
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+          sudo apt-get update
+          sudo apt-get install helm
 
       - name: 'Automatically update chart versions'
         run: 'GIT_COMMIT=1 ./update_versions.sh'
+
+      # - name: 'Package Charts'
+      #   run: './.github/workflows/scripts/'
+
+      # - name: 'Update Chart Index'
+      #   run: 'echo TODO'
+
+      # - name: 'Upload Artefacts'
+      #   run: 'echo TODO'
 
       # - name: 'Package Charts'
       #   run: './.github/workflows/scripts/'
