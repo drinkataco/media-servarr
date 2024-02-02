@@ -60,8 +60,6 @@ update_helm_charts() {
       echo git add './Chart.yaml'
       echo git commit -m "$note"
     fi
-
-    cd - > /dev/null || exit 4
   done
 }
 
@@ -88,9 +86,18 @@ update_helm_dependencies() {
     echo "update $chart dependency to $1"
     cd "$chart" || exit 5
 
-    sed -i '/- name: '"'"'media-servarr-base'"'"'/!b;n;s/version: .*/version: 0.2.100/' 'Chart.yaml'
+    sed -i '/- name: '"'"'media-servarr-base'"'"'/!b;n;s/version: .*/version: '"$base_chart_version"'/' 'Chart.yaml'
 
-    cd - || exit 6
+    note="Update base dependency to '$new_version'"
+
+    echo "$note"
+
+    if [[ "$GIT_COMMIT" == "1" ]]; then
+      echo git add './Chart.yaml'
+      echo git commit -m "$note"
+    fi
+
+    cd - > /dev/null || exit 4
   done
 }
 
@@ -106,8 +113,8 @@ main() {
   # current_tag="${GITHUB_REF#refs/tags/}"
   previous_tag="main^^"
   current_tag="main^^^"
-  previous_tag="main^^"
-  current_tag=""
+  previous_tag="main^^^"
+  current_tag="main^"
 
   all=$(find_chart_updates \
     "$previous_tag" \
@@ -120,15 +127,15 @@ main() {
 
     previous_tag="0.0.0"
     current_tag="1.0.0"
-    # update_helm_base_chart "$previous_tag" "$current_tag" "."
     new_version=$(update_helm_chart "$previous_tag" "$current_tag" ".")
     note_base_chart_update "$new_version"
 
     charts=$(find "./charts" -mindepth 1 -maxdepth 1 -print)
 
     update_helm_dependencies "$new_version" "${charts}"
-
-    # update_helm_charts "${charts}"
+    previous_tag="0.0.0"
+    current_tag="1.0.0"
+    update_helm_charts "$previous_tag" "$current_tag" "$charts"
 
     return
   fi
