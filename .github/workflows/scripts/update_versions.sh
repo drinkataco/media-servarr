@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Updates Helm chart versions and dependencies based on Git tag comparisons.
 # This script utilizes environment variables and a set of defined functions to
 # manage Helm chart versions within a Git repository, optionally committing changes.
@@ -9,24 +9,27 @@
 SCRIPTS_DIR=$(cd -- "$(dirname -- "$(readlink "$0" || echo "$0")")" && pwd)
 GIT_COMMIT="${GIT_COMMIT:-0}"
 
-# find_chart_updates: Identifies chart updates between two Git tags
+# source shared functiontags
+source "${SCRIPTS_DIR}/lib/updated_charts.sh"
+
+# Identifies chart updates between two Git tags
 # Arguments:
-#   previous_tag: Previous Git tag
-#   current_tag: Current Git tag
+#   previous_ref: Previous Git reference
+#   current_tag: Current Git reference
 #   glob_pattern: Glob pattern for chart files
 #   break_on_find: Break on first find flag (any non-empty value causes break)
 # Outputs:
 #   Space-separated list of charts that have updates
 find_chart_updates() {
-  local previous_tag="$1"
-  local current_tag="$2"
+  local previous_ref="$1"
+  local current_ref="$2"
   local glob_pattern="$3"
   local break_on_find="$4"
   local charts_found=""
 
   for pattern in $glob_pattern; do
     local chart
-    chart=$(git diff "${previous_tag}".."${current_tag}" --name-only -- "$pattern")
+    chart=$(git diff "${previous_ref}".."${current_ref}" --name-only -- "$pattern")
     if [[ -n "$chart" ]]; then
       charts_found="$charts_found $pattern"
       if [[ -n "$break_on_find" ]]; then
@@ -129,7 +132,7 @@ main() {
   previous_tag="main^^^^^^^^^^^^^^^^^^^^^^^^"
   current_tag="main^"
 
-  update_all=$(find_chart_updates \
+  update_all=$(updated_charts \
     "$previous_tag" \
     "$current_tag" \
     "templates/ .helmignore Chart.yaml values.yaml" \
