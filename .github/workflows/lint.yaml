@@ -19,7 +19,7 @@ jobs:
         #!/bin/bash
 
         for chart in ./charts/*; do
-          cd chart
+          cd $chart
           helm dependency update
           cd -
         done;
