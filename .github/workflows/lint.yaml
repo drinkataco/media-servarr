@@ -10,7 +10,6 @@ jobs:
     steps:
     - uses: 'actions/checkout@v4'
 
-    # Set up Helm
     - name: 'Set up Helm'
       run: |
         curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null

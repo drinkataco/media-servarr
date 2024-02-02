@@ -120,6 +120,7 @@ main() {
   local charts
 
   git fetch --tags
+  git pull
 
   # Change directory to git repo root
   cd "$(git rev-parse --show-toplevel)" || exit 1
