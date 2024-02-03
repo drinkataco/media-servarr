@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -o errexit # Exit on most errors
+set -o pipefail # Catch errors in pipelines
 
 # Parses a semantic version number and separates it into core version and metadata components
 # Globals:

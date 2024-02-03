@@ -4,11 +4,11 @@ on:
   # ON RELEASE
   # This uses the release description to find realms to build and package
   # Packages are then uploaded to that release
-  # release:
-  #   types:
-  #     - 'published'
+  release:
+    types:
+      - 'published'
   # test:
-  push:
+  # push:
   # workflow_dispatch:
 
 jobs:
@@ -36,7 +36,18 @@ jobs:
           sudo apt-get install helm
 
       - name: 'Automatically update chart versions'
-        run: 'GIT_COMMIT=1 ./update_versions.sh'
+        run: |
+          # FIXME: Some issues with this job step that should be fixed and considered:
+          # 1. We assume the tag will be semvar. There is no checking or protections if not.
+          # 2. The previous tag is the last tag - and can be on any branch. We do not have any
+          #   branch checking to make sure the comparison is logical
+          # 3. Semvar metadata is carried over to the updated version. However, future comparisons
+          #   will include this, meaning -dev and -alpha releases may have unintended consequences
+          # 4. If the Chart.yaml version is updated as part of the diff, then it will be bumped up
+          #   again as part of this script. We should check the diffs and skip if so
+          current_tag="${GITHUB_REF#refs/tags/}"
+          previous_tag=$(git tag --sort=-creatordate | grep -A1 $CURRENT_TAG | tail -n1)
+          GIT_COMMIT=1 ./update_versions.sh "$previous_tag" "$current_tag"
 
       # - name: 'Package Charts'
       #   run: './.github/workflows/scripts/'

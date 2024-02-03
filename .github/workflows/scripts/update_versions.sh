@@ -2,6 +2,9 @@
 # Updates Helm chart versions and dependencies based on Git tag comparisons.
 # This script utilizes environment variables and a set of defined functions to
 # manage Helm chart versions within a Git repository, optionally committing changes.
+set -o errexit # Exit on most errors
+set -o pipefail # Catch errors in pipelines
+
 
 # Global Variables:
 #   SCRIPTS_DIR: Directory containing this script and possibly other utility scripts
