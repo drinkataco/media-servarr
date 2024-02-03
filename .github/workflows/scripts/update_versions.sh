@@ -112,26 +112,22 @@ update_helm_dependencies() {
   done
 }
 
-# Orchestrates the chart update process based on Git tag comparisons and changes.
+# Main function orchestrating the version bumping process
+# Globals:
+#   None
+# Arguments:
+#   previous_tag: Previous semvar formatted tag
+#   previous_tag: Current semvar formatted tag
 main() {
-  local previous_tag
-  local current_tag
+  local previous_tag="$1"
+  local current_tag="$2"
   local update_all
   local charts
 
-  git fetch --tags
-  git pull
+  # git fetch --tags
 
   # Change directory to git repo root
   cd "$(git rev-parse --show-toplevel)" || exit 1
-
-  # Get current and previous tag
-  # previous_tag=$(git describe --tags --abbrev=0 "${current_tag}"^)
-  # current_tag="${GITHUB_REF#refs/tags/}"
-  previous_tag="main^^"
-  current_tag="main^^^"
-  previous_tag="ee43066"
-  current_tag="main^"
 
   update_all=$(updated_charts \
     "$previous_tag" \
@@ -139,7 +135,7 @@ main() {
     "templates/ .helmignore Chart.yaml values.yaml" \
     "1")
 
-  if [ -n "$update_all" ]; then
+  if [[ -n "$update_all" ]]; then
     echo 'Base dependency changed. Updating all charts.'
 
     # Example version numbers for demonstration purposes.
@@ -163,11 +159,13 @@ main() {
     charts=$(find "./charts" -mindepth 1 -maxdepth 1 -print)
     update_helm_dependencies "$new_version" "$charts"
     update_helm_charts "$previous_version" "$new_version" "$charts"
-  else
-    # If no base dependency changes were found, update charts individually.
-    charts=$(find_chart_updates "$previous_tag" "$current_tag" "./charts/*")
-    update_helm_charts "$previous_version" "$new_version" "$charts"
+
+    exit
   fi
+
+  # If no base dependency changes were found, update charts individually.
+  charts=$(find_chart_updates "$previous_tag" "$current_tag" "./charts/*")
+  update_helm_charts "$previous_version" "$new_version" "$charts"
 }
 
 main "$@"
