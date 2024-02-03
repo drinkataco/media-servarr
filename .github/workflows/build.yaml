@@ -55,6 +55,8 @@ jobs:
           previous_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -n1)
           GIT_COMMIT=1 ./update_versions.sh "$previous_tag" "$current_tag"
 
+          git push # Push updates
+
       # - name: 'Package Charts'
       #   run: './.github/workflows/scripts/'
 

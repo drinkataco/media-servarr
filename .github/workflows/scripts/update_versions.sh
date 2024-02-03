@@ -2,15 +2,18 @@
 # Updates Helm chart versions and dependencies based on Git tag comparisons.
 # This script utilizes environment variables and a set of defined functions to
 # manage Helm chart versions within a Git repository, optionally committing changes.
+set -e
 set -o errexit # Exit on most errors
 set -o pipefail # Catch errors in pipelines
-
+set -o xtrace
 
 # Global Variables:
 #   SCRIPTS_DIR: Directory containing this script and possibly other utility scripts
 #   GIT_COMMIT: Controls whether changes are committed to Git. (1 = commit, 0 = no commit)
+#   COMMIT_PREFIX: Prefix for git commit messages
 SCRIPTS_DIR=$(cd -- "$(dirname -- "$(readlink "$0" || echo "$0")")" && pwd)
 GIT_COMMIT="${GIT_COMMIT:-0}"
+COMMIT_PREFX="💫 - "
 
 # source shared functiontags
 source "${SCRIPTS_DIR}/lib/updated_charts.sh"
@@ -55,9 +58,10 @@ update_helm_chart() {
   local previous_version="$1"
   local new_version="$2"
   local chart_dir="$3"
+  local chart_version
 
   pushd "$chart_dir" > /dev/null || exit 3
-  local chart_version=$(grep '^version:' 'Chart.yaml' | awk '{print $2}')
+  chart_version=$(grep '^version:' 'Chart.yaml' | awk '{print $2}')
   new_version=$("${SCRIPTS_DIR}/bump_version.sh" "$previous_version" "$new_version" "$chart_version")
   sed -i -E "s/^version: [0-9.]+/version: ${new_version}/" Chart.yaml
   popd > /dev/null || exit 4
@@ -67,7 +71,8 @@ update_helm_chart() {
 
 # Iterates through a list of charts and updates their versions
 # Globals:
-#   GIT_COMMIT: Controls whether changes are committed
+#   COMMIT_PREFX
+#   GIT_COMMIT
 # Arguments:
 #   previous_version: Previous version
 #   new_version: New version
@@ -84,15 +89,16 @@ update_helm_charts() {
     echo "$note"
 
     if [[ "$GIT_COMMIT" == "1" ]]; then
-      echo git add './Chart.yaml'
-      echo git commit -m "$note"
+      git add "./$chart/Chart.yaml"
+      git commit -m "${COMMIT_PREFX}${note}"
     fi
   done
 }
 
 # Updates the Helm chart dependencies to a new version
 # Globals:
-#   GIT_COMMIT: Indicates if changes should be committed.
+#   COMMIT_PREFX
+#   GIT_COMMIT
 # Arguments:
 #   base_chart_version: Base chart version
 #   charts: Space-separated list of chart directories
@@ -104,20 +110,22 @@ update_helm_dependencies() {
     echo "Updating $chart dependency to $base_chart_version"
     pushd "$chart" > /dev/null || exit 5
     sed -i '/- name: '"'"'media-servarr-base'"'"'/!b;n;s/version: .*/version: '"$base_chart_version"'/' 'Chart.yaml'
-    popd > /dev/null || exit 4
-    local note="Update base dependency to '$base_chart_version'"
+    local note="Update base dependency of $chart to '$base_chart_version'"
     echo "$note"
 
     if [[ "$GIT_COMMIT" == "1" ]]; then
-      echo git add './Chart.yaml'
-      echo git commit -m "$note"
+      git add './Chart.yaml'
+      git commit -m "${COMMIT_PREFX}${note}"
     fi
+
+    popd > /dev/null || exit 4
   done
 }
 
 # Main function orchestrating the version bumping process
 # Globals:
-#   None
+#   COMMIT_PREFX
+#   GIT_COMMIT
 # Arguments:
 #   previous_tag: Previous semvar formatted tag
 #   previous_tag: Current semvar formatted tag
@@ -150,8 +158,8 @@ main() {
     echo "$note"
 
     if [[ "$GIT_COMMIT" == "1" ]]; then
-      echo git add './Chart.yaml'
-      echo git commit -m "$note"
+      git add './Chart.yaml'
+      git commit -m "${COMMIT_PREFX}${note}"
     fi
 
     # Find and update helm dependencies in all charts.
