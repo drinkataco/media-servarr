@@ -15,7 +15,7 @@ GIT_COMMIT="${GIT_COMMIT:-0}"
 COMMIT_PREFX="💫 "
 
 # source shared functiontags
-source "${SCRIPTS_DIR}/lib/updated_charts.sh"
+source "${SCRIPTS_DIR}/updated_charts.sh"
 
 # Identifies chart updates between two Git tags
 # Arguments:
