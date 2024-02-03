@@ -5,7 +5,6 @@
 set -e
 set -o errexit # Exit on most errors
 set -o pipefail # Catch errors in pipelines
-set -o xtrace
 
 # Global Variables:
 #   SCRIPTS_DIR: Directory containing this script and possibly other utility scripts
@@ -13,7 +12,7 @@ set -o xtrace
 #   COMMIT_PREFIX: Prefix for git commit messages
 SCRIPTS_DIR=$(cd -- "$(dirname -- "$(readlink "$0" || echo "$0")")" && pwd)
 GIT_COMMIT="${GIT_COMMIT:-0}"
-COMMIT_PREFX="💫 - "
+COMMIT_PREFX="💫 "
 
 # source shared functiontags
 source "${SCRIPTS_DIR}/lib/updated_charts.sh"
