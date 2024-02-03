@@ -170,7 +170,7 @@ main() {
   fi
 
   # If no base dependency changes were found, update charts individually.
-  charts=$(find_chart_updates "$previous_tag" "$current_tag" "./charts/*")
+  charts=$(updated_charts "$previous_tag" "$current_tag" "./charts/*")
   update_helm_charts "$previous_version" "$new_version" "$charts"
 }
 

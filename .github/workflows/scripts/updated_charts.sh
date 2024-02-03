@@ -3,14 +3,14 @@
 # Arguments:
 #   previous_ref: Previous Git reference
 #   current_tag: Current Git reference
-#   glob_pattern: Glob pattern for chart files - charts/* by default
+#   glob_pattern: Glob pattern for chart files
 #   break_on_find: Break on first find flag (any non-empty value causes break)
 # Outputs:
 #   Space-separated list of charts that have updates
 function updated_charts() {
   local previous_ref="$1"
   local current_ref="$2"
-  local glob_pattern="${3:-'charts/*'}"
+  local glob_pattern="$3"
   local break_on_find="$4"
   local charts_found=""
 
@@ -19,7 +19,8 @@ function updated_charts() {
     chart=$(git diff "${previous_ref}".."${current_ref}" --name-only -- "$pattern")
     if [[ -n "$chart" ]]; then
       charts_found="$charts_found $pattern"
-      if [[ -n "$break_on_find" ]]; then
+      if [[ "$break_on_find" = '1' ]]; then
+        echo 'bof'
         break
       fi
     fi
