@@ -35,11 +35,20 @@ jobs:
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
           sudo apt-get update
           sudo apt-get install helm
-      
+
       - name: 'Initialise Git'
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
+      - name: 'Set Environment'
+        run: |
+          #!/bin/bash
+          # current_tag="${GITHUB_REF#refs/tags/}"
+          current_tag=v0.0.2-dev
+          previous_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -n1)
+          echo "::set-output name=CURRENT_VERSION::${current_tag}"
+          echo "::set-output name=PREVIOUS_VERSION::${previous_tag}"
 
       - name: 'Automatically update chart versions'
         run: |
@@ -56,15 +65,18 @@ jobs:
           # 4. If the Chart.yaml version is updated as part of the diff, then it will be bumped up
           #   again as part of this script. We should check the diffs and skip if so
           git fetch --tags
-          # current_tag="${GITHUB_REF#refs/tags/}"
-          current_tag=v0.0.2-dev
-          previous_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -n1)
-          GIT_COMMIT=1 ./update_versions.sh "$previous_tag" "$current_tag"
+          GIT_COMMIT=0 ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
 
-          git push origin main # Push updates to main
+          # git push origin main # Push updates to main
 
-      # - name: 'Package Charts'
-      #   run: './.github/workflows/scripts/'
+      - name: 'Package Charts'
+        run: |
+          #!/bin/bash
+          set -e
+
+          source ./updated_charts.sh
+          cd "$(git rev-parse --show-toplevel)" || exit 1 # Go to git root
+          make package CHARTS="$(updated_charts "${PREVIOUS_VERSION}" "$CURRENT_VERSION")"
 
       # - name: 'Update Chart Index'
       #   run: 'echo TODO'
