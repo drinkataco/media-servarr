@@ -127,7 +127,7 @@ main() {
   local update_all
   local charts
 
-  # git fetch --tags
+  git fetch --tags
 
   # Change directory to git repo root
   cd "$(git rev-parse --show-toplevel)" || exit 1
@@ -141,12 +141,8 @@ main() {
   if [[ -n "$update_all" ]]; then
     echo 'Base dependency changed. Updating all charts.'
 
-    # Example version numbers for demonstration purposes.
-    local previous_version="0.0.0"
-    local new_version="1.0.0"
-
     # Update the base chart itself.
-    new_version=$(update_helm_chart "$previous_version" "$new_version" ".")
+    new_version=$(update_helm_chart "$previous_tag" "$new_tag" ".")
 
     # Optionally note the base chart update in a commit message.
     local note="Bump base chart to '$new_version'"
