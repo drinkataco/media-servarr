@@ -2,7 +2,7 @@ apiVersion: 'v2'
 name: 'transmission'
 description: 'Chart for Transmission'
 type: 'application'
-version: 0.1.0
+version: 0.2.0
 appVersion: '4.0.5'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/transmission/icon.png'
 dependencies:
