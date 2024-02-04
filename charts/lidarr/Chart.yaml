@@ -2,7 +2,7 @@ apiVersion: 'v2'
 name: 'lidarr'
 description: 'Chart for Lidarr'
 type: 'application'
-version: 0.1.0
+version: 0.2.0
 appVersion: '2.0.7'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
