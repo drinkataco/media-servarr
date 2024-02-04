@@ -59,10 +59,14 @@ jobs:
           #   will include this, meaning -dev and -alpha releases may have unintended consequences
           # 4. If the Chart.yaml version is updated as part of the diff, then it will be bumped up
           #   again as part of this script. We should check the diffs and skip if so
+          # 5. As it pushes up to main initially, but we then need to build via the tag... we're
+          #   going to have to rerun the update version script in two places (but not commit it
+          #   the second time)
           git checkout main
           GIT_COMMIT=1 ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
           git push
           git checkout "$CURRENT_VERSION"
+          ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
 
       - name: 'Package Charts'
         run: |
