@@ -7,5 +7,5 @@ appVersion: '0.14.4'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.1.0
+    version: 0.2.0
     repository: "file://../.."
