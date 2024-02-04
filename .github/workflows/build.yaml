@@ -87,8 +87,6 @@ jobs:
         with:
           path: './dist'
           key: ${{ runner.os }}-${{ hashFiles('dist/charts') }}
-      - name: 'x'
-        run: ls -R
       - name: 'Get AWS environment variables'
         run: |
           echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.cdk
