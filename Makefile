@@ -1,17 +1,17 @@
 .PHONY: all lint package index clean
 
 CHARTS_DIR ?= charts/
-DIST := dist
+DIST := dist/charts
 
 # Default value for CHILD_CHARTS is set to a shell command that finds all directories in CHARTS_DIR
 # This can be overridden by passing CHILD_CHARTS="chart1 chart2" to the make command
 CHARTS ?= $(shell ls -d $(CHARTS_DIR)/*/ | xargs -n 1 basename)
 
 # Location of Repo
-HELM_REPO ?= https://media-servarr.github.io/charts
+HELM_REPO ?= https://media-servarr.shw.al/charts
 
 # Default target
-all: lint package pre-fetch index
+build: package pre-fetch index
 
 # Lint the Helm charts
 lint:
@@ -31,7 +31,7 @@ package:
 # Fetch existing index for new package merge
 pre-fetch:
 	@echo "Fetching existing index.yaml..."
-	curl -o $(DIST)/index.yaml $(HELM_REPO)
+	curl -o $(DIST)/index.yaml $(HELM_REPO)/index.yaml
 
 # Create index file for Helm repository
 index:
