@@ -17,7 +17,7 @@ spec:
     - '{{ $value.accessMode | default "ReadWriteOnce" }}'
   resources:
     requests:
-      storage: '{{ $value.storageClassName | default "1Gi" }}'
+      storage: '{{ $value.requestStorage | default "1Gi" }}'
   {{- if $value.selector }}
   selector:
     {{- toYaml $value.selector | nindent 4 }}

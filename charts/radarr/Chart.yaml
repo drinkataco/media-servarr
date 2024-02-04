@@ -2,7 +2,13 @@ apiVersion: 'v2'
 name: 'radarr'
 description: 'Chart for Radarr'
 type: 'application'
+<<<<<<< HEAD
 version: 0.1.0
+||||||| parent of a169e5f (test)
+version: 0.2.0
+=======
+version: 0.3.0
+>>>>>>> a169e5f (test)
 appVersion: '5.2.6'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
