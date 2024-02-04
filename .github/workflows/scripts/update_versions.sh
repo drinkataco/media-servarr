@@ -55,15 +55,17 @@ find_chart_updates() {
 #   The new version of the chart.
 update_helm_chart() {
   local previous_version="$1"
-  local new_version="$2"
+  local current_version="$2"
   local chart_dir="$3"
   local chart_version
 
   pushd "$chart_dir" > /dev/null || exit 3
   chart_version=$(grep '^version:' 'Chart.yaml' | awk '{print $2}')
-  new_version=$("${SCRIPTS_DIR}/bump_version.sh" "$previous_version" "$new_version" "$chart_version")
+  new_chart_version=$("${SCRIPTS_DIR}/bump_version.sh" "$previous_version" "$current_version" "$chart_version")
   sed -i -E "s/^version: [0-9.]+/version: ${new_version}/" Chart.yaml
   popd > /dev/null || exit 4
+
+  echo "$new_chart_version"
 }
 
 # Iterates through a list of charts and updates their versions
@@ -81,8 +83,8 @@ update_helm_charts() {
 
   for chart in $charts; do
     echo "Updating $chart..."
-    update_helm_chart "$previous_version" "$new_version" "$chart"
-    local note="Bump chart '$chart' to '$new_version'"
+    new_chart_version=$(update_helm_chart "$previous_version" "$new_version" "$chart")
+    local note="Bump chart '$chart' to '$new_chart_version'"
     echo "$note"
 
     if [[ "$GIT_COMMIT" == "1" ]]; then
