@@ -64,8 +64,6 @@ update_helm_chart() {
   new_version=$("${SCRIPTS_DIR}/bump_version.sh" "$previous_version" "$new_version" "$chart_version")
   sed -i -E "s/^version: [0-9.]+/version: ${new_version}/" Chart.yaml
   popd > /dev/null || exit 4
-
-  echo "${new_version}"
 }
 
 # Iterates through a list of charts and updates their versions
@@ -134,7 +132,9 @@ main() {
   local update_all
   local charts
 
-  git fetch --tags
+  echo "Update versions using comparison"
+  echo "Current Tag Version: $current_tag"
+  echo "Previous Tag Version: $previous_tag"
 
   # Change directory to git repo root
   cd "$(git rev-parse --show-toplevel)" || exit 1
@@ -149,7 +149,7 @@ main() {
     echo 'Base dependency changed. Updating all charts.'
 
     # Update the base chart itself.
-    new_version=$(update_helm_chart "$previous_tag" "$new_tag" ".")
+    new_version=$(update_helm_chart "$previous_tag" "$current_tag" ".")
 
     # Optionally note the base chart update in a commit message.
     local note="Bump base chart to '$new_version'"
@@ -160,11 +160,10 @@ main() {
       git add './Chart.yaml'
       git commit -m "${COMMIT_PREFX}${note}"
     fi
-
     # Find and update helm dependencies in all charts.
     charts=$(find "./charts" -mindepth 1 -maxdepth 1 -print)
     update_helm_dependencies "$new_version" "$charts"
-    update_helm_charts "$previous_version" "$new_version" "$charts"
+    update_helm_charts "$previous_version" "$current_tag" "$charts"
 
     exit
   fi

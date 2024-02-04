@@ -60,8 +60,8 @@ jobs:
           # 4. If the Chart.yaml version is updated as part of the diff, then it will be bumped up
           #   again as part of this script. We should check the diffs and skip if so
           git checkout main
-          GIT_COMMIT=0 ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
-          git push # Push updates to main
+          GIT_COMMIT=1 ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
+          git push
           git checkout "$CURRENT_VERSION"
 
       - name: 'Package Charts'
