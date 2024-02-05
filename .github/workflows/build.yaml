@@ -34,7 +34,7 @@ jobs:
         run: |
           #!/bin/sh
           mkdir .cr-index
-          # make pre-fetch DIST=".cr-index"
+          make pre-fetch DIST=".cr-index"
 
       - name: 'Run chart-releaser'
         uses: 'helm/chart-releaser-action@6203d709ca237fb26b724837f2c53716f244ee8c'
@@ -48,6 +48,9 @@ jobs:
         run: |
           mkdir -p ./dist/charts
           mv .cr-release-packages/* ./dist/charts
+
+          # er
+          cat .cr-index/index.yaml
 
           # Create index.yaml
           make pre-fetch
