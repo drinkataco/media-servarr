@@ -1,40 +1,61 @@
----
 name: Bug Report
-about: Report a bug or issue with a specific Helm chart
-title: '[Bug]: '
-labels: 'bug'
-assignees: ''
-
----
-
-**Chart Name and Version**
-Please specify the name and version of the chart where the bug was encountered.
-
-**Helm Version**
-- Output of `helm version`:
-
-**Kubernetes Version**
-- Output of `kubectl version`:
-
-**Describe the bug**
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior:
-
-1.
-2.
-3.
-4.
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots/Logs**
-If applicable, add screenshots or logs to help explain your problem.
-
-**Additional context**
-Add any other context about the problem here, such as peculiarities of your environment.
-
-**Possible Solution**
-If you have a suggestion on how to fix the bug, please provide details here.
+description: Report a bug or issue with a specific Helm chart
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report Guidelines
+        Please fill out the sections below to help us address your bug report.
+  - type: input
+    id: chart-name
+    attributes:
+      label: Chart Name and Version
+      description: "Specify the name and version of the chart where the bug was encountered."
+      placeholder: "example-chart 1.2.3"
+    validations:
+      required: true
+  - type: input
+    id: helm-version
+    attributes:
+      label: Helm Version
+      description: "Output of `helm version`:"
+      placeholder: "version.BuildInfo{Version:\"v3.0.0\", ...}"
+    validations:
+      required: true
+  - type: input
+    id: kubernetes-version
+    attributes:
+      label: Kubernetes Version
+      description: "Output of `kubectl version`:"
+      placeholder: "Client Version: v1.19.0, Server Version: v1.19.0"
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: "A clear and concise description of what the bug is."
+      placeholder: "When I deploy the chart ..."
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: "Steps to reproduce the behavior:"
+      placeholder: "1. Deploy the chart with ...\n2. Trigger an action ...\n3. See error"
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: "I expected that ..."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+     

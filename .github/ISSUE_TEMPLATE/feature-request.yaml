@@ -1,23 +1,45 @@
----
 name: Feature Request
-about: Suggest an enhancement or new feature for a specific Helm chart
-title: '[Feature]: '
-labels: 'enhancement'
-assignees: ''
-
----
-
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Chart Name and Desired Version**
-Specify the name of the chart and, if applicable, the version you'd like to see the feature implemented in.
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A brief description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+description: Suggest an enhancement or new feature for a specific Helm chart
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request Guidelines
+        Please fill out the sections below to help guide your feature request to the team.
+  - type: input
+    id: chart-name
+    attributes:
+      label: Chart Name and Version
+      description: Specify the name and version of the chart.
+      placeholder: "example-chart 1.2.3"
+    validations:
+      required: true
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: "Describe the feature you'd like to see added, including any specific details and use cases."
+      placeholder: "I would like the chart to support ..."
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "Why is this feature important to you?"
+      placeholder: "This feature is important because ..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: "Describe any alternative solutions or features you've considered."
+      placeholder: "We've considered ..."
+  - type: markdown
+    attributes:
+      value: |
+        ## Additional Information
+        Feel free to add any other context or screenshots about the feature request here.

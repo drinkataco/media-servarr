@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+issue_template:
+  - name: Bug Report
+    about: Create a report to help us improve
+    title: "[Bug]: "
+    labels: ["bug"]
+    template: bug_report.yml
+
+  - name: Feature Request
+    about: Suggest an idea for this project
+    title: "[Feature]: "
+    labels: ["enhancement"]
+    template: feature_request.yml
