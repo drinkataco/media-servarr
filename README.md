@@ -1,5 +1,8 @@
 # media-servarr helm charts
 
+[![Lint](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yml)
+[![Release](https://github.com/DiceTechnology/drinkataco/media-servarr/workflows/release.yml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/package.yml)
+
 ![media-servarr](./icon.png)
 
 This repository contains a collection of similar applications under the [servarr](https://wiki.servarr.com/) family.
