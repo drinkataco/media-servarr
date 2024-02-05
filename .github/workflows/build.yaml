@@ -47,7 +47,11 @@ jobs:
         run: |
           mkdir -p ./dist/charts
           mv .cr-release-packages/* ./dist/charts
-          mv .cr-index/index.yaml ./dist/charts
+
+          # Create index.yaml
+          make prefetch
+          make index
+
           ls -R ./dist/
 
       - name: 'Upload Packaged Charts as Artifacts'
