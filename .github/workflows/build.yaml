@@ -32,6 +32,12 @@ jobs:
         with:
           version: v3.12.0
 
+      - name: Get existing index file
+        run: |
+          CR_INDEX_DIR=.cr-index
+          mkdir "$CR_INDEX_DIR"
+          make prefetch DIST="$CR_INDEX_DIR"
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
