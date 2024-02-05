@@ -12,7 +12,6 @@ The aim of this repository is to be featureful, use repeatable code, and to be a
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Usage](#usage)
 * [The Charts](#the-charts)
-* [Development](#development)
 <!-- vim-md-toc END -->
 
 ## Usage
@@ -20,7 +19,7 @@ The aim of this repository is to be featureful, use repeatable code, and to be a
 Add the repository using:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
+helm repo add mediar-servarr https://media-servarr.shw.al/charts
 ```
 
 And then view all available charts with
@@ -44,6 +43,4 @@ There are a number of charts available under the [./charts](./charts) directory 
 It will be helpful to check out each application in [./charts](./charts) and its README for more information.
 
 The [media-servarr](./charts/media-servarr/) chart allows you to install and manage all the applications in one installation - and coordinate extras, such as shared persistent volumes and network policies.
-
-## Development
 
