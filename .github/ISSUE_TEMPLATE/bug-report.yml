@@ -5,9 +5,7 @@ labels: ["bug"]
 body:
   - type: markdown
     attributes:
-      value: |
-        ## Bug Report Guidelines
-        Please fill out the sections below to help us address your bug report.
+      value: "## Bug Report Guidelines\nPlease fill out the sections below to help us address your bug report."
   - type: input
     id: chart-name
     attributes:
@@ -58,4 +56,4 @@ body:
       required: true
   - type: markdown
     attributes:
-     
+      value: "## Additional Information\nIf applicable, add screenshots or logs to help explain your problem."
