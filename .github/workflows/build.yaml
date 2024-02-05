@@ -49,7 +49,7 @@ jobs:
           mv .cr-release-packages/* ./dist/charts
 
           # Create index.yaml
-          make prefetch
+          make pre-fetch
           make index
 
           ls -R ./dist/
