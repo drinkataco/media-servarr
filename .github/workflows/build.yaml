@@ -39,7 +39,7 @@ jobs:
           make pre-fetch DIST="$CR_INDEX_DIR"
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action
+        uses: helm/chart-releaser-action@6203d70
         with:
           skip_upload: true
           # package-path:
