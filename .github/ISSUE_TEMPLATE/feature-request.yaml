@@ -1,0 +1,23 @@
+---
+name: Feature Request
+about: Suggest an enhancement or new feature for a specific Helm chart
+title: '[Feature]: '
+labels: 'enhancement'
+assignees: ''
+
+---
+
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+**Chart Name and Desired Version**
+Specify the name of the chart and, if applicable, the version you'd like to see the feature implemented in.
+
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+**Describe alternatives you've considered**
+A brief description of any alternative solutions or features you've considered.
+
+**Additional context**
+Add any other context or screenshots about the feature request here.

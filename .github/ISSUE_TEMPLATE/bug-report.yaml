@@ -1,0 +1,40 @@
+---
+name: Bug Report
+about: Report a bug or issue with a specific Helm chart
+title: '[Bug]: '
+labels: 'bug'
+assignees: ''
+
+---
+
+**Chart Name and Version**
+Please specify the name and version of the chart where the bug was encountered.
+
+**Helm Version**
+- Output of `helm version`:
+
+**Kubernetes Version**
+- Output of `kubectl version`:
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+
+1.
+2.
+3.
+4.
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Screenshots/Logs**
+If applicable, add screenshots or logs to help explain your problem.
+
+**Additional context**
+Add any other context about the problem here, such as peculiarities of your environment.
+
+**Possible Solution**
+If you have a suggestion on how to fix the bug, please provide details here.
