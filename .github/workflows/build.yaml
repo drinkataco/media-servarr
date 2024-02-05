@@ -50,8 +50,7 @@ jobs:
         run: |
           mkdir -p ./dist/charts
           mv .cr-release-packages/* ./dist/charts
-          ls -R ./.cr-index
-          echo '---'
+          make pre-fetch && make index
           ls -R ./dist/
 
       - name: 'Upload Packaged Charts as Artifacts'
