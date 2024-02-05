@@ -1,105 +1,45 @@
-name: 'Package Charts'
+name: 'Package and Release Helm Charts'
 
 on:
-  # ON RELEASE
-  # This uses the release description to find realms to build and package
-  # Packages are then uploaded to that release
-  release:
-    types:
-      - 'published'
-
-permissions:
-  contents: write
+  push:
+    branches:
+      - 'feature/RethinkCICD'
+    paths:
+      - 'chart/**/Chart.yaml'
 
 jobs:
-  package:
+  package-and-release:
     runs-on: 'ubuntu-latest'
-
-    defaults:
-      run:
-        working-directory: './.github/workflows/scripts'
-
     steps:
-      - uses: 'actions/checkout@v4'
-        with:
-          fetch-depth: 0
+      - name: 'Checkout code'
+        uses: 'actions/checkout@v2'
 
       - name: 'Set up Helm'
-        run: |
-          curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-          sudo apt-get install apt-transport-https --yes
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-          sudo apt-get update
-          sudo apt-get install helm
-
-      - name: 'Initialise Git'
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-      - name: 'Set Environment'
-        run: |
-          #!/bin/bash
-          current_tag="${GITHUB_REF#refs/tags/}"
-          previous_tag=$(git tag --sort=-creatordate | grep -A1 "$current_tag" | tail -n1)
-          echo "CURRENT_VERSION=${current_tag}" >> $GITHUB_ENV
-          echo "PREVIOUS_VERSION=${previous_tag}" >> $GITHUB_ENV
-
-      - name: 'Automatically update chart versions'
-        run: |
-          #!/bin/bash
-          set -e
-          set -o pipefail # Catch errors in pipelines
-
-          # FIXME: Some issues with this job step that should be fixed and considered:
-          # 1. We assume the tag will be semvar. There is no checking or protections if not.
-          # 2. The previous tag is the last tag - and can be on any branch. We do not have any
-          #   branch checking to make sure the comparison is logical
-          # 3. Semvar metadata is carried over to the updated version. However, future comparisons
-          #   will include this, meaning -dev and -alpha releases may have unintended consequences
-          # 4. If the Chart.yaml version is updated as part of the diff, then it will be bumped up
-          #   again as part of this script. We should check the diffs and skip if so
-          # 5. As it pushes up to main initially, but we then need to build via the tag... we're
-          #   going to have to rerun the update version script in two places (but not commit it
-          #   the second time)
-          git checkout main
-          GIT_COMMIT=1 ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
-          git push
-          git checkout "$CURRENT_VERSION"
-          ./update_versions.sh "$PREVIOUS_VERSION" "$CURRENT_VERSION"
-
-      - name: 'Package Charts'
-        run: |
-          #!/bin/bash
-          set -e
-
-          source ./updated_charts.sh
-          cd "$(git rev-parse --show-toplevel)" || exit 1 # Go to git root
-          make build CHARTS="$(updated_charts "$PREVIOUS_VERSION" "$CURRENT_VERSION" './charts/*')" CHARTS_DIR='./'
-
-      - uses: 'actions/cache@v4'
+        uses: 'azure/setup-helm@v1'
         with:
-          path: './dist'
-          key: ${{ runner.os }}-${{ hashFiles('dist/charts') }}
+          version: '3.x'
 
-  deploy:
-    runs-on: 'ubuntu-latest'
-    needs: ['package']
-    steps:
-      - uses: 'actions/checkout@v4'
-      - uses: 'actions/cache@v4'
-        with:
-          path: './dist'
-          key: ${{ runner.os }}-${{ hashFiles('dist/charts') }}
-      - name: 'Get AWS environment variables'
+      - name: 'Package Updated Charts'
+        id: package
         run: |
-          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.cdk
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.cdk
-          echo AWS_DEFAULT_REGION=${{ vars.AWS_DEFAULT_REGION }} >> .env.cdk
-          echo "${{ vars.DEPLOY_ENV_FILE }}" >> .env.cdk
-      - uses: 'addnab/docker-run-action@v3'
+          mkdir packaged-charts
+          changed_charts=$(git diff --find-renames --name-only ${{ github.event.before }} ${{ github.sha }} 'chart/**/Chart.yaml' | sed -n 's#\(chart/.*/\)Chart.yaml#\1#p')
+          for chart in $changed_charts; do
+            chart_name=$(basename $chart)
+            version=$(grep 'version:' $chart/Chart.yaml | awk '{print $2}')
+            previous_version=$(git show ${{ github.event.before }}:$chart/Chart.yaml | grep 'version:' | awk '{print $2}')
+            if [ "$version" != "$previous_version" ]; then
+              helm package $chart -d packaged-charts
+              echo "::set-output name=${chart_name}::packaged"
+            else
+              echo "${chart_name} version has not changed, skipping..."
+            fi
+          done
+
+      - name: Create GitHub Release
+        if: steps.package.outputs
+        uses: softprops/action-gh-release@v1
         with:
-          image: 'ghcr.io/drinkataco/cdk-static-site:latest'
-          options: --volume ${{ github.workspace }}/dist:/srv --env-file=.env.cdk
-          run: |
-            npm run cdk:deploy -- --require-approval never
+          files: packaged-charts/*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
