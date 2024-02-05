@@ -36,6 +36,7 @@ jobs:
         run: |
           CR_INDEX_DIR=.cr-index
           mkdir "$CR_INDEX_DIR"
+          pwd
           make prefetch DIST="$CR_INDEX_DIR"
 
       - name: Run chart-releaser
