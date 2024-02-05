@@ -36,9 +36,7 @@ jobs:
         run: |
           CR_INDEX_DIR=.cr-index
           mkdir "$CR_INDEX_DIR"
-          pwd
-          ls
-          make prefetch DIST="$CR_INDEX_DIR"
+          make pre-fetch DIST="$CR_INDEX_DIR"
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
