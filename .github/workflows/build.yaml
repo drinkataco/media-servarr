@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - 'main'
-    paths:
-      - 'charts/**/Chart.yaml'
+    # paths:
+      # - 'charts/**/Chart.yaml'
 
 jobs:
   package:
@@ -33,7 +33,10 @@ jobs:
       - name: 'Prepare packaging'
         run: |
           #!/bin/sh
-          make pre-fetch DIST=".cr-index"
+          # Fetch current index.yaml
+          CR_INDEX_DIR=.cr-index
+          mkdir "$CR_INDEX_DIR"
+          make pre-fetch DIST="$CR_INDEX_DIR"
 
       - name: 'Run chart-releaser'
         uses: 'helm/chart-releaser-action@6203d709ca237fb26b724837f2c53716f244ee8c'
@@ -47,7 +50,7 @@ jobs:
         run: |
           mkdir -p ./dist/charts
           mv .cr-release-packages/* ./dist/charts
-          mv .cr-index/index.yaml ./dist/charts
+          make pre-fetch && make index
           ls -R ./dist/
 
       - name: 'Upload Packaged Charts as Artifacts'
