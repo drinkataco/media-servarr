@@ -30,10 +30,11 @@ jobs:
         with:
           version: 'v3.12.0'
 
-      # - name: 'Prepare packaging'
-      #   run: |
-      #     #!/bin/sh
-      #     make pre-fetch DIST=".cr-index"
+      - name: 'Prepare packaging'
+        run: |
+          #!/bin/sh
+          mkdir .cr-index
+          # make pre-fetch DIST=".cr-index"
 
       - name: 'Run chart-releaser'
         uses: 'helm/chart-releaser-action@6203d709ca237fb26b724837f2c53716f244ee8c'
