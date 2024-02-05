@@ -66,8 +66,8 @@ jobs:
       - name: 'Download Packaged Charts'
         uses: 'actions/download-artifact@v4'
         with:
-          name: 'packaged-charts'
-          path: 'downloaded-charts'
+          name: 'dist'
+          path: 'dist'
       - name: 'ls again'
         run: |
           ls -R ./dist
