@@ -49,7 +49,7 @@ jobs:
       - name: 'Move to upload path'
         run: |
           mkdir -p ./dist/charts
-          mv -r .cr-release-packages/* ./dist/charts
+          mv .cr-release-packages/* ./dist/charts
           ls -R ./dist/
 
   deploy:
