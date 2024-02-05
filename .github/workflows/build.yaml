@@ -1,9 +1,9 @@
-name: Release Charts
+name: 'Release Charts'
 
 on:
   push:
     branches:
-      - 'feature/RethinkCICD'
+      - 'main'
     paths:
       - 'charts/**/Chart.yaml'
 
@@ -68,18 +68,18 @@ jobs:
         with:
           name: 'dist'
           path: 'dist'
-      - name: 'ls again'
+      - name: 'Uploading Charts'
         run: |
           ls -R ./dist
-      # - name: 'Get AWS environment variables'
-        # run: |
-          # echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.cdk
-          # echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.cdk
-          # echo AWS_DEFAULT_REGION=${{ vars.AWS_DEFAULT_REGION }} >> .env.cdk
-          # echo "${{ vars.DEPLOY_ENV_FILE }}" >> .env.cdk
-      # - uses: 'addnab/docker-run-action@v3'
-        # with:
-          # image: 'ghcr.io/drinkataco/cdk-static-site:latest'
-          # options: --volume ${{ github.workspace }}/dist:/srv --env-file=.env.cdk
-          # run: |
-            # npm run cdk:deploy -- --require-approval never
+      - name: 'Get AWS environment variables'
+        run: |
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.cdk
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.cdk
+          echo AWS_DEFAULT_REGION=${{ vars.AWS_DEFAULT_REGION }} >> .env.cdk
+          echo "${{ vars.DEPLOY_ENV_FILE }}" >> .env.cdk
+      - uses: 'addnab/docker-run-action@v3'
+        with:
+          image: 'ghcr.io/drinkataco/cdk-static-site:latest'
+          options: --volume ${{ github.workspace }}/dist:/srv --env-file=.env.cdk
+          run: |
+            npm run cdk:deploy -- --require-approval never
