@@ -2,7 +2,7 @@ apiVersion: 'v2'
 name: 'sonarr'
 description: 'Chart for Sonarr'
 type: 'application'
-version: 0.21.0
+version: 0.22.0
 appVersion: '4.0.1'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/sonarr/icon.png'
 dependencies:
