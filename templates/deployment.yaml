@@ -60,7 +60,7 @@ spec:
               # Inject secrets in config if set
               sed \
                 {{- range .Values.application.config.secrets }}
-                's/\${{ . }}/${{ . }}/g' \
+                "s/\${{ . }}/${{ . }}/g" \
                 {{- end }}
                 '/config-map/{{ .Values.application.config.filename }}' > \
                 '/config-processed/{{ .Values.application.config.filename }}'
