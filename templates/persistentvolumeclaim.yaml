@@ -7,10 +7,11 @@ apiVersion: 'v1'
 kind: 'PersistentVolumeClaim'
 metadata:
   name: '{{ $key }}'
+  namespace: {{ $context.Release.Namespace }}
   labels:
     {{- include "media-servarr-base.labels" $context | nindent 4 }}
 spec:
-  {{- if $value.storageClassName }}
+  {{- if (hasKey $value "storageClassName")  }}
   storageClassName: '{{ $value.storageClassName }}'
   {{- end }}
   accessModes:
