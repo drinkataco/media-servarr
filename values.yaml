@@ -130,4 +130,20 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  # TODO: Replace with this / merge with metrics
+  host: 'media-servarr.local' # TODO: use this?
+
+
+metrics:
+  enable: true
+  app: # could we use this from other values
+    name: 'sonarr'
+    port: # TODO: This is the FOURTH time this is defined. How can we simplify this?
+  nameSuffix: '-exportarr'
+  image:
+    repository: 'ghcr.io/onedr0p/exportarr'
+    tag: 'v1.6.1'
+    pullPolicy: 'IfNotPresent'
+  port: 9707
+  
 
