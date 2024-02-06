@@ -4,6 +4,7 @@ apiVersion: 'apps/v1'
 kind: 'Deployment'
 metadata:
   name: '{{ include "media-servarr-base.fullname" . }}'
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "media-servarr-base.labels" . | nindent 4 }}
 spec:
