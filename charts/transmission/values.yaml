@@ -164,7 +164,6 @@ persistentVolumeClaims:
 
 service:
   type: 'LoadBalancer'
-  externalTrafficPolicy: 'Local' # TODO: does this work
   ports:
     - port: 9091
       targetPort: 'http'
