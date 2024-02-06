@@ -1,11 +1,11 @@
 # media-servarr helm charts
 
-> [!WARNING]
-> These charts and the definitions are currently Alpha - and will be until the first major version of each chart (1.\*.\*).
-> There is a likelihood of breaking changes; primarily around Values.yaml from being introduced with each minor change for now
-
 [![Lint](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yaml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yaml)
 [![Release](https://github.com/drinkataco/media-servarr/actions/workflows/release.yaml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/release.yaml)
+
+> [!WARNING]
+> The charts and their definitions are in the Alpha stage and will remain so until they reach the first major version release (1.x.x).
+> It is important to note that there may be breaking changes introduced, especially around values, with each minor updater until then.
 
 ![media-servarr](./icon.png)
 
