@@ -145,7 +145,6 @@ metrics:
     pullPolicy: 'IfNotPresent'
   port:
     name: 'monitoring'
-    number: 9707
   resources:
     requests:
       cpu: '100m'
