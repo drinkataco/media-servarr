@@ -167,4 +167,3 @@ helm uninstall radarr
 ## Support
 
 For support, issues, or feature requests, please file an issue on the chart's repository issue tracker.
-
