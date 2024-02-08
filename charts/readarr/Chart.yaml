@@ -2,10 +2,10 @@ apiVersion: 'v2'
 name: 'readarr'
 description: 'Chart for Readarr'
 type: 'application'
-version: 0.1.1
+version: 0.2.0
 appVersion: '0.3.17-develop'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.1.1
+    version: 0.2.0
     repository: "file://../.."

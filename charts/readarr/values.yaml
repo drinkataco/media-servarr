@@ -13,24 +13,29 @@ secrets:
 # Application Config
 #
 application:
+  # Main application web UI port
+  port: 8787
+  # Access url base
+  urlBase: 'readarr'
+  # ConfigMap for core application settings
   config:
     # Filename of configuration
     filename: 'config.xml'
     # Configuration file contents
     contents: |
       <Config>
-          <LogLevel>info</LogLevel>
-          <EnableSsl>False</EnableSsl>
-          <Port>8787</Port>
-          <UrlBase>readarr</UrlBase>
-          <BindAddress>*</BindAddress>
-          <ApiKey>$apiKey</ApiKey>
-          <AnalyticsEnabled>False</AnalyticsEnabled>
-          <AuthenticationMethod>None</AuthenticationMethod>
-          <UpdateMechanism>Docker</UpdateMechanism>
-          <Branch>develop</Branch>
-          <InstanceName>Readarr</InstanceName>
-        </Config>
+        <LogLevel>info</LogLevel>
+        <EnableSsl>False</EnableSsl>
+        <Port>8787</Port>
+        <UrlBase>readarr</UrlBase>
+        <BindAddress>*</BindAddress>
+        <ApiKey>$apiKey</ApiKey>
+        <AnalyticsEnabled>False</AnalyticsEnabled>
+        <AuthenticationMethod>None</AuthenticationMethod>
+        <UpdateMechanism>Docker</UpdateMechanism>
+        <Branch>develop</Branch>
+        <InstanceName>Readarr</InstanceName>
+      </Config>
     # Secrets to inject - if any - to the config. In the config they must be defined as $secret
     secrets: [ 'apiKey' ]
     # Path the file will be mounted to in the config
@@ -50,11 +55,6 @@ deployment:
         value: '1000'
       - name: 'PUID'
         value: '1000'
-
-    ports:
-      - name: 'http'
-        containerPort: 8787
-        protocol: 'TCP'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -83,18 +83,15 @@ persistentVolumeClaims:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 8787
-      targetPort: 'http'
+    - targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/readarr'
-          pathType: 'Prefix'
-          port: 8787
-  tls: []
+
+metrics:
+  enabled: true
+  app: 'readarr'
+  port:
+    number: 9705
