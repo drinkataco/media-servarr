@@ -17,7 +17,6 @@
   - [x] remove replication/autoscaling
   - [x] Ingress
   - [x] Walk through config
-  - [] Build test
   - [x] README's
 
 - [x] SONARR
@@ -34,11 +33,6 @@
 
 - [x] START BUILDING makefile
 
-- [] Overview
-  - [] Health checks
-  - [] securityContext
-    - [] transmission
-    - [] homarr
 
 - [x] CICD
   - [x] Hosting
@@ -51,6 +45,9 @@
     - [x] Auto versioning update on tag
 
 - [] Exportarr
+  - [x] Clean up duplicate values (ports)
+  - [] serviceaccount.create to serviceaccount.enable
+  - [] Fix up readmes
 
 - [] Flaresolver
 
@@ -62,6 +59,14 @@
   - [x] ISSUE Template
   - [x] PR Template
   - [x] LICENCE
+
+- [] Strengthen
+  - application* to config
+  - [] Health checks
+  - [] securityContext
+    - [] transmission
+    - [] homarr
+  - [] TESTS
 
 - [] Advanced CICD
   - [] datree
