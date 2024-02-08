@@ -3,6 +3,13 @@ nameOverride: ''
 fullnameOverride: ''
 
 #
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 7575
+
+#
 # Resource - DEPLOYMENT
 # This is to set up and define the application deployment
 #
@@ -10,11 +17,6 @@ deployment:
   container:
     image:
       repository: 'ghcr.io/ajnart/homarr'
-
-    ports:
-      - name: 'http'
-        containerPort: 7575
-        protocol: 'TCP'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
@@ -48,18 +50,10 @@ persistentVolumeClaims:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 7575
-      targetPort: 'http'
+    - targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/'
-          pathType: 'Prefix'
-          port: 7575
-  tls: []
+  path: '/'
