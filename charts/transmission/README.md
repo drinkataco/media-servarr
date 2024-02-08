@@ -23,14 +23,16 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
+helm repo add mediar-servarr https://media-servarr.shw.al/charts
 
-helm install transmission media-servarr/transmission -f myvalues.yaml -f mysecrets.yaml
+helm install transmission media-servarr/transmission
 ```
+
+Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/transmission/`
 
 ## Configuration
 
-Here is some example of some configuration you may want to override.
+Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
 
 ### Application Configuration
 
@@ -38,6 +40,8 @@ By default, base configuration is defined using a ConfigMap - defined by default
 
 ```yaml
 application:
+  port: 9091 # default UI port
+  urlBase: 'transmission' # default web base path
   config:
     filename: 'settings.json'
     contents: |
@@ -55,6 +59,7 @@ You can prevent a ConfigMap being create and the configuration being managed as 
 
 ```yaml
 application:
+  ...
   config: null
 ```
 
@@ -64,7 +69,6 @@ Three volumes are available by default:
 
 - **config** - General config data - where settings exist
 - **downloads** - Downloads folder
-
 
 ```yaml
 deployment:
@@ -101,13 +105,6 @@ If ingress is enabled, you can customise the host, paths, and TLS settings:
 ```yaml
 ingress:
   enabled: true
-  hosts:
-    - host: 'mymedia.example.com'
-      paths:
-        - path: '/transmission/'
-          pathType: 'ImplementationSpecific'
-  tls:
-    # Your TLS settings...
 ```
 
 ### Advanced
@@ -123,7 +120,7 @@ Have a look at the parent charts default `values.yaml` for a comprehensive list 
 To upgrade the deployment:
 
 ```bash
-helm upgrade transmission media-servarr/transmission -f myvalues.yaml -f mysecrets.yaml
+helm upgrade transmission media-servarr/transmission -f myvalues.yaml
 ```
 
 ## Uninstallation
@@ -137,4 +134,3 @@ helm delete transmission
 ## Support
 
 For support, issues, or feature requests, please file an issue on the chart's repository issue tracker.
-

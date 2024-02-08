@@ -13,6 +13,11 @@ secrets:
 # Application Config
 #
 application:
+  # main application web ui port
+  port: 9091
+  # access url base
+  urlbase: 'transmission'
+  # ConfigMap for core application settings
   config:
     # Filename of configuration
     filename: 'settings.json'
@@ -122,7 +127,7 @@ deployment:
 
     ports:
       - name: 'http'
-        containerPort: 9091
+        containerPort: # use application.port
         protocol: 'TCP'
       - name: 'peer'
         containerPort: 51413
@@ -165,7 +170,7 @@ persistentVolumeClaims:
 service:
   type: 'LoadBalancer'
   ports:
-    - port: 9091
+    - port: # use application.port by default
       targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
@@ -180,11 +185,3 @@ service:
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/transmission'
-          pathType: 'Prefix'
-          port: 9091
-  tls: []
