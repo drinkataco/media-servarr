@@ -13,24 +13,29 @@ secrets:
 # Application Config
 #
 application:
+  # Main application web UI port
+  port: 8686
+  # Access url base
+  urlBase: 'lidarr'
+  # ConfigMap for core application settings
   config:
     # Filename of configuration
     filename: 'config.xml'
     # Configuration file contents
     contents: |
       <Config>
-          <LogLevel>info</LogLevel>
-          <EnableSsl>False</EnableSsl>
-          <Port>7878</Port>
-          <UrlBase>lidarr</UrlBase>
-          <BindAddress>*</BindAddress>
-          <ApiKey>$apiKey</ApiKey>
-          <AnalyticsEnabled>False</AnalyticsEnabled>
-          <AuthenticationMethod>External</AuthenticationMethod>
-          <UpdateMechanism>Docker</UpdateMechanism>
-          <Branch>main</Branch>
-          <InstanceName>Lidarr</InstanceName>
-        </Config>
+        <LogLevel>info</LogLevel>
+        <EnableSsl>False</EnableSsl>
+        <Port>8686</Port>
+        <UrlBase>lidarr</UrlBase>
+        <BindAddress>*</BindAddress>
+        <ApiKey>$apiKey</ApiKey>
+        <AnalyticsEnabled>False</AnalyticsEnabled>
+        <AuthenticationMethod>External</AuthenticationMethod>
+        <UpdateMechanism>Docker</UpdateMechanism>
+        <Branch>main</Branch>
+        <InstanceName>Lidarr</InstanceName>
+      </Config>
     # Secrets to inject - if any - to the config. In the config they must be defined as $secret
     secrets: [ 'apiKey' ]
     # Path the file will be mounted to in the config
@@ -51,19 +56,14 @@ deployment:
       - name: 'PUID'
         value: '1000'
 
-    ports:
-      - name: 'http'
-        containerPort: 7878
-        protocol: 'TCP'
-
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
         mountPath: '/config'
       - name: 'downloads'
         mountPath: '/downloads'
-      - name: 'film'
-        mountPath: '/film'
+      - name: 'music'
+        mountPath: '/music'
 
   volumes:
     config:
@@ -71,7 +71,7 @@ deployment:
         claimName: 'lidarr-config'
     downloads:
       emptyDir: {}
-    film:
+    music:
       emptyDir: {}
 
 persistentVolumeClaims:
@@ -83,18 +83,15 @@ persistentVolumeClaims:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 7878
-      targetPort: 'http'
+    - targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/lidarr/'
-          pathType: 'Prefix'
-          port: 7878
-  tls: []
+
+metrics:
+  enabled: false
+  app: 'lidarr'
+  port:
+    number: 9702

@@ -12,7 +12,8 @@ This README covers the basics of customising and installation
   * [Secrets](#secrets)
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
-  * [Ingress Configuration](#ingress-configuration)
+  * [Ingress](#ingress)
+  * [Metrics](#metrics)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
 * [Uninstallation](#uninstallation)
@@ -24,14 +25,16 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.p.shw.al/charts
+helm repo add mediar-servarr https://media-servarr.shw.al/charts
 
-helm install lidarr media-servarr/lidarr -f myvalues.yaml -f mysecrets.yaml
+helm install lidarr media-servarr/lidarr
 ```
+
+Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/lidarr/`
 
 ## Configuration
 
-Here is some example of some configuration you may want to override.
+Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
 
 ### Secrets
 
@@ -51,12 +54,17 @@ By default, base configuration is defined using a ConfigMap - defined by default
 
 ```yaml
 application:
+  port: 8686 # default UI port
+  urlBase: 'radarr' # default web base path
   config:
     filename: 'config.xml'
     contents: |
       <Config>
+        ...
         <UrlBase>music</UrlBase>
         <ApiKey>$apiKey</ApiKey>
+        <Port>8686</Port>
+        ...
       </Config>
     secrets: [ 'apiKey' ]
     mountPath: '/config/config.xml'
@@ -66,6 +74,7 @@ You can prevent a ConfigMap being create and the configuration being managed as 
 
 ```yaml
 application:
+  ...
   config: null
 ```
 
@@ -76,7 +85,6 @@ Three volumes are available by default:
 - **config** - General config data, where the sqlite database exists, for example
 - **downloads** - Downloads folder for monitoring
 - **music** - Location of music
-
 
 ```yaml
 deployment:
@@ -112,21 +120,28 @@ persistentVolumeClaims:
         type: 'local'
 ```
 
-### Ingress Configuration
+### Ingress
 
-If ingress is enabled, you can customise the host, paths, and TLS settings:
+Ingress can be enabled, and you can customise the default host, path, and TLS settings:
 
 ```yaml
 ingress:
   enabled: true
-  hosts:
-    - host: 'mymedia.example.com'
-      paths:
-        - path: '/lidarr/'
-          pathType: 'ImplementationSpecific'
+  host: 'example.com'
   tls:
     # Your TLS settings...
 ```
+
+### Metrics
+
+Enabling metrics enables a sidecar container being attached for [exportarr](https://github.com/onedr0p/exportarr/) - and a ServiceMonitor CRD to be consumed by the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) package.
+
+```yaml
+metrics:
+  enabled: true
+```
+
+It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
 
 ### Advanced
 
@@ -141,7 +156,7 @@ Have a look at the parent charts default `values.yaml` for a comprehensive list 
 To upgrade the deployment:
 
 ```bash
-helm upgrade lidarr media-servarr/lidarr -f myvalues.yaml -f mysecrets.yaml
+helm upgrade lidarr media-servarr/lidarr -f myvalues.yaml
 ```
 
 ## Uninstallation
@@ -155,4 +170,3 @@ helm delete lidarr
 ## Support
 
 For support, issues, or feature requests, please file an issue on the chart's repository issue tracker.
-
