@@ -7,16 +7,16 @@ fullnameOverride: ''
 #
 secrets:
   - name: 'apiKey'
-    value: '36cafb7a7fdc73abdee3735f5c9fde8c'
+    value: ''
 
 #
 # Application Config
 #
 application:
-  # Main application web UI port
+  # main application web ui port
   port: 7878
-  # Access url base
-  urlBase: 'radarr'
+  # access url base
+  urlbase: 'radarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
@@ -24,18 +24,18 @@ application:
     # Configuration file contents
     contents: |
       <Config>
-          <LogLevel>info</LogLevel>
-          <EnableSsl>False</EnableSsl>
-          <Port>7878</Port>
-          <UrlBase>radarr</UrlBase>
-          <BindAddress>*</BindAddress>
-          <ApiKey>$apiKey</ApiKey>
-          <AnalyticsEnabled>False</AnalyticsEnabled>
-          <AuthenticationMethod>External</AuthenticationMethod>
-          <UpdateMechanism>Docker</UpdateMechanism>
-          <Branch>main</Branch>
-          <InstanceName>Radarr</InstanceName>
-        </Config>
+        <LogLevel>info</LogLevel>
+        <EnableSsl>False</EnableSsl>
+        <Port>7878</Port>
+        <UrlBase>radarr</UrlBase>
+        <BindAddress>*</BindAddress>
+        <ApiKey>$apiKey</ApiKey>
+        <AnalyticsEnabled>False</AnalyticsEnabled>
+        <AuthenticationMethod>External</AuthenticationMethod>
+        <UpdateMechanism>Docker</UpdateMechanism>
+        <Branch>main</Branch>
+        <InstanceName>Radarr</InstanceName>
+      </Config>
     # Secrets to inject - if any - to the config. In the config they must be defined as $secret
     secrets: [ 'apiKey' ]
     # Path the file will be mounted to in the config
@@ -91,5 +91,7 @@ ingress:
   enabled: true
 
 metrics:
-  enabled: true
+  enabled: false
   app: 'radarr'
+  port:
+    number: 9704
