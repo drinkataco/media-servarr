@@ -1,0 +1,71 @@
+- [x] Basic RADARR
+- - [x] volumeMounts [Config]
+- - [x] pod.volumes
+- - [x] initcontainer
+
+- [] Quick fixes:
+  - [n/a] application.config use deployment.containerPort throughout
+  - [x] NOTES.txt
+  - [x] Icon
+  - [x] README
+  - [x] Merge valueskkgt
+  - [x] Security Context, etc?
+  - [x] persistent volumes (claims)
+  - [x] appVersion no worky
+  - [x] apostraphoies i like
+  - [x] version / app version
+  - [x] remove replication/autoscaling
+  - [x] Ingress
+  - [x] Walk through config
+  - [] Build test
+  - [x] README's
+
+- [x] SONARR
+
+- [x] Transmission
+
+- [x] Prowlarr
+
+- [x] HOMARR
+
+- [x] Lidarr
+
+- [x] Readarr
+
+- [x] START BUILDING makefile
+
+- [] Overview
+  - [] Health checks
+  - [] securityContext
+    - [] transmission
+    - [] homarr
+
+- [x] CICD
+  - [x] Hosting
+  - [x] CI/CD
+    - [x] Helm Lint
+    - [x] build and package
+    - [x] Host
+    - [x] CICD buttons
+    - [x] Walkthrough and build
+    - [x] Auto versioning update on tag
+
+- [] Exportarr
+
+- [] Flaresolver
+
+- [] Publishing
+  - [x] Hosting
+  - [x] Icons Sizes
+  - [x] Readme checks
+  - [] Chart.yaml keywords, etc
+  - [x] ISSUE Template
+  - [x] PR Template
+  - [x] LICENCE
+
+- [] Advanced CICD
+  - [] datree
+  - [] tests
+  - [] Add README as index.html
+
+- [] media-servarr

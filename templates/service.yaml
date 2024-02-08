@@ -12,6 +12,10 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     {{- toYaml .Values.service.ports | nindent 4 }}
+    {{- if .Values.metrics.enabled }}
+    - name: '{{ .Values.metrics.port.name }}'
+      port: {{ .Values.metrics.port.number }}
+    {{- end }}
   selector:
     {{- include "media-servarr-base.selectorLabels" . | nindent 4 }}
 {{- end }}
