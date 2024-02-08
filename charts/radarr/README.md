@@ -30,6 +30,8 @@ helm repo add mediar-servarr https://media-servarr.shw.al/charts
 helm install radarr media-servarr/radarr
 ```
 
+Pointing the host `media-servarr.local` to your kubernetes cluster will then allow you to access the application at the default location of `http://media-servarr.local/radarr/`
+
 ## Configuration
 
 Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
@@ -52,23 +54,24 @@ By default, base configuration is defined using a ConfigMap - defined by default
 
 ```yaml
 application:
+  port: 7878 # default UI port
+  urlBase: 'radarr' # default web base path
   config:
     contents: |
       <Config>
         ...
-        <UrlBase>$urlBase</UrlBase>
+        <UrlBase>radarr</UrlBase>
         <ApiKey>$apiKey</ApiKey>
-        <Port>$port</Port>
+        <Port>7878</Port>
         ...
       </Config>
 ```
-
-The values shown in the example can be overwritten, but keeping them as environment variables will allow 
 
 You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
 
 ```yaml
 application:
+  ...
   config: null
 ```
 
@@ -158,7 +161,7 @@ helm upgrade radarr media-servarr/radarr -f myvalues.yaml
 To uninstall/delete the `radarr` deployment:
 
 ```bash
-helm delete radarr
+helm uninstall radarr
 ```
 
 ## Support
