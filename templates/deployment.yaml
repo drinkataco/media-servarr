@@ -1,4 +1,5 @@
 {{- define "media-servarr-base.deployment" -}}
+{{- $context := . }}
 
 apiVersion: 'apps/v1'
 kind: 'Deployment'
@@ -42,7 +43,6 @@ spec:
               mountPath: '/config-processed'
           env:
             {{- if .Values.application.config.secrets }}
-            {{- $context := . }}
             {{- range .Values.application.config.secrets }}
             - name: '{{ . }}'
               valueFrom:
@@ -81,7 +81,11 @@ spec:
           image: '{{ .Values.deployment.container.image.repository }}:{{ .Values.deployment.container.image.tag | default .Chart.AppVersion }}'
           imagePullPolicy: '{{ .Values.deployment.container.image.pullPolicy }}'
           ports:
-            {{- toYaml .Values.deployment.container.ports | nindent 12 }}
+            {{- range .Values.deployment.container.ports }}
+              - name: '{{ .name }}'
+                protocol: '{{ .protocol }}'
+                containerPort: {{ .containerPort | default $context.Values.application.port }}
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.deployment.container.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -98,13 +102,12 @@ spec:
           image: '{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}'
           imagePullPolicy: '{{ .Values.metrics.image.pullPolicy }}'
           args:
-            - '{{ .Values.metrics.app.name }}'
+            - '{{ .Values.metrics.app }}'
           env:
             - name: 'PORT'
               value: '{{ .Values.metrics.port.number }}'
-            # TODO: This is the internal host, but example shows URL
             - name: 'URL'
-              value: '{{ include "media-servarr-base.fullname" . }}:{{ .Values.metrics.app.port }}'
+              value: 'http://{{ include "media-servarr-base.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.application.port }}/{{ .Values.application.urlBase }}'
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
