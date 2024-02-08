@@ -1,4 +1,5 @@
 {{- define "media-servarr-base.service" -}}
+{{- $context := . }}
 ---
 
 apiVersion: 'v1'
@@ -11,7 +12,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    {{- toYaml .Values.service.ports | nindent 4 }}
+    {{- range .Values.deployment.container.ports }}
+    - port: {{ .containerPort | default $context.Values.application.port }}
+      targetPort: '{{ .targetPort }}'
+      protocol: '{{ .protocol }}'
+      name: '{{ .name }}'
+    {{- end }}
     {{- if .Values.metrics.enabled }}
     - name: '{{ .Values.metrics.port.name }}'
       port: {{ .Values.metrics.port.number }}

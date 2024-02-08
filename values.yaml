@@ -14,6 +14,11 @@ secrets: []
 # Here you can define configuration to be used and mounted as a ConfigMap
 #
 application:
+  # Main application web UI port
+  port:
+  # base path of application
+  urlBase:
+  # ConfigMap for core application settings
   config:
     # # Filename of configuration
     # filename: 'config.xml'
@@ -110,7 +115,7 @@ serviceAccount:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 80
+    - port: # by default uses application.port
       targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
@@ -130,14 +135,10 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-  # TODO: Replace with this / merge with metrics
-  host: 'media-servarr.local' # TODO: use this?
 
 metrics:
   enabled: false
-  app: # TODO: could we use this from other values
-    name:
-    port: # TODO: This is the FOURTH time this is defined. How can we simplify this?
+  app: # Application to set up metrics for
   nameSuffix: '-exportarr'
   image:
     repository: 'ghcr.io/onedr0p/exportarr'
