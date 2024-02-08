@@ -53,7 +53,7 @@ deployment:
 
     ports:
       - name: 'http'
-        containerPort: 80
+        containerPort: # By default uses application.port
         protocol: 'TCP'
 
     livenessProbe:
@@ -126,11 +126,10 @@ ingress:
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: ''
-      paths:
-        - path: '/'
-          pathType: 'ImplementationSpecific'
+  host: 'media-servarr.local'
+  path: # defaults to application.urlBase
+  pathType: 'Prefix'
+  port: # defaults to application.port
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
