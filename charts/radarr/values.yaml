@@ -98,3 +98,9 @@ ingress:
           pathType: 'Prefix'
           port: 7878
   tls: []
+
+metrics:
+  enabled: true
+  app: # TODO: could we use this from other values
+    name: 'sonarr'
+    port: 8989 # TODO: This is the FOURTH time this is defined. How can we simplify this?

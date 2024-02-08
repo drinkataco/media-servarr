@@ -133,17 +133,27 @@ ingress:
   # TODO: Replace with this / merge with metrics
   host: 'media-servarr.local' # TODO: use this?
 
-
 metrics:
-  enable: true
-  app: # could we use this from other values
-    name: 'sonarr'
+  enabled: false
+  app: # TODO: could we use this from other values
+    name:
     port: # TODO: This is the FOURTH time this is defined. How can we simplify this?
   nameSuffix: '-exportarr'
   image:
     repository: 'ghcr.io/onedr0p/exportarr'
     tag: 'v1.6.1'
     pullPolicy: 'IfNotPresent'
-  port: 9707
-  
-
+  port:
+    name: 'monitoring'
+    number: 9707
+  resources:
+    requests:
+      cpu: '100m'
+      memory: '64Mi'
+    limits:
+      cpu: '500m'
+      memory: '256Mi'
+  serviceMonitor:
+    interval: '4m'
+    scrapeTimeout: '90s'
+    path: '/metrics'

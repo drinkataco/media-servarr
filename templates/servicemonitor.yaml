@@ -1,0 +1,22 @@
+{{- define "media-servarr-base.servicemonitor" -}}
+{{- if .Values.metrics.enabled -}}
+---
+
+apiVersion: 'monitoring.coreos.com/v1'
+kind: 'ServiceMonitor'
+metadata:
+  name: '{{ include "media-servarr-base.fullname" . }}'
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "media-servarr-base.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "media-servarr-base.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: 'monitoring'
+      interval: '{{ .Values.metrics.serviceMonitor.interval }}'
+      scrapeTimeout: '{{ .Values.metrics.serviceMonitor.scrapeTimeout }}'
+      path: '{{ .Values.metrics.serviceMonitor.path }}'
+{{- end }}
+{{- end }}
