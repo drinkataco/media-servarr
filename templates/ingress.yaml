@@ -1,5 +1,6 @@
 {{- define "media-servarr-base.ingress" -}}
 {{- if .Values.ingress.enabled -}}
+{{- $context := . }}
 {{- $fullName := include "media-servarr-base.fullname" . -}}
 ---
 
@@ -15,9 +16,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .Values.ingress.className }}
-  {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
@@ -29,19 +27,18 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- with .Values.ingress }}
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType | default "Prefix" }}
+          {{- $defaultPath := printf "/%s" $context.Values.application.urlBase }}
+          - path: {{ .path | default $defaultPath }}
+            pathType: {{ .pathType }}
             backend:
               service:
                 name: '{{ $fullName }}'
                 port:
-                  number: {{ .port }}
-          {{- end }}
+                  number: {{ .port | default $context.Values.application.port }}
     {{- end }}
 {{- end }}
 {{- end }}

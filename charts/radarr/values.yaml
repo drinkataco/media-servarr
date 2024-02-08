@@ -89,14 +89,6 @@ service:
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/radarr/'
-          pathType: 'Prefix'
-          port: 7878
-  tls: []
 
 metrics:
   enabled: true
