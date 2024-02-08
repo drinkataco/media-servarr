@@ -13,6 +13,11 @@ secrets:
 # Application Config
 #
 application:
+  # Main application web UI port
+  port: 8989
+  # Access url base
+  urlBase: 'sonarr'
+  # ConfigMap for core application settings
   config:
     # Filename of configuration
     filename: 'config.xml'
@@ -51,11 +56,6 @@ deployment:
       - name: 'PUID'
         value: '1000'
 
-    ports:
-      - name: 'http'
-        containerPort: 8989
-        protocol: 'TCP'
-
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -83,18 +83,15 @@ persistentVolumeClaims:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 8989
-      targetPort: 'http'
+    - targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/sonarr/'
-          pathType: 'Prefix'
-          port: 8989
-  tls: []
+
+metrics:
+  enabled: true
+  app: 'sonarr'
+  port:
+    number: 9706
