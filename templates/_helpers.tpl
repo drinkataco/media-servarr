@@ -92,6 +92,7 @@ Use all default templates and logic
 {{ include "media-servarr-base.configmap" . }}
 {{ include "media-servarr-base.secret" . }}
 {{ include "media-servarr-base.serviceaccount" . }}
+{{ include "media-servarr-base.servicemonitor" . }}
 {{ include "media-servarr-base.ingress" . }}
 {{ include "media-servarr-base.persistentvolumeclaim" . }}
 {{- end }}

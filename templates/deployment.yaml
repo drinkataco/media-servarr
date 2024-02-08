@@ -93,45 +93,42 @@ spec:
               mountPath: '{{ .Values.application.config.mountPath }}'
               subPath: '{{ .Values.application.config.filename }}'
             {{- end }}
-        {{- if .Values.metrics }}
+        {{- if .Values.metrics.enabled }}
         - name: '{{ .Chart.Name }}{{ .Values.metrics.nameSuffix }}'
-          image: '{{ .Values.metrics.image.repository }}:{{ .values.metrics.image.tag }}'
+          image: '{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}'
           imagePullPolicy: '{{ .Values.metrics.image.pullPolicy }}'
           args:
             - '{{ .Values.metrics.app.name }}'
           env:
             - name: 'PORT'
-              value: '{{ .Values.metrics.port }}'
+              value: '{{ .Values.metrics.port.number }}'
             # TODO: This is the internal host, but example shows URL
-            - name: URL
-              value: '{{ include "media-servarr-base.fullname" . }}'
-            - name: APIKEY
+            - name: 'URL'
+              value: '{{ include "media-servarr-base.fullname" . }}:{{ .Values.metrics.app.port }}'
+            - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
-                  name: sonarr-exporter
-                  key: api-key
+                  name: '{{ include "media-servarr-base.fullname" . }}'
+                  key: 'apiKey'
           ports:
-            - name: monitoring
-              containerPort: 9707
+            - name: '{{ .Values.metrics.port.name }}'
+              containerPort: {{ .Values.metrics.port.number }}
           livenessProbe:
             httpGet:
-              path: /healthz
-              port: monitoring
+              path: '/healthz'
+              port: {{ .Values.metrics.port.name }}
             failureThreshold: 5
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: monitoring
+              path: '/healthz'
+              port: {{ .Values.metrics.port.name }}
             failureThreshold: 5
             periodSeconds: 10
+          {{- with .Values.metrics.resources }}
           resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 500m
-              memory: 256Mi
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- end }}
       volumes:
         {{- range $key, $value := .Values.deployment.volumes }}
