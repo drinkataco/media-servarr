@@ -13,24 +13,29 @@ secrets:
 # Application Config
 #
 application:
+  # Main application web UI port
+  port: 9696
+  # Access url base
+  urlBase: 'prowlarr'
+  # ConfigMap for core application settings
   config:
     # Filename of configuration
     filename: 'config.xml'
     # Configuration file contents
     contents: |
       <Config>
-          <LogLevel>info</LogLevel>
-          <EnableSsl>False</EnableSsl>
-          <Port>9696</Port>
-          <UrlBase>prowlarr</UrlBase>
-          <BindAddress>*</BindAddress>
-          <ApiKey>$apiKey</ApiKey>
-          <AnalyticsEnabled>False</AnalyticsEnabled>
-          <AuthenticationMethod>External</AuthenticationMethod>
-          <UpdateMechanism>Docker</UpdateMechanism>
-          <Branch>main</Branch>
-          <InstanceName>Prowlarr</InstanceName>
-        </Config>
+        <LogLevel>info</LogLevel>
+        <EnableSsl>False</EnableSsl>
+        <Port>9696</Port>
+        <UrlBase>prowlarr</UrlBase>
+        <BindAddress>*</BindAddress>
+        <ApiKey>$apiKey</ApiKey>
+        <AnalyticsEnabled>False</AnalyticsEnabled>
+        <AuthenticationMethod>External</AuthenticationMethod>
+        <UpdateMechanism>Docker</UpdateMechanism>
+        <Branch>main</Branch>
+        <InstanceName>Prowlarr</InstanceName>
+      </Config>
     # Secrets to inject - if any - to the config. In the config they must be defined as $secret
     secrets: [ 'apiKey' ]
     # Path the file will be mounted to in the config
@@ -51,11 +56,6 @@ deployment:
       - name: 'PUID'
         value: '1000'
 
-    ports:
-      - name: 'http'
-        containerPort: 9696
-        protocol: 'TCP'
-
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
@@ -75,18 +75,15 @@ persistentVolumeClaims:
 service:
   type: 'ClusterIP'
   ports:
-    - port: 9696
-      targetPort: 'http'
+    - targetPort: 'http'
       protocol: 'TCP'
       name: 'http'
 
 ingress:
   enabled: true
-  annotations: {}
-  hosts:
-    - host: 'media-servarr.local'
-      paths:
-        - path: '/prowlarr/'
-          pathType: 'Prefix'
-          port: 9696
-  tls: []
+
+metrics:
+  enabled: true
+  app: 'prowlarr'
+  port:
+    number: 9703
