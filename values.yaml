@@ -17,7 +17,7 @@ application:
   # Main application web UI port
   port:
   # base path of application
-  urlBase:
+  urlBase: ''
   # ConfigMap for core application settings
   config:
     # # Filename of configuration
