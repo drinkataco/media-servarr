@@ -16,7 +16,7 @@ application:
   # main application web ui port
   port: 7878
   # access url base
-  urlbase: 'radarr'
+  urlBase: 'radarr'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
