@@ -16,7 +16,7 @@ application:
   # main application web ui port
   port: 9091
   # access url base
-  urlbase: 'transmission'
+  urlBase: 'transmission'
   # ConfigMap for core application settings
   config:
     # Filename of configuration
