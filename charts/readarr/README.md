@@ -140,6 +140,8 @@ metrics:
 
 It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
 
+Unless changed with `metrics.port.number` you can then consume metrics over port `9705`.
+
 ### Advanced
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
@@ -161,7 +163,7 @@ helm upgrade readarr media-servarr/readarr -f myvalues.yaml
 To uninstall/delete the `readarr` deployment:
 
 ```bash
-helm delete readarr
+helm uninstall readarr
 ```
 
 ## Support
