@@ -1,32 +1,9 @@
-Prowlarr has been installed!
+Success!
+                         _
+ _ __  _ __ _____      _| | __ _ _ __ _ __
+| '_ \| '__/ _ \ \ /\ / / |/ _` | '__| '__|
+| |_) | | | (_) \ V  V /| | (_| | |  | |
+| .__/|_|  \___/ \_/\_/ |_|\__,_|_|  |_|
+|_|
 
-1. If you enabled ingress, access using:
-
-    http://media-servarr.local/prowlarr/
-
-    You may need to point `media-servarr.local` to your kubernetes host first!
-
-2. Login Details:
-
-  By default, AuthenticationMethod is set to External - meaning no authentication required. You can change this by changing the `application.config`.
-
-  If you are planning on allowing access over the internet **add authentication**
-
-3. Configure Prowlarr:
-
-   - You can start adding telvision shows by clicking on "Add New Indexer" in the Prowlarr web UI.
-   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/prowlarr/settings for more information.
-
-4. Persisting Data:
-
-   By default, your Prowlarr installation is configured to store data in a local persistent volume.
-
-5. Documentation:
-
-   Learn more about Prowlarr and its features by visiting the official Prowlarr documentation: [Prowlarr Wiki](https://wiki.servarr.com/prowlarr/settings)
-
-For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/prowlarr).
-
-Happy film collecting!
-
-{{- include "media-servarr-base.notes" . -}}
+{{ include "media-servarr-base.notes" "prowlarr" }}
