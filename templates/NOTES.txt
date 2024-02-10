@@ -1,4 +1,9 @@
 {{- define "media-servarr-base.notes" -}}
+You have installed {{ . }}!
+
+For help getting started, visit:
+
+  https://github.com/drinkataco/media-servarr/blob/main/charts/{{ . }}/README.md
 
 Managed by media-servarr helm collection
 {{- end }}

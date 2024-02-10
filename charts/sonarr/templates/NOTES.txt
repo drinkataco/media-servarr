@@ -1,33 +1,7 @@
-Sonarr has been installed!
+Success!
+ ___  ___  _ __   __ _ _ __ _ __
+/ __|/ _ \| '_ \ / _` | '__| '__|
+\__ \ (_) | | | | (_| | |  | |
+|___/\___/|_| |_|\__,_|_|  |_|
 
-1. If you enabled ingress, access using:
-
-    http://media-servarr.local/sonarr/
-
-    You may need to point `media-servarr.local` to your kubernetes host first!
-
-2. Login Details:
-
-  By default, AuthenticationMethod is set to External - meaning no authentication required. You can change this by changing the `application.config`.
-
-  If you are planning on allowing access over the internet **add authentication**
-
-3. Configure Sonarr:
-
-   - You can start adding telvision shows by clicking on "Add New Series" in the Sonarr web UI.
-   - To automate tv downloads, configure indexers and download clients in the Settings menu.
-   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/sonarr/settings for more information.
-
-4. Persisting Data:
-
-   By default, your Sonarr installation is configured to store data in a local persistent volume.
-
-5. Documentation:
-
-   Learn more about Sonarr and its features by visiting the official Sonarr documentation: [Sonarr Wiki](https://wiki.servarr.com/sonarr/settings)
-
-For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/sonarr).
-
-Happy film collecting!
-
-{{- include "media-servarr-base.notes" . -}}
+{{ include "media-servarr-base.notes" "sonarr" }}

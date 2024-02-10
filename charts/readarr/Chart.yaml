@@ -1,11 +1,30 @@
 apiVersion: 'v2'
 name: 'readarr'
-description: 'Chart for Readarr'
+description: 'Ebook and audiobook collection manager for Usenet and BitTorrent users'
+home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/readarr'
+keywords:
+  - 'ebooks'
+  - 'audiobooks'
+  - 'torrent'
+  - 'bittorrent'
+  - 'usenet'
+  - 'manager'
+  - 'readarr'
+kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.2.0
+version: 0.2.1
 appVersion: '0.3.17-develop'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/readarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.2.0
+    version: 0.2.2
     repository: "file://../.."
+maintainers:
+  - name: 'media-servarr'
+    email: 'git@jo.shw.al'
+    url: 'https://github.com/drinkataco/media-servarr/'
+sources:
+  - 'https://github.com/Readarr/Readar'
+  - 'https://github.com/linuxserver/docker-readarr'
+  - 'https://ghcr.io/onedr0p/exportarr'
+  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/readarr'

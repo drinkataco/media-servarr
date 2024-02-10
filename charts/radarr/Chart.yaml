@@ -1,11 +1,30 @@
 apiVersion: 'v2'
 name: 'radarr'
-description: 'Chart for Radarr'
+description: 'Movie collection manager for Usenet and BitTorrent users'
+home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/radarr'
+keywords:
+  - 'film'
+  - 'movies'
+  - 'torrent'
+  - 'bittorrent'
+  - 'usenet'
+  - 'manager'
+  - 'radarr'
+kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.2.1
+version: 0.2.2
 appVersion: '5.2.6'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.2.0
+    version: 0.2.2
     repository: "file://../.."
+maintainers:
+  - name: 'media-servarr'
+    email: 'git@jo.shw.al'
+    url: 'https://github.com/drinkataco/media-servarr/'
+sources:
+  - 'https://github.com/Radarr/Radar'
+  - 'https://github.com/linuxserver/docker-radarr'
+  - 'https://ghcr.io/onedr0p/exportarr'
+  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/radarr'

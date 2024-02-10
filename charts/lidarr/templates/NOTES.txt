@@ -1,33 +1,8 @@
-Lidarr has been installed!
+Success!
+ _ _     _
+| (_) __| | __ _ _ __ _ __
+| | |/ _` |/ _` | '__| '__|
+| | | (_| | (_| | |  | |
+|_|_|\__,_|\__,_|_|  |_|
 
-1. If you enabled ingress, access using:
-
-    http://media-servarr.local/lidarr/
-
-    You may need to point `media-servarr.local` to your kubernetes host first!
-
-2. Login Details:
-
-  By default, AuthenticationMethod is set to External - meaning no authentication required. You can change this by changing the `application.config`.
-
-  If you are planning on allowing access over the intern **add authentication**
-
-3. Configure Lidarr:
-
-   - You can start adding movies by clicking on "Add New Artist" in the Lidarr web UI.
-   - To automate music downloads, configure indexers and download clients in the Settings menu.
-   - Change how the container runs by adjusting the `application.config.contents`. View https://wiki.servarr.com/lidarr/settings for more information.
-
-4. Persisting Data:
-
-   By default, your Lidarr installation is configured to store data in a local persistent volume.
-
-5. Documentation:
-
-   Learn more about Lidarr and its features by visiting the official Lidarr documentation: [Lidarr Wiki](https://wiki.servarr.com/lidarr/settings)
-
-For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/lidarr).
-
-Happy music collecting!
-
-{{- include "media-servarr-base.notes" . -}}
+{{ include "media-servarr-base.notes" "lidarr" }}
