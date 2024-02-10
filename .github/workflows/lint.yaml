@@ -1,7 +1,7 @@
 name: 'Lint'
 
 on:
-  push:
+  pull_request:
 
 jobs:
   lint:
@@ -14,16 +14,36 @@ jobs:
         with:
           version: 'v3.12.0'
 
-      - name: 'Update dependencies'
+      - name: 'Identify changed charts'
+        id: changed-charts
         run: |
           #!/bin/bash
+          BASE_BRANCH=${{ github.base_ref }}
+          BASE_BRANCH=${BASE_BRANCH:-'main'} # default to main if not set
 
-          for chart in ./charts/*; do
-            cd $chart
-            helm dependency update
-            cd -
-          done;
+          git fetch origin "$BASE_BRANCH" --depth=1 # Fetch base branch
+          git diff --name-only ${{ github.sha }} FETCH_HEAD
+
+          CHANGED_FILES=$(git diff --name-only ${{ github.sha }} FETCH_HEAD | grep '^charts/' | awk -F/ '{print $2}' | uniq)
+          CHANGED_CHARTS=""
+          for chart in $CHANGED_FILES; do
+            if [[ -d "./charts/$chart" ]]; then
+              CHANGED_CHARTS="$CHANGED_CHARTS $chart"
+            fi
+          done
+          echo "CHANGED_CHARTS=${CHANGED_CHARTS}" >> $GITHUB_ENV
+
+      - name: 'Update dependencies for changed charts'
+        if: env.CHANGED_CHARTS != ''
+        run: |
+          #!/bin/bash
+          IFS=' ' read -r -a CHARTS <<< "$CHANGED_CHARTS"
+          for chart in "${CHARTS[@]}"; do
+            echo "Updating dependencies for $chart"
+            helm dependency update "./charts/${chart}"
+          done
 
       # Lint Helm charts
       - name: 'Lint Helm charts'
-        run: 'make lint'
+        if: env.CHANGED_CHARTS != ''
+        run: 'make lint CHARTS="$CHANGED_CHARTS"'
