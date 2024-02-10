@@ -138,6 +138,7 @@ metrics:
 
 It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
 
+Unless changed with `metrics.port.number` you can then consume metrics over port `9703`.
 
 ### Advanced
 
@@ -160,7 +161,7 @@ helm upgrade prowlarr media-servarr/prowlarr -f myvalues.yaml
 To uninstall/delete the `prowlarr` deployment:
 
 ```bash
-helm delete prowlarr
+helm uninstall prowlarr
 ```
 
 ## Support
