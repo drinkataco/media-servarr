@@ -98,7 +98,7 @@ spec:
               subPath: '{{ .Values.application.config.filename }}'
             {{- end }}
         {{- if .Values.metrics.enabled }}
-        - name: '{{ .Chart.Name }}{{ .Values.metrics.nameSuffix }}'
+        - name: '{{ .Values.metrics.name }}'
           image: '{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}'
           imagePullPolicy: '{{ .Values.metrics.image.pullPolicy }}'
           args:
