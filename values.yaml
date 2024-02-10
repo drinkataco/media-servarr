@@ -138,7 +138,7 @@ ingress:
 metrics:
   enabled: false
   app: # Application to set up metrics for
-  nameSuffix: '-exportarr'
+  name: 'exportarr'
   image:
     repository: 'ghcr.io/onedr0p/exportarr'
     tag: 'v1.6.1'
