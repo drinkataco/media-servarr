@@ -134,6 +134,11 @@ Enabling metrics enables a sidecar container being attached for [exportarr](http
 ```yaml
 metrics:
   enabled: true
+  env:
+    - name: 'PROWLARR__BACKFILL'
+      value: 'true'
+    - name: 'PROWLARR__BACKFILL_SINCE_DATE'
+      value: '1970-01-01'
 ```
 
 It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!

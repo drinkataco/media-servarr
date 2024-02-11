@@ -87,3 +87,6 @@ metrics:
   app: 'prowlarr'
   port:
     number: 9703
+  env:
+    # - name: 'PROWLARR__BACKFILL'
+    #   value: 'true'
