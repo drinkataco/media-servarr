@@ -34,7 +34,9 @@ helm search repo media-servarr
 
 ## The Charts
 
-There are a number of charts available under the [./charts](./charts) directory for the following applications:
+There are a number of charts available under the [./charts](./charts)
+
+An example of some of the supported charts:
 
 - Radarr - [radarr.video](https://radarr.video/)
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
@@ -44,7 +46,7 @@ There are a number of charts available under the [./charts](./charts) directory 
 - Transmission - [transmissionbt.com](https://transmissionbt.com)
 - Homarr - [homarr.dev](https://homarr.dev/)
 
-It will be helpful to check out each application in [./charts](./charts) and its README for more information.
+It will be helpful to check out all available application in [./charts](./charts) and its README for more information.
 
 The [media-servarr](./charts/media-servarr/) chart allows you to install and manage all the applications in one installation - and coordinate extras, such as shared persistent volumes and network policies.
 
