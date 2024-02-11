@@ -28,20 +28,18 @@ deployment:
         mountPath: '/app/data/icons'
 
   volumes:
+    # Dashboard files
     app-data-configs:
-      persistentVolumeClaim:
-        claimName: 'homarr-configs'
+      emptyDir: {}
+    # Icons
+    app-data-icons:
+      emptyDir: {}
+    # DB files
     data:
       persistentVolumeClaim:
         claimName: 'homarr-data'
-    app-data-icons:
-      emptyDir: {}
 
 persistentVolumeClaims:
-  homarr-configs:
-    accessMode: 'ReadWriteOnce'
-    requestStorage: '1Gi'
-    selector: {}
   homarr-data:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'

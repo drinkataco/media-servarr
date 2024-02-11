@@ -55,12 +55,18 @@ Three volumes are available by default:
 deployment:
   ...
   volumes:
-    app-data-configs: # The key will be the volume name
+    # Dashboard (config) files
+    app-data-configs:
       persistentVolumeClaim:
         name: 'my-pv-claim1'
-    app-data-icons: # The key will be the volume name
-      persistentVolumeClaim:
-        name: 'my-pv-claim2'
+      emptyDir: # nullify default empty dir
+    # Dashboard Icons
+    app-data-icons:
+      # Example direct NFS mount without need for PV
+      nfs:
+        server: 'fileserver'
+        path: '/srv/homarr/icons'
+      emptyDir: # nullify default empty dir
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for all the config directories listed above
@@ -69,7 +75,8 @@ You can define basic persistent volume claims in code to help you get started. Y
 
 ```yaml
 persistentVolumeClaims:
-  app-data-configs:
+  # Default PV is for 'data' where the SQlite database exists
+  data:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
     storageClassName: 'manual'
