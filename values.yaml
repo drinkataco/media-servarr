@@ -143,6 +143,7 @@ metrics:
     repository: 'ghcr.io/onedr0p/exportarr'
     tag: 'v1.6.1'
     pullPolicy: 'IfNotPresent'
+  env:
   port:
     name: 'monitoring'
   resources:
