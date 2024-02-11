@@ -1,0 +1,67 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+# secrets:
+#   - name: 'apiKey'
+#     value: ''
+
+#
+# Application Config
+#
+application:
+  # main application web ui port
+  port: 8191
+  # access url base
+  urlBase: 'flaresolverr'
+  # Config is managed with environment variables in deployment.env
+  # @see https://github.com/FlareSolverr/FlareSolverr?tab=readme-ov-file#environment-variables
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'ghcr.io/flaresolverr/flaresolverr'
+
+    # @see https://github.com/FlareSolverr/FlareSolverr?tab=readme-ov-file#environment-variables
+    env:
+      # - name: 'PROMETHEUS_ENABLED'
+      #   value: '1'
+      # - name: 'PROMETHEUS_PORT'
+      #   value: '9702'
+
+    # Additional volumeMounts on the output Deployment definition.
+    # volumeMounts:
+    #   - name: 'config'
+    #     mountPath: '/config'
+
+  # volumes:
+  #   config:
+  #     persistentVolumeClaim:
+  #       claimName: 'flaresolverr-config'
+
+# persistentVolumeClaims:
+#   flaresolverr-config:
+#     accessMode: 'ReadWriteOnce'
+#     requestStorage: '1Gi'
+#     selector: {}
+
+service:
+  type: 'ClusterIP'
+  ports:
+    - targetPort: 'http'
+      protocol: 'TCP'
+      name: 'http'
+
+ingress:
+  enabled: true
+
+# metrics:
+# Metrics are enabled with environment variables in deployment.env
+# @see https://github.com/FlareSolverr/FlareSolverr?tab=readme-ov-file#environment-variables
