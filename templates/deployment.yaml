@@ -113,6 +113,9 @@ spec:
                 secretKeyRef:
                   name: '{{ include "media-servarr-base.fullname" . }}'
                   key: 'apiKey'
+            {{- if .Values.metrics.env }}
+            {{ toYaml .Values.metrics.env | nindent 12 }}
+            {{- end }}
           ports:
             - name: '{{ .Values.metrics.port.name }}'
               containerPort: {{ .Values.metrics.port.number }}
