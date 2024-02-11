@@ -80,13 +80,6 @@ persistentVolumeClaims:
     requestStorage: '1Gi'
     selector: {}
 
-service:
-  type: 'ClusterIP'
-  ports:
-    - targetPort: 'http'
-      protocol: 'TCP'
-      name: 'http'
-
 ingress:
   enabled: true
 
