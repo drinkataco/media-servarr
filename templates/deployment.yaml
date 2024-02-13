@@ -1,5 +1,10 @@
 {{- define "media-servarr-base.deployment" -}}
 {{- $context := . }}
+{{/* Set application config object to map */}}
+{{- $config := .Values.application.config }}
+{{- if ne (kindOf $config) "slice" }}
+  {{- $config = list $config }}
+{{- end -}}
 
 apiVersion: 'apps/v1'
 kind: 'Deployment'
@@ -32,7 +37,8 @@ spec:
         If application.config includes valus, we'll use an init container to also set secrets, if
           applicable, and add to a temporary rw storage (as servarr apps often crash if these files are ro
         */}}
-      {{- if .Values.application.config }}
+      {{- if $config }}
+      {{/* Add config as array if not already */}}
       initContainers:
         - name: 'prepare-config'
           image: 'alpine'
@@ -42,33 +48,37 @@ spec:
             - name: 'config-map-processed'
               mountPath: '/config-processed'
           env:
-            {{- if .Values.application.config.secrets }}
-            {{- range .Values.application.config.secrets }}
+            {{- range $config }}
+              {{- if .secrets }}
+                {{- range .secrets }}
             - name: '{{ . }}'
               valueFrom:
                 secretKeyRef:
                   name: '{{ include "media-servarr-base.fullname" $context }}'
                   key: '{{ . }}'
-            {{- end }}
+                {{- end }}
+              {{- end }}
             {{- end }}
           command: ["/bin/sh"]
           args:
             - '-c'
             - |
               #!/bin/sh
-              {{- if gt (len (default list .Values.application.config.secrets)) 0 }}
               # Inject secrets in config if set
+              {{- range $config }}
+              {{- if gt (len (default list .secrets)) 0 }}
               sed \
-                {{- range .Values.application.config.secrets }}
-                "s/\${{ . }}/${{ . }}/g" \
+                {{- range .secrets }}
+                -e "s/\${{ . }}/${{ . }}/g" \
                 {{- end }}
-                '/config-map/{{ .Values.application.config.filename }}' > \
-                '/config-processed/{{ .Values.application.config.filename }}'
+                '/config-map/{{ .filename }}' > \
+                '/config-processed/{{ .filename }}'
               {{- else }}
               cp \
-                '/config-map/{{ .Values.application.config.filename }}' \
-                '/config-processed/{{ .Values.application.config.filename }}'
-              {{ end }}
+                '/config-map/{{ .filename }}' \
+                '/config-processed/{{ .filename }}'
+              {{- end }}
+              {{- end }}
       {{- end }}
       containers:
         - name: '{{ .Chart.Name }}'
@@ -92,10 +102,12 @@ spec:
             {{- toYaml .Values.deployment.container.readinessProbe | nindent 12 }}
           volumeMounts:
             {{- toYaml .Values.deployment.container.volumeMounts | nindent 12 }}
-            {{- if .Values.application.config }}
+            {{- if $config }}
+              {{ range $config }}
             - name: 'config-map-processed'
-              mountPath: '{{ .Values.application.config.mountPath }}'
-              subPath: '{{ .Values.application.config.filename }}'
+              mountPath: '{{ .mountPath }}'
+              subPath: '{{ .filename }}'
+              {{- end }}
             {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: '{{ .Values.metrics.name }}'
@@ -141,13 +153,15 @@ spec:
         - name: '{{ $key }}'
           {{- toYaml $value | nindent 10 }}
         {{- end }}
-        {{- if .Values.application.config }}
+        {{- if $config }}
         - name: 'config-map'
           configMap:
             name: '{{ include "media-servarr-base.fullname" . }}'
             items:
-              - key: '{{ .Values.application.config.filename }}'
-                path: '{{ .Values.application.config.filename }}'
+              {{- range $config }}
+              - key: '{{ .filename }}'
+                path: '{{ .filename }}'
+              {{- end }}
         - name: 'config-map-processed'
           emptyDir: {}
         {{- end }}

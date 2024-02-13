@@ -11,8 +11,15 @@ metadata:
     {{- include "media-servarr-base.labels" . | nindent 4 }}
 data:
 {{- with .Values.application.config }}
+  {{- if eq (kindOf .) "map" }}
   {{ .filename }}: |
 {{ .contents | indent 4 }}
+  {{- else if eq (kindOf .) "slice" }}
+    {{- range .  }}
+  {{ .filename }}: |
+{{- .contents | nindent 4 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
