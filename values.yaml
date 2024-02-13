@@ -21,18 +21,18 @@ application:
   # ConfigMap for core application settings
   config:
     # # Filename of configuration
-    # filename: 'config.xml'
-    # # Configuration file contents
-    # contents: |
-    #   <Config>
-    #     <Port>7878</Port>
-    #     <UrlBase>dashboard</UrlBase>
-    #     <ApiKey>$apiKey</ApiKey>
-    #   </Config>
-    # # Secrets to inject. In the config they must be defined as $secretname
-    # secrets: [ 'apiKey' ]
-    # # Path to mount the file to in the application
-    # mountPath: '/config/config.xml'
+    # - filename: 'config.xml'
+    #   # Configuration file contents
+    #   contents: |
+    #     <Config>
+    #       <Port>7878</Port>
+    #       <UrlBase>dashboard</UrlBase>
+    #       <ApiKey>$apiKey</ApiKey>
+    #     </Config>
+    #   # Secrets to inject. In the config they must be defined as $secretname
+    #   secrets: [ 'apiKey' ]
+    #   # Path to mount the file to in the application
+    #   mountPath: '/config/config.xml'
 
 #
 # Resource - DEPLOYMENT
