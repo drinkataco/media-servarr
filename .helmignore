@@ -3,3 +3,7 @@ charts/
 .git
 .helmignore
 dist/
+.github
+scripts/
+LICENSE
+Makefile
