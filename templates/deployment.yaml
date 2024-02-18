@@ -2,7 +2,7 @@
 {{- $context := . }}
 {{/* Set application config object to map */}}
 {{- $config := .Values.application.config }}
-{{- if ne (kindOf $config) "slice" }}
+{{- if and $config (ne (kindOf $config) "slice") }}
   {{- $config = list $config }}
 {{- end -}}
 
