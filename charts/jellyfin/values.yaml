@@ -1,0 +1,85 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 8096
+  # Access url base
+  urlBase: 'jellyfin'
+  # ConfigMap for core application settings
+  config:
+    # Network Options
+    - filename: 'network.xml'
+      contents: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <NetworkConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <BaseUrl>jellyfin</BaseUrl>
+          <HttpServerPortNumber>8096</HttpServerPortNumber>
+          <EnableHttps>false</EnableHttps>
+          <PublicPort>8096</PublicPort>
+          <EnableRemoteAccess>true</EnableRemoteAccess>
+        </NetworkConfiguration>
+      mountPath: '/config/config/network.xml'
+    # System Options
+    - filename: 'system.xml'
+      contents: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <EnableMetrics>true</EnableMetrics>
+          <PreferredMetadataLanguage>en</PreferredMetadataLanguage>
+          <MetadataCountryCode>GB</MetadataCountryCode>
+          <UICulture>en-GB</UICulture>
+        </ServerConfiguration>
+      mountPath: '/config/config/system.xml'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'jellyfin/jellyfin'
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+      - name: 'ebooks'
+        mountPath: '/ebooks'
+      - name: 'film'
+        mountPath: '/film'
+      - name: 'music'
+        mountPath: '/music'
+      - name: 'television'
+        mountPath: '/tv'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'jellyfin-config'
+    ebooks:
+      emptyDir: {}
+    film:
+      emptyDir: {}
+    music:
+      emptyDir: {}
+    television:
+      emptyDir: {}
+
+persistentVolumeClaims:
+  jellyfin-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+
+# Metrics are enable within config - add <EnableMetrics>true</EnableMetrics> to /config/config/system.xml
+# metrics:
+#   enabled: false
