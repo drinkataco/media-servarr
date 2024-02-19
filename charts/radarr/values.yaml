@@ -33,7 +33,7 @@ application:
         <AnalyticsEnabled>False</AnalyticsEnabled>
         <AuthenticationMethod>External</AuthenticationMethod>
         <UpdateMechanism>Docker</UpdateMechanism>
-        <Branch>main</Branch>
+        <Branch>master</Branch>
         <InstanceName>Radarr</InstanceName>
       </Config>
     # Secrets to inject - if any - to the config. In the config they must be defined as $secret
