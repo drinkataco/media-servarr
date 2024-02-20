@@ -74,7 +74,6 @@ Merge global, default, values, and custom values
 
 {{- /* Merge custom values into .Values */ -}}
 {{- /* Ensure that the subchart values are being accessed correctly */ -}}
-{{/* {{- $mergedValues := merge $subchartValues.Values .Values -}} */}}
 {{- $mergedValues := merge .Values $subchartValues.Values -}}
 
 {{- /* Set the merged values as a global variable */ -}}
