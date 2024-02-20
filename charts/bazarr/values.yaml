@@ -106,7 +106,7 @@ ingress:
   enabled: true
 
 metrics:
-  enabled: true
+  enabled: false
   app: 'bazarr'
   port:
     number: 9700
