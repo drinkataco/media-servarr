@@ -17,7 +17,7 @@ build: package pre-fetch index
 lint:
 	@echo "Linting charts..."
 	helm lint .
-	$(foreach chart,$(CHARTS),helm lint $(CHARTS_DIR)$(chart);)
+	$(foreach chart,$(CHARTS),helm lint "$(CHARTS_DIR)$(chart)";)
 
 # Test the Helm charts
 test:
@@ -26,7 +26,7 @@ test:
 # Package the Helm charts
 package:
 	@echo "Packaging charts..."
-	$(foreach chart,$(CHARTS),helm package $(CHARTS_DIR)$(chart) --dependency-update --destination $(DIST);)
+	$(foreach chart,$(CHARTS), helm package "$(CHARTS_DIR)$(chart)" --dependency-update --destination $(DIST);)
 
 # Fetch existing index for new package merge
 pre-fetch:
