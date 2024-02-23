@@ -56,12 +56,12 @@ deployment:
         containerPort: # By default uses application.port
         protocol: 'TCP'
 
-    livenessProbe: {}
+    livenessProbe:
       # httpGet:
       #   path: '/'
       #   port: 'http'
       # initialDelaySeconds: 30
-    readinessProbe: {}
+    readinessProbe:
       # httpGet:
       #   path: '/'
       #   port: 'http'
