@@ -47,7 +47,5 @@ persistentVolumeClaims:
     selector: {}
 
 ingress:
-  enabled: false
-  className: 'traefik'
-  annotations: {}
-
+  enabled: true
+  host: 'jellyseerr.media-servarr.local'
