@@ -55,6 +55,8 @@ application:
     - filename: 'system.xml'
       contents: |
         # We could add <EnableMetrics>true</EnableMetrics> to enable prometheus metrics
+        # It is recommended to add <IsStartupWizardCompleted>true</IsStartupWizardCompleted> to
+        #  prevent the wizard running again after initial setup.
         ...
       mountPath: '/config/config/system.xml'
     - filename: 'encoding.xml'
@@ -79,7 +81,7 @@ The following volumes are available by default:
 - **ebooks** - Location of ebooks
 - **film** - Location of movies
 - **music** - Location of music
-- **telivion** - Location of TV shows
+- **television** - Location of TV shows
 
 ```yaml
 deployment:
@@ -92,7 +94,9 @@ deployment:
       nfs:
         server: 'fileserver.local'
         path: '/srv/media/ebooks/'
-    
+    film:
+    music:
+    television:
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads and film - but it is recommended enable some type of PVC and PV!
@@ -126,17 +130,9 @@ ingress:
 
 ### Metrics
 
-Enabling metrics enables a sidecar container being attached for [exportarr](https://github.com/onedr0p/exportarr/) - and a ServiceMonitor CRD to be consumed by the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) package.
+Prometheus metrics are enabled by placing `<EnableMetrics>true</EnableMetrics>` in System.xml.
 
-```yaml
-metrics:
-  enabled: true
-  env: []
-```
-
-It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
-
-Unless changed with `metrics.port.number` you can then consume metrics over port `9702`.
+Read more about this functionality in the [official documentation](https://jellyfin.org/docs/general/networking/monitoring/)
 
 ### Advanced
 
