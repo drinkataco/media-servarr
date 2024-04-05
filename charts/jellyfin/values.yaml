@@ -25,16 +25,18 @@ application:
         </NetworkConfiguration>
       mountPath: '/config/config/network.xml'
     # System Options
-    - filename: 'system.xml'
-      contents: |
-        <?xml version="1.0" encoding="utf-8"?>
-        <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-          <EnableMetrics>true</EnableMetrics>
-          <PreferredMetadataLanguage>en</PreferredMetadataLanguage>
-          <MetadataCountryCode>GB</MetadataCountryCode>
-          <UICulture>en-GB</UICulture>
-        </ServerConfiguration>
-      mountPath: '/config/config/system.xml'
+    # - filename: 'system.xml'
+    #   contents: |
+    #     <?xml version="1.0" encoding="utf-8"?>
+    #     <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    #       <EnableMetrics>true</EnableMetrics>
+    #       <PreferredMetadataLanguage>en</PreferredMetadataLanguage>
+    #       <MetadataCountryCode>GB</MetadataCountryCode>
+    #       <UICulture>en-GB</UICulture>
+    #       <!-- Change me to false to run the setup wizard, but make sure you keep it true!! -->
+    #       <IsStartupWizardCompleted>true</IsStartupWizardCompleted>
+    #     </ServerConfiguration>
+    #   mountPath: '/config/config/system.xml'
 
 #
 # Resource - DEPLOYMENT
