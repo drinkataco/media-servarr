@@ -25,7 +25,7 @@ spec:
     metadata:
       {{- with .Values.deployment.podAnnotations }}
       annotations:
-        '{{- toYaml . | nindent 8 }}'
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "media-servarr-base.labels" . | nindent 8 }}
