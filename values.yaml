@@ -39,6 +39,7 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
+  strategy: {}
   podAnnotations: {}
   podLabels: {}
 

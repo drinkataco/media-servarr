@@ -17,6 +17,10 @@ spec:
   selector:
     matchLabels:
       {{- include "media-servarr-base.selectorLabels" . | nindent 6 }}
+  strategy:
+    {{- with .Values.deployment.strategy }}
+      '{{- toYaml . | nindent 6 }}'
+    {{- end }}
   template:
     metadata:
       {{- with .Values.deployment.podAnnotations }}
