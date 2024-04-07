@@ -1,0 +1,93 @@
+#
+# Secrets to create
+#
+secrets:
+  - name: 'apiKey'
+    value: 'apiKey'
+  - name: 'nzbKey'
+    value: 'nzbKey'
+  - name: 'newsreaderServerPassword'
+    value: 'password123'
+
+#
+# Application Config
+#
+application:
+  # main application web ui port
+  port: 8080
+  # access url base
+  urlBase: 'sabnzbd'
+  # ConfigMap for core application settings
+  config:
+    # Filename of configuration
+    filename: 'sabnzbd.ini'
+    # Configuration file contents
+    contents: |
+      [misc]
+      language = en
+      queue_limit = 20
+      port = 8080
+      api_key = $apiKey
+      nzb_key = $nzbKey
+      download_dir = Downloads/incomplete
+      complete_dir = Downloads/complete
+      # [servers]
+      # [[yournewsreader.example.org]]
+      # name = yournewsreader.example.org
+      # displayname = yourNewsReader
+      # host = yournewsreader.example.org
+      # port = 563
+      # username = username
+      # password = $newsreaderServerPassword
+      # connections = 8
+      # ssl = 1
+      # ssl_verify = 2
+      # enable = 1
+      # priority = 0
+    secrets: [ 'apiKey', 'nzbKey', 'newsreaderServerPassword' ]
+    # path the file will be mounted to in the config
+    mountPath: '/config/sabnzbd.ini'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'lscr.io/linuxserver/sabnzbd'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+      - name: 'downloads'
+        mountPath: '/config/Downloads'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'sabnzbd-config'
+    downloads:
+      emptyDir: {}
+
+persistentVolumeClaims:
+  sabnzbd-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+
+metrics:
+  enabled: true
+  app: 'sabnzbd'
+  port:
+    number: 9707
