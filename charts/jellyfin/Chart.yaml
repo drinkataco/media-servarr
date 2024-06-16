@@ -15,8 +15,8 @@ keywords:
   - 'jellyfin'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.3.0
-appVersion: '10.8.13'
+version: 0.3.1
+appVersion: '10.9.6'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/jellyfin/icon.png'
 dependencies:
   - name: 'media-servarr-base'
