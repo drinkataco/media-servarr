@@ -33,8 +33,8 @@ application:
       #   ./config.example.yaml
       analytics:
         enabled: false
-        auth:
-          apiKey: '$apiKey'
+      auth:
+        apiKey: '$apiKey'
       general:
         adaptive_searching: true
         auto_update: false
