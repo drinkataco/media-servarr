@@ -12,8 +12,8 @@ keywords:
   - 'readarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.5.4
-appVersion: '0.3.32-develop'
+version: 0.6.0
+appVersion: '0.4.0-develop'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/readarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
@@ -24,7 +24,7 @@ maintainers:
     email: 'git@jo.shw.al'
     url: 'https://github.com/drinkataco/media-servarr/'
 sources:
-  - 'https://github.com/Readarr/Readar'
+  - 'https://github.com/Readarr/Readarr'
   - 'https://github.com/linuxserver/docker-readarr'
   - 'https://ghcr.io/onedr0p/exportarr'
   - 'https://github.com/drinkataco/media-servarr/tree/main/charts/readarr'
