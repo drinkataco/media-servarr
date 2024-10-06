@@ -59,19 +59,15 @@ deployment:
     app-data-configs:
       persistentVolumeClaim:
         name: 'my-pv-claim1'
-      emptyDir: # nullify default empty dir
     # Dashboard Icons
     app-data-icons:
       # Example direct NFS mount without need for PV
       nfs:
         server: 'fileserver'
         path: '/srv/homarr/icons'
-      emptyDir: # nullify default empty dir
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for all the config directories listed above
-
-You can define basic persistent volume claims in code to help you get started. You just need to pass to the pvc name (which is the key) is an empty object (`{}`)
+By default, a PersistentVolumeClaim will be provisioned for the `data`, but `emptyDir: {}` will be used for config and icons, unless otherwise specified in your `values.yaml`
 
 ```yaml
 persistentVolumeClaims:

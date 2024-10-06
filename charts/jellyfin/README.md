@@ -99,11 +99,7 @@ deployment:
     television:
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads and film - but it is recommended enable some type of PVC and PV!
-
-It is highly recommended that you do not use NFS for your config volume - because of the loose implementation of NFS protocol that causes issue with file locking causing detrimental effects on the SQlite database.
-
-You can define basic persistent volume claims in code to help you get started. You just need to pass to the pvc name (which is the key) is an empty object (`{}`)
+By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for ebooks, film, music, and television, unless otherwise specified in your `values.yaml`
 
 ```yaml
 persistentVolumeClaims:
