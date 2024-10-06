@@ -5,4 +5,5 @@ Success!
 | | | (_| | (_| | |  | |
 |_|_|\__,_|\__,_|_|  |_|
 
+
 {{ include "media-servarr-base.notes" "lidarr" }}
