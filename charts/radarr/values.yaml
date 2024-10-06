@@ -70,9 +70,7 @@ deployment:
       persistentVolumeClaim:
         claimName: 'radarr-config'
     downloads:
-      emptyDir: {}
     film:
-      emptyDir: {}
 
 persistentVolumeClaims:
   radarr-config:

@@ -6,4 +6,5 @@ Success!
 | .__/|_|  \___/ \_/\_/ |_|\__,_|_|  |_|
 |_|
 
+
 {{ include "media-servarr-base.notes" "prowlarr" }}

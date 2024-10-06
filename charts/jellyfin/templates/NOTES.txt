@@ -6,4 +6,5 @@ Success!
  _/ |\___|_|_|\__, |_| |_|_| |_|
 |__/          |___/
 
+
 {{ include "media-servarr-base.notes" "jellyfin" }}

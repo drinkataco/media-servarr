@@ -155,7 +155,8 @@ spec:
       volumes:
         {{- range $key, $value := .Values.deployment.volumes }}
         - name: '{{ $key }}'
-          {{- toYaml $value | nindent 10 }}
+          {{- $volume := default (dict "emptyDir" dict) $value }}
+          {{- toYaml $volume | nindent 10 }}
         {{- end }}
         {{- if $config }}
         - name: 'config-map'

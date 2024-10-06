@@ -81,8 +81,6 @@ deployment:
 
 By default, a PersistentVolumeClaim will be provisioned for the `config`.
 
-You can deseerre basic persistent volume claims in code to help you get started. You just need to pass to the pvc name (which is the key) is an empty object (`{}`)
-
 ```yaml
 persistentVolumeClaims:
   jellyseerr-config:

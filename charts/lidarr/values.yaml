@@ -70,9 +70,7 @@ deployment:
       persistentVolumeClaim:
         claimName: 'lidarr-config'
     downloads:
-      emptyDir: {}
     music:
-      emptyDir: {}
 
 persistentVolumeClaims:
   lidarr-config:

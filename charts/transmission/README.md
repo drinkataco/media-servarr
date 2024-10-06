@@ -83,9 +83,7 @@ deployment:
         path: '/srv/downloads/'
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads - but it is recommended enable some type of PVC and PV!
-
-You can define basic persistent volume claims in code to help you get started. You just need to pass to the pvc name (which is the key) is an empty object (`{}`)
+By default, a PersistentVolumeClaim will be provisioned for the `config`, but `emptyDir: {}` will be used for downloads, unless otherwise specified in your `values.yaml`
 
 ```yaml
 persistentVolumeClaims:

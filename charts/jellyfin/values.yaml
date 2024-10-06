@@ -65,13 +65,9 @@ deployment:
       persistentVolumeClaim:
         claimName: 'jellyfin-config'
     ebooks:
-      emptyDir: {}
     film:
-      emptyDir: {}
     music:
-      emptyDir: {}
     television:
-      emptyDir: {}
 
 persistentVolumeClaims:
   jellyfin-config:

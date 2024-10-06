@@ -1,27 +1,10 @@
-Transmission has been installed!
 
-1. If you enabled ingress, access using:
+Success!
+ _                                 _         _
+| |_ _ __ __ _ _ __  ___ _ __ ___ (_)___ ___(_) ___  _ __
+| __| '__/ _` | '_ \/ __| '_ ` _ \| / __/ __| |/ _ \| '_ \
+| |_| | | (_| | | | \__ \ | | | | | \__ \__ \ | (_) | | | |
+ \__|_|  \__,_|_| |_|___/_| |_| |_|_|___/___/_|\___/|_| |_|
 
-    http://media-servarr.local/transmission/
 
-    You may need to point `media-servarr.local` to your kubernetes host first!
-
-2. Configure Transmission:
-
-   - You can start adding torrents
-   - To automate movie downloads, configure indexers and download clients in the Settings menu.
-   - Change how the container runs by adjusting the `application.config.contents`. View [the docs](https://github.com/transmission/transmission/blob/main/docs/Editing-Configuration-Files.md] for more information.
-
-4. Persisting Data:
-
-   By default, your Transmission installation is configured to store data in a local persistent volume.
-
-5. Documentation:
-
-   Learn more about Transmission and its features by visiting the official Transmission documentation: [Transmission Docs](https://github.com/transmission/transmission/tree/main/docs)
-
-For more information on using this chart, refer to the [Helm Chart Documentation](https://github.com/drinkataco/media-servarr/charts/transmission).
-
-Happy downloading!
-
-{{- include "media-servarr-base.notes" . -}}
+{{ include "media-servarr-base.notes" "transmission" }}

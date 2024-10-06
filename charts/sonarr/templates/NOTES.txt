@@ -4,4 +4,5 @@ Success!
 \__ \ (_) | | | | (_| | |  | |
 |___/\___/|_| |_|\__,_|_|  |_|
 
+
 {{ include "media-servarr-base.notes" "sonarr" }}
