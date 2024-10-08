@@ -7,8 +7,8 @@ keywords:
   - 'homarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.5.3
-appVersion: '0.15.3'
+version: 0.5.4
+appVersion: '0.15.4'
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
