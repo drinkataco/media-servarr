@@ -13,8 +13,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     {{- range .Values.deployment.container.ports }}
-    - port: {{ .containerPort | default $context.Values.application.port }}
-      targetPort: '{{ .targetPort }}'
+    - port: {{ if .servicePort }}{{ .servicePort }}{{ else if .containerPort }}{{ .containerPort }}{{ else }}{{ $context.Values.application.port }}{{ end }}
+      targetPort: {{ if .targetPort }}{{ .targetPort }}{{ else if .containerPort }}{{ .containerPort }}{{ else }}{{ $context.Values.application.port }}{{ end }}
       protocol: '{{ .protocol }}'
       name: '{{ .name }}'
     {{- end }}
