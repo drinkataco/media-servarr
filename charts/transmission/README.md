@@ -12,6 +12,7 @@ This README covers the basics of customising and installation
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress Configuration](#ingress-configuration)
+  * [VPN Sidecar](#vpn-sidecar)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
 * [Uninstallation](#uninstallation)
@@ -104,6 +105,12 @@ If ingress is enabled, you can customise the host, paths, and TLS settings:
 ingress:
   enabled: true
 ```
+
+### VPN Sidecar
+
+Thanks to [qdm12/gluetun](https://github.com/qdm12/gluetun), it is fairly trivial to route traffic through a VPN.
+
+[To see how, view the VPN docs.](./docs/vpn.md)
 
 ### Advanced
 
