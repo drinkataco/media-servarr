@@ -168,19 +168,6 @@ persistentVolumeClaims:
 
 service:
   type: 'LoadBalancer'
-  ports:
-    - port: # use application.port by default
-      targetPort: 'http'
-      protocol: 'TCP'
-      name: 'http'
-    - port: 51413
-      targetPort: 'peer'
-      protocol: 'TCP'
-      name: 'peer'
-    - port: 51413
-      targetPort: 'peer-udp'
-      protocol: 'UDP'
-      name: 'peer-udp'
 
 ingress:
   enabled: true

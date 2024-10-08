@@ -52,9 +52,11 @@ deployment:
       tag: ''
       pullPolicy: 'IfNotPresent'
 
+    # This also sets up a corresponding service
     ports:
       - name: 'http'
         containerPort: # By default uses application.port
+        servicePort: # By default uses application.port
         protocol: 'TCP'
 
     livenessProbe:
