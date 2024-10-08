@@ -81,6 +81,11 @@ deployment:
       # - name: 'foo'
       #   mountPath: "/etc/foo"
       #   readOnly: true
+      #
+
+  # Any custom sidecar containers to run in a deployment
+  #   for example, running a vpn container such as qdm12/gluetun for network traffic
+  sideCarContainers: []
 
   volumes: {}
     # config:
@@ -136,6 +141,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# For radarr, sonarr, readarr, lidarr
 metrics:
   enabled: false
   app: # Application to set up metrics for

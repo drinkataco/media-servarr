@@ -85,6 +85,9 @@ spec:
               {{- end }}
       {{- end }}
       containers:
+        {{- with .Values.deployment.sideCarContainers }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: '{{ .Chart.Name }}'
           securityContext:
             {{- toYaml .Values.deployment.container.securityContext | nindent 12 }}
