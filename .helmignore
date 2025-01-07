@@ -5,5 +5,6 @@ charts/
 dist/
 .github
 scripts/
+.cr-release-packages/
 LICENSE
 Makefile
