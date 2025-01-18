@@ -1,31 +1,31 @@
-apiVersion: 'v2'
-name: 'sonarr'
-description: 'Television series manager for Usenet and BitTorrent users'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/sonarr'
+apiVersion: v2
+name: sonarr
+description: Television series manager for Usenet and BitTorrent users
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/sonarr
 keywords:
-  - 'tv'
-  - 'television'
-  - 'series'
-  - 'torrent'
-  - 'bittorrent'
-  - 'usenet'
-  - 'manager'
-  - 'sonarr'
-kubeversion: ">=1.24.0-0"
-type: 'application'
-version: 0.6.0
-appVersion: '4.0.9'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/sonarr/icon.png'
+  - tv
+  - television
+  - series
+  - torrent
+  - bittorrent
+  - usenet
+  - manager
+  - sonarr
+kubeversion: '>=1.24.0-0'
+type: application
+version: 0.7.0
+appVersion: 4.0.9
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/sonarr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/Sonarr/Sonarr'
-  - 'https://github.com/linuxserver/docker-sonarr'
-  - 'https://ghcr.io/onedr0p/exportarr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/sonarr'
+  - https://github.com/Sonarr/Sonarr
+  - https://github.com/linuxserver/docker-sonarr
+  - https://ghcr.io/onedr0p/exportarr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/sonarr

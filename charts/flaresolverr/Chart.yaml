@@ -1,25 +1,25 @@
-apiVersion: 'v2'
-name: 'flaresolverr'
-description: 'Proxy server to bypass Cloudflare and DDoS-GUARD protection.'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/flaresolverr'
+apiVersion: v2
+name: flaresolverr
+description: Proxy server to bypass Cloudflare and DDoS-GUARD protection.
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/flaresolverr
 keywords:
-  - 'flaresolverr'
-  - 'proxy'
-  - 'cloudflare'
-  - 'bypass'
-kubeVersion: ">=1.24.0-0"
-type: 'application'
-version: 0.5.0
-appVersion: 'v3.3.21'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/flaresolverr/icon.png'
+  - flaresolverr
+  - proxy
+  - cloudflare
+  - bypass
+kubeVersion: '>=1.24.0-0'
+type: application
+version: 0.6.0
+appVersion: v3.3.21
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/flaresolverr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/FlareSolverr/FlareSolverr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/flaresolverr'
+  - https://github.com/FlareSolverr/FlareSolverr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/flaresolverr

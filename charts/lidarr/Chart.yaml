@@ -1,29 +1,29 @@
-apiVersion: 'v2'
-name: 'lidarr'
-description: 'Music collection manager for Usenet and BitTorrent users.'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/lidarr'
+apiVersion: v2
+name: lidarr
+description: Music collection manager for Usenet and BitTorrent users.
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/lidarr
 keywords:
-  - 'music'
-  - 'torrent'
-  - 'bittorrent'
-  - 'usenet'
-  - 'manager'
-  - 'lidarr'
-kubeversion: ">=1.24.0-0"
-type: 'application'
-version: 0.7.0
-appVersion: '2.5.3'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
+  - music
+  - torrent
+  - bittorrent
+  - usenet
+  - manager
+  - lidarr
+kubeversion: '>=1.24.0-0'
+type: application
+version: 0.8.0
+appVersion: 2.5.3
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/Lidarr/Lidarr'
-  - 'https://github.com/linuxserver/docker-lidarr'
-  - 'https://ghcr.io/onedr0p/exportarr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/lidarr'
+  - https://github.com/Lidarr/Lidarr
+  - https://github.com/linuxserver/docker-lidarr
+  - https://ghcr.io/onedr0p/exportarr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/lidarr

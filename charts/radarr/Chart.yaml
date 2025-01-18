@@ -1,30 +1,30 @@
-apiVersion: 'v2'
-name: 'radarr'
-description: 'Movie collection manager for Usenet and BitTorrent users'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/radarr'
+apiVersion: v2
+name: radarr
+description: Movie collection manager for Usenet and BitTorrent users
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/radarr
 keywords:
-  - 'film'
-  - 'movies'
-  - 'torrent'
-  - 'bittorrent'
-  - 'usenet'
-  - 'manager'
-  - 'radarr'
-kubeversion: ">=1.24.0-0"
-type: 'application'
-version: 0.7.0
-appVersion: '5.11.0'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
+  - film
+  - movies
+  - torrent
+  - bittorrent
+  - usenet
+  - manager
+  - radarr
+kubeversion: '>=1.24.0-0'
+type: application
+version: 0.8.0
+appVersion: 5.11.0
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/Radarr/Radarr'
-  - 'https://github.com/linuxserver/docker-radarr'
-  - 'https://ghcr.io/onedr0p/exportarr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/radarr'
+  - https://github.com/Radarr/Radarr
+  - https://github.com/linuxserver/docker-radarr
+  - https://ghcr.io/onedr0p/exportarr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/radarr

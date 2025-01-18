@@ -1,23 +1,24 @@
-apiVersion: 'v2'
-name: 'homarr'
-description: 'Sleek, modern dashboard that puts all of your apps and services at your fingertips'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/homarr'
+apiVersion: v2
+name: homarr
+description: Sleek, modern dashboard that puts all of your apps and services at your
+  fingertips
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/homarr
 keywords:
-  - 'dashboard'
-  - 'homarr'
-kubeversion: ">=1.24.0-0"
-type: 'application'
-version: 0.6.0
-appVersion: '0.15.4'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
+  - dashboard
+  - homarr
+kubeversion: '>=1.24.0-0'
+type: application
+version: 0.7.0
+appVersion: 0.15.4
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/ajnart/homarr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/homarr'
+  - https://github.com/ajnart/homarr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/homarr

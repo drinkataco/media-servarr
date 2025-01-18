@@ -1,28 +1,28 @@
-apiVersion: 'v2'
-name: 'prowlarr'
-description: 'BitTorrent indexer management'
-home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/prowlarr'
+apiVersion: v2
+name: prowlarr
+description: BitTorrent indexer management
+home: https://github.com/drinkataco/media-servarr/tree/main/charts/prowlarr
 keywords:
-  - 'bittorrent'
-  - 'torrent'
-  - 'download'
-  - 'indexer'
-  - 'prowlarr'
-kubeversion: ">=1.24.0-0"
-type: 'application'
-version: 0.7.0
-appVersion: '1.24.3'
-icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/prowlarr/icon.png'
+  - bittorrent
+  - torrent
+  - download
+  - indexer
+  - prowlarr
+kubeversion: '>=1.24.0-0'
+type: application
+version: 0.8.0
+appVersion: 1.24.3
+icon: https://github.com/drinkataco/media-servarr/blob/main/charts/prowlarr/icon.png
 dependencies:
-  - name: 'media-servarr-base'
-    version: 0.6.0
-    repository: "file://../.."
+  - name: media-servarr-base
+    version: 0.8.0
+    repository: file://../..
 maintainers:
-  - name: 'media-servarr'
-    email: 'git@jo.shw.al'
-    url: 'https://github.com/drinkataco/media-servarr/'
+  - name: media-servarr
+    email: git@jo.shw.al
+    url: https://github.com/drinkataco/media-servarr/
 sources:
-  - 'https://github.com/Prowlarr/Prowlarr'
-  - 'https://github.com/linuxserver/docker-prowlarr'
-  - 'https://ghcr.io/onedr0p/exportarr'
-  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/prowlarr'
+  - https://github.com/Prowlarr/Prowlarr
+  - https://github.com/linuxserver/docker-prowlarr
+  - https://ghcr.io/onedr0p/exportarr
+  - https://github.com/drinkataco/media-servarr/tree/main/charts/prowlarr
