@@ -60,7 +60,7 @@ update_chart_version() {
 update_dependency_version() {
   local file=$1 dependency_name=$2 new_version=$3
   echo "Updating $dependency_name dependency version in $file to $new_version"
-  yq eval -i ".dependencies[] |= (select(.name == \"$dependency_name\").version |= \"${new_version}\")" "$file"
+  yq -i -y ".dependencies[] |= (select(.name == \"$dependency_name\").version |= \"${new_version}\")" "$file"
 }
 
 # The main function orchestrates the version update process.
@@ -85,7 +85,7 @@ main() {
     exit 1
   fi
 
-  current_version=$(yq eval '.version' "$root_chart")
+  current_version=$(yq -r '.version' "$root_chart")
   new_version=$(increment_version "$current_version" "$type")
 
   update_chart_version "$root_chart" "$new_version"
@@ -96,7 +96,7 @@ main() {
     local sub_current_version
     local sub_new_version
 
-    sub_current_version=$(yq eval '.version' "$chart")
+    sub_current_version=$(yq -r '.version' "$chart")
     sub_new_version=$(increment_version "$sub_current_version" "$type")
 
     update_chart_version "$chart" "$sub_new_version"
