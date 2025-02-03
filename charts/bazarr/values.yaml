@@ -93,7 +93,7 @@ deployment:
 
   volumes:
     config:
-      persirtentVolumeClaim:
+      persistentVolumeClaim:
         claimName: 'bazarr-config'
 
 persistentVolumeClaims:
