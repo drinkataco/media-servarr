@@ -9,6 +9,24 @@ set -e
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
+# Strip a prefix from a string
+# Globals:
+#   STRIP_VERSION_PREFIX: prefix to remove
+# Arguments:
+#   string: string to parse
+# Outputs:
+#   adjusted string
+strip_prefix() {
+  local string="${1}"
+  local prefix="${STRIP_VERSION_PREFIX}"
+
+  if [[ -n "${string:-}" ]]; then
+    string="${string#"${prefix}"}"
+  fi
+
+  echo "${string}"
+}
+
 # Fetches the latest version from GitHub releases for a given repository
 # Arguments:
 #   repo: The GitHub repository in the form "owner/repo".
@@ -30,6 +48,8 @@ get_latest_version() {
 }
 
 # Reads the 'appVersion' field from the specified Chart.yaml file.
+# Globals:
+#   STRIP_VERSION_PREFIX: app_version prefix to strip
 # Arguments:
 #   chart_file: The path to the Chart.yaml file.
 # Outputs:
@@ -53,6 +73,9 @@ get_current_app_version() {
     echo "Error: appVersion not found in $chart_file"
     exit 1
   fi
+
+  # If STRIP_VERSION_PREFIX is set, remove it from the start of latest_version if present.
+  app_version=$(strip_prefix "$app_version")
 
   # Output the appVersion
   echo "$app_version"
@@ -136,6 +159,7 @@ main() {
   local current_version
 
   latest_version=$(get_latest_version "$repo" "$allow_prerelease")
+  latest_version=$(strip_prefix "${latest_version}")
 
   if [[ "${latest_version}" == 'null' ]]; then
     echo "No Release Found for ${repo}" >&2
@@ -151,7 +175,7 @@ main() {
     exit
   fi
 
-  echo "Current chart uses appVersion ${current_version}"
+  echo "Current chart uses appVersion '${current_version}'"
 
   update_appversion "${chart_file}" "${latest_version}"
 
