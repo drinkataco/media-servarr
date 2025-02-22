@@ -1,0 +1,88 @@
+name: 'Update App Version'
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  get-latest-app-version:
+    name: 'Check App Updates'
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'write'
+      pull-requests: 'write'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'bazarr'
+            repo: 'linuxserver/docker-bazarr'
+          - name: 'flaresolverr'
+            repo: 'FlareSolverr/FlareSolverr'
+          - name: 'homarr'
+            repo: 'ajnart/homarr'
+          - name: 'jellyfin'
+            repo: 'jellyfin/jellyfin'
+          - name: 'jellyseerr'
+            repo: 'Fallenbagel/jellyseerr'
+          - name: 'lidarr'
+            repo: 'linuxserver/docker-lidarr'
+          - name: 'prowlarr'
+            repo: 'linuxserver/docker-prowlarr'
+          - name: 'radarr'
+            repo: 'linuxserver/docker-radarr'
+          - name: 'readarr'
+            repo: 'linuxserver/docker-readarr'
+            allow_prerelease: true
+          - name: 'sabnzbd'
+            repo: 'linuxserver/docker-sabnzbd'
+          - name: 'sonarr'
+            repo: 'linuxserver/docker-sonarr'
+          - name: 'transmission'
+            repo: 'linuxserver/docker-transmission'
+    steps:
+      - uses: 'actions/checkout@v4'
+        with:
+          fetch-depth: 0
+
+      - name: 'Update AppVersion and ChartVersion'
+        run: |
+          ./scripts/update_appversion.sh \
+            '${{ matrix.name }}' \
+            '${{ matrix.repo }}' \
+            '${{ matrix.allow_prerelease }}'
+
+      - name: 'Check for changes'
+        id: changes
+        run: |
+
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "CHANGES_FOUND=true" >> $GITHUB_ENV
+            git diff
+          else
+            echo "CHANGES_FOUND=false" >> $GITHUB_ENV
+          fi
+
+      - name: 'Set up Git'
+        if: env.CHANGES_FOUND == 'true'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@users.noreply.github.com"
+
+          app_version=$(awk '/^appVersion:/ {print $2}' "./charts/${{ matrix.name }}/Chart.yaml")
+
+          BRANCH_NAME="update-${{ matrix.name }}-${app_version}"
+          COMMIT_MSG="New app version found for ${{ matrix.name }}"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
+          echo "COMMIT_MSG=$BRANCH_NAME" >> "$GITHUB_ENV"
+
+      - name: 'Create Pull Request'
+        if: env.CHANGES_FOUND == 'true'
+        uses: 'peter-evans/create-pull-request@v7'
+        with:
+          commit-message: ${{ env.COMMIT_MSG }}
+          title: "⭐️ New App Version: Update ${{ matrix.name }}"
+          body: 'Automated Workflow. New App Version found for Chart'
+          branch: ${{ env.BRANCH_NAME }}
+          base: 'main'
