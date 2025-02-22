@@ -20,14 +20,14 @@ jobs:
             repo: 'linuxserver/docker-bazarr'
           - name: 'flaresolverr'
             repo: 'FlareSolverr/FlareSolverr'
-          # Homarr release numbers are prefixed with v, but the package is not.
-          # To come up with a simple solution, like stripVersionPrefx: 'v'
-          # - name: 'homarr'
-          #   repo: 'ajnart/homarr'
+          - name: 'homarr'
+            repo: 'ajnart/homarr'
+            strip_prefix: 'v'
           - name: 'jellyfin'
             repo: 'jellyfin/jellyfin'
           - name: 'jellyseerr'
             repo: 'Fallenbagel/jellyseerr'
+            strip_prefix: 'v'
           - name: 'lidarr'
             repo: 'linuxserver/docker-lidarr'
           - name: 'prowlarr'
@@ -50,10 +50,14 @@ jobs:
 
       - name: 'Update AppVersion and ChartVersion'
         run: |
+          # Set global script settings
+          export ALLOW_PRERELEASE='${{ matrix.allow_prerelease }}'
+          export STRIP_VERSION_PREFIX='${{ matrix.strip_prefix }}'
+
+          # Call main script to fetch newest app version
           ./scripts/update_appversion.sh \
             '${{ matrix.name }}' \
-            '${{ matrix.repo }}' \
-            '${{ matrix.allow_prerelease }}'
+            '${{ matrix.repo }}'
 
       - name: 'Check for changes'
         id: changes
