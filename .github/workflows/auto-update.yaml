@@ -1,0 +1,49 @@
+name: 'Check New Versions'
+
+on:
+  pull_request: # to test
+  # schedule:
+    # - cron: '0 2 * * *'
+  # workflow_dispatch:
+
+jobs:
+  get-latest-app-version:
+    runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        include:
+          - name: 'bazarr'
+            repo: 'linuxserver/docker-bazarr'
+          # flaresolver starts with v. will fail
+          - name: 'flaresolverr'
+            repo: 'FlareSolverr/FlareSolverr'
+          - name: 'homarr'
+            repo: 'ajnart/homarr'
+          - name: 'jellyfin'
+            repo: 'jellyfin/jellyfin'
+          - name: 'jellyseer'
+            repo: 'Fallenbagel/jellyseerr'
+          - name: 'lidarr'
+            repo: 'linuxserver/docker-lidarr'
+          - name: 'prowlarr'
+            repo: 'linuxserver/docker-prowlarr'
+          - name: 'radarr'
+            repo: 'linuxserver/docker-radarr'
+          # readarr ends with -developer. will fail
+          - name: 'readarr'
+            repo: 'linuxserver/docker-readarr'
+            prerelease: true
+          - name: 'sabnzbd'
+            repo: 'linuxserver/sabnzbd'
+          - name: 'sonarr'
+            repo: 'linuxserver/docker-sonarr'
+          - name: 'transmission'
+            repo: 'linuxserver/docker-transmission'
+    steps:
+      - uses: 'actions/checkout@v4'
+      - name: 'Update AppVersion and ChartVersion'
+        run: |
+          ./scripts/update_appversion.sh \
+            '${{ matrix.name }}' \
+            '${{ matrix.repo }}' \
+            '${{ matrix.allow_prerelease }}'
