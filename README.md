@@ -2,10 +2,11 @@
 
 [![Lint](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yaml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/lint.yaml)
 [![Release](https://github.com/drinkataco/media-servarr/actions/workflows/release.yaml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/release.yaml)
+[![App Update](https://github.com/drinkataco/media-servarr/actions/workflows/auto-update.yaml/badge.svg)](https://github.com/drinkataco/media-servarr/actions/workflows/auto-update.yaml)
 
 ![media-servarr](./icon.png)
 
-This repository contains a collection of similar applications under the [servarr](https://wiki.servarr.com/) family.
+This repository contains a collection of similar applications under the [servarr](https://wiki.servarr.com/) family, and some other useful related applications.
 
 The aim of this repository is to be featureful, use repeatable code, and to be a testbed for me to play with a kubernetes helm chart.
 
@@ -30,17 +31,19 @@ helm search repo media-servarr
 
 ## The Charts
 
-There are a number of charts available under the [./charts](./charts)
+There are a number of charts available under the [./charts](./charts) - each with indiviual README instructions to help you get started.
 
-An example of some of the supported charts:
-
-- Radarr - [radarr.video](https://radarr.video/)
-- Sonarr - [sonarr.tv](https://sonarr.tv/)
-- Lidarr - [lidarr.audio](https://lidarr.audio/)
-- Readarr - [readarr.com](https://readarr.com/)
-- Prowlarr - [prowlarr.com](https://prowlarr.com/)
-- Transmission - [transmissionbt.com](https://transmissionbt.com)
+- Bazarr - [bazarr.media](https://www.bazarr.media/)
+- Flaresolverr - [Flaresolverr/Flaresolverr](https://github.com/FlareSolverr/FlareSolverr)
 - Homarr - [homarr.dev](https://homarr.dev/)
+- Jellyfin - [jellyfin.org](https://jellyfin.org/)
+- Jellyseerr - [docs.jellyseerr.dev](https://docs.jellyseerr.dev/)
+- Lidarr - [lidarr.audio](https://lidarr.audio/)
+- Prowlarr - [prowlarr.com](https://prowlarr.com/)
+- Radarr - [radarr.video](https://radarr.video/)
+- Readarr - [readarr.com](https://readarr.com/)
+- Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
+- Sonarr - [sonarr.tv](https://sonarr.tv/)
+- Transmission - [transmissionbt.com](https://transmissionbt.com)
 
-It will be helpful to check out all available application in [./charts](./charts) and its README for more information.
 

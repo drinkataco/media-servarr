@@ -1,8 +1,3 @@
----
-name: Pull Request
-about: Create a pull request to contribute to the Helm chart collection
----
-
 ## Description
 
 Please provide a summary of your changes and the chart name and version they pertain to. Include the motivation behind these changes and what issue(s) this PR addresses, if applicable.
