@@ -120,17 +120,17 @@ update_chartversion() {
 # and Chart version if needed.
 #
 # Globals:
-#   REPO_DIR (read-only): The base directory for the repository.
+#   REPO_DIR: The base directory for the repository.
+#   ALLOW_PRERELEASE: A boolean string ("true" or "false") indicating whether to allow prerelease versions (default: false).
 # Arguments:
 #   name: The name of the chart (folder under charts/).
 #   repo: The GitHub repository in the form "owner/repo".
-#   allow_prerelease: A boolean string ("true" or "false") indicating whether to allow prerelease versions (default: false).
 # Outputs:
 #   Writes changes to Chart.yaml files and logs actions to stdout.
 main() {
   local name="$1"
   local repo="$2"
-  local allow_prerelease="${3:-false}"
+  local allow_prerelease="${ALLOW_PRERELEASE:-false}"
   local chart_file="${REPO_DIR}/charts/${name}/Chart.yaml"
   local latest_version
   local current_version
