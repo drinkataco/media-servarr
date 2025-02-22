@@ -70,24 +70,15 @@ jobs:
         with:
           name: 'dist'
           path: 'dist'
-      - name: 'Get AWS environment variables'
-        run: |
-          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env.cdk
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env.cdk
-          echo AWS_DEFAULT_REGION=${{ vars.AWS_DEFAULT_REGION }} >> .env.cdk
-          echo "${{ vars.DEPLOY_ENV_FILE }}" >> .env.cdk
-      - uses: 'addnab/docker-run-action@v3'
-        with:
-          image: 'ghcr.io/drinkataco/cdk-static-site:latest'
-          options: --volume ${{ github.workspace }}/dist:/srv --env-file=.env.cdk
-          run: |
-            npm run cdk:deploy -- --require-approval never
       - name: 'Configure AWS Credentials'
         uses: 'aws-actions/configure-aws-credentials@v4'
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+      - name: 'Upload new packages'
+        run: |
+          aws s3 cp ./dist/charts s3://media-servarr-helm-chart--mediaservarrhelmcharts3b-b6yezrsb3jje/charts --recursive
       - name: 'Invalidate CloudFront Distribution for index.yaml'
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/charts/index.yaml"
