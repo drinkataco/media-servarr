@@ -25,6 +25,7 @@ jobs:
             strip_prefix: 'v'
           - name: 'jellyfin'
             repo: 'jellyfin/jellyfin'
+            strip_prefix: 'v'
           - name: 'jellyseerr'
             repo: 'Fallenbagel/jellyseerr'
             strip_prefix: 'v'
