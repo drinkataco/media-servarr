@@ -31,7 +31,7 @@ application:
         <BindAddress>*</BindAddress>
         <ApiKey>$apiKey</ApiKey>
         <AnalyticsEnabled>False</AnalyticsEnabled>
-        <AuthenticationMethod>None</AuthenticationMethod>
+        <AuthenticationMethod>External</AuthenticationMethod>
         <UpdateMechanism>Docker</UpdateMechanism>
         <Branch>develop</Branch>
         <InstanceName>Readarr</InstanceName>
