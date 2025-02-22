@@ -20,8 +20,10 @@ jobs:
             repo: 'linuxserver/docker-bazarr'
           - name: 'flaresolverr'
             repo: 'FlareSolverr/FlareSolverr'
-          - name: 'homarr'
-            repo: 'ajnart/homarr'
+          # Homarr release numbers are prefixed with v, but the package is not.
+          # To come up with a simple solution, like stripVersionPrefx: 'v'
+          # - name: 'homarr'
+          #   repo: 'ajnart/homarr'
           - name: 'jellyfin'
             repo: 'jellyfin/jellyfin'
           - name: 'jellyseerr'
