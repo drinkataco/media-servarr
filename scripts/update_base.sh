@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script automates the process of incrementing version numbers in Helm Chart.yaml files and updating specific dependencies.
 # It supports major, minor, or patch version increments and updates dependencies to match the root Chart.yaml version.
