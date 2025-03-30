@@ -12,8 +12,8 @@ keywords:
   - 'readarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.8.6
-appVersion: nightly-0.4.13.2754-ls385
+version: 0.8.7
+appVersion: nightly-0.4.13.2760-ls390
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/readarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
