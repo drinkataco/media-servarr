@@ -13,8 +13,8 @@ keywords:
   - 'sonarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.7.5
-appVersion: 4.0.14.2939-ls276
+version: 0.7.6
+appVersion: 4.0.14.2939-ls277
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/sonarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
