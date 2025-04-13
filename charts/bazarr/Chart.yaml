@@ -13,8 +13,8 @@ keywords:
   - 'bazarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.7.4
-appVersion: v1.5.1-ls298
+version: 0.7.5
+appVersion: v1.5.1-ls299
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/bazarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
