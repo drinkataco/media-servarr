@@ -92,4 +92,4 @@ jobs:
           title: "⭐️ New App Version: Update ${{ matrix.name }}"
           body: 'Automated Workflow. New App Version found for Chart'
           branch: ${{ env.BRANCH_NAME }}
-          base: 'main'
+          base: ${{ github.event.repository.default_branch }}
