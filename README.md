@@ -20,7 +20,7 @@ The aim of this repository is to be featureful, use repeatable code, and to be a
 Add the repository using:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 ```
 
 And then view all available charts with
