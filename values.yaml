@@ -64,11 +64,20 @@ deployment:
       #   path: '/'
       #   port: 'http'
       # initialDelaySeconds: 30
+
     readinessProbe:
       # httpGet:
       #   path: '/'
       #   port: 'http'
       # initialDelaySeconds: 15
+
+    resources:
+      # requests:
+      #   memory: "64Mi"
+      #   cpu: "250m"
+      # limits:
+      #   memory: "128Mi"
+      #   cpu: "500m"
 
     securityContext: {}
       # capabilities:
