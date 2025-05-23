@@ -36,17 +36,73 @@ strip_prefix() {
 get_latest_version() {
   local repo="$1"
   local allow_prerelease="$2"
-  local prerelease_filter=''
+  local hub="$3"  # Default to dockerhub if not specified
 
-  # If we allow prereleases we will omitt this filter
-  if [[ "$allow_prerelease" == "false" ]]; then
-    prerelease_filter="map(select(.prerelease == false)) |"
-  fi
-
-  curl -s "https://api.github.com/repos/${repo}/releases" | \
-    jq -r "${prerelease_filter} first | .tag_name"
+  case "$hub" in
+    dockerhub)
+      get_latest_version_dockerhub "$repo" "$allow_prerelease"
+      ;;
+    ghcr)
+      get_latest_version_ghcr "$repo" "$allow_prerelease"
+      ;;
+    *)
+      echo "Unsupported hub: $hub" >&2
+      return 1
+      ;;
+  esac
 }
 
+get_latest_version_dockerhub() {
+  local repo="$1"
+  local allow_prerelease="$2"
+  local namespace="${repo%%/*}"
+  local repository="${repo##*/}"
+  local page_size=100
+
+  curl -s "https://hub.docker.com/v2/namespaces/${namespace}/repositories/${repository}/tags?page_size=${page_size}" | \
+    jq -r --arg allow_prerelease "$allow_prerelease" '
+      .results
+      | map(.name)
+      | map(select(
+          ($allow_prerelease == "true" and test("^v?[0-9]+\\.[0-9]+\\.[0-9]+(-nightly)?$"))
+          or
+          ($allow_prerelease != "true" and test("^v?[0-9]+\\.[0-9]+\\.[0-9]+$"))
+        ))
+      | sort_by(
+          sub("^v"; "") 
+          | split("-")[0] 
+          | split(".") 
+          | map(tonumber)
+        )
+      | reverse
+      | .[0]
+    '
+}
+
+get_latest_version_ghcr() {
+  local github_repo="$1"
+  local allow_prerelease="$2"
+
+  curl -s "https://api.github.com/repos/${github_repo}/releases" | \
+  jq -r --arg allow_prerelease "$allow_prerelease" '
+    map(select(
+      (.tag_name | type == "string") and (
+        ($allow_prerelease == "true" and (.tag_name | test("^v?[0-9]+\\.[0-9]+\\.[0-9]+(-nightly)?$")))
+        or
+        ($allow_prerelease != "true" and (.tag_name | test("^v?[0-9]+\\.[0-9]+\\.[0-9]+$")))
+      )
+    ))
+    | map(.tag_name)
+    | sort_by(
+        sub("^v"; "") 
+        | split("-")[0] 
+        | split(".") 
+        | map(tonumber)
+      )
+    | reverse
+    | .[0]
+  '
+}
 # Reads the 'appVersion' field from the specified Chart.yaml file.
 # Globals:
 #   STRIP_VERSION_PREFIX: app_version prefix to strip
@@ -153,12 +209,13 @@ update_chartversion() {
 main() {
   local name="$1"
   local repo="$2"
+  local hub="${3:-dockerhub}"
   local allow_prerelease="${ALLOW_PRERELEASE:-false}"
   local chart_file="${REPO_DIR}/charts/${name}/Chart.yaml"
   local latest_version
   local current_version
 
-  latest_version=$(get_latest_version "$repo" "$allow_prerelease")
+  latest_version=$(get_latest_version "$repo" "$allow_prerelease" "$hub")
   latest_version=$(strip_prefix "${latest_version}")
 
   if [[ "${latest_version}" == 'null' ]]; then
