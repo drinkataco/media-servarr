@@ -8,8 +8,8 @@ keywords:
   - 'sabnzbd'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.5.4
-appVersion: 4.5.1-ls217
+version: 0.5.5
+appVersion: 4.5.1-ls219
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/sabnzbd/icon.png'
 dependencies:
   - name: 'media-servarr-base'
