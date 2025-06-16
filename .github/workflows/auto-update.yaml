@@ -17,33 +17,34 @@ jobs:
       matrix:
         include:
           - name: 'bazarr'
-            repo: 'linuxserver/docker-bazarr'
+            repo: 'linuxserver/bazarr'
           - name: 'flaresolverr'
-            repo: 'FlareSolverr/FlareSolverr'
+            repo: 'flaresolverr/flaresolverr'
           - name: 'homarr'
             repo: 'ajnart/homarr'
+            hub: 'ghcr'
             strip_prefix: 'v'
           - name: 'jellyfin'
             repo: 'jellyfin/jellyfin'
             strip_prefix: 'v'
           - name: 'jellyseerr'
-            repo: 'Fallenbagel/jellyseerr'
+            repo: 'fallenbagel/jellyseerr'
             strip_prefix: 'v'
           - name: 'lidarr'
-            repo: 'linuxserver/docker-lidarr'
+            repo: 'linuxserver/lidarr'
           - name: 'prowlarr'
-            repo: 'linuxserver/docker-prowlarr'
+            repo: 'linuxserver/prowlarr'
           - name: 'radarr'
-            repo: 'linuxserver/docker-radarr'
+            repo: 'linuxserver/radarr'
           - name: 'readarr'
-            repo: 'linuxserver/docker-readarr'
+            repo: 'linuxserver/readarr'
             allow_prerelease: true
           - name: 'sabnzbd'
-            repo: 'linuxserver/docker-sabnzbd'
+            repo: 'linuxserver/sabnzbd'
           - name: 'sonarr'
-            repo: 'linuxserver/docker-sonarr'
+            repo: 'linuxserver/sonarr'
           - name: 'transmission'
-            repo: 'linuxserver/docker-transmission'
+            repo: 'linuxserver/transmission'
     steps:
       - uses: 'actions/checkout@v4'
         with:
@@ -58,7 +59,8 @@ jobs:
           # Call main script to fetch newest app version
           ./scripts/update_appversion.sh \
             '${{ matrix.name }}' \
-            '${{ matrix.repo }}'
+            '${{ matrix.repo }}' \
+            '${{ matrix.hub }}'
 
       - name: 'Check for changes'
         id: changes
