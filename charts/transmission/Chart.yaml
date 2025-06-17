@@ -10,8 +10,8 @@ keywords:
   - 'usenet'
 kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.8.1
-appVersion: 4.0.6-r4-ls292
+version: 0.8.2
+appVersion: 4.0.6
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/transmission/icon.png'
 dependencies:
   - name: 'media-servarr-base'
