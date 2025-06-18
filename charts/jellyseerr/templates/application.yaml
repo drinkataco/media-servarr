@@ -1,5 +1,0 @@
-{{/* Prepare Values */}}
-{{ include "media-servarr-base.prepareValues" . }}
-
-{{/* Run templater */}}
-{{ include "media-servarr-base.template" . }}

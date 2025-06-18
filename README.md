@@ -37,7 +37,6 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Flaresolverr - [Flaresolverr/Flaresolverr](https://github.com/FlareSolverr/FlareSolverr)
 - Homarr - [homarr.dev](https://homarr.dev/)
 - Jellyfin - [jellyfin.org](https://jellyfin.org/)
-- Jellyseerr - [docs.jellyseerr.dev](https://docs.jellyseerr.dev/)
 - Lidarr - [lidarr.audio](https://lidarr.audio/)
 - Prowlarr - [prowlarr.com](https://prowlarr.com/)
 - Radarr - [radarr.video](https://radarr.video/)
@@ -45,5 +44,3 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
 - Transmission - [transmissionbt.com](https://transmissionbt.com)
-
-
