@@ -7,3 +7,4 @@ dist/
 scripts/
 LICENSE
 Makefile
+.cr-release-packages/
