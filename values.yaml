@@ -98,6 +98,14 @@ deployment:
   #   for example, running a vpn container such as qdm12/gluetun for network traffic
   sideCarContainers: []
 
+  initContainers: []
+    # - name: 'init-myservice'
+    #   image: 'busybox'
+    #   command: ['sh', '-c', 'echo Hello from the init container!']
+    #   volumeMounts:
+    #     - name: 'init-volume'
+    #       mountPath: '/data'
+
   volumes: {}
     # config:
     #   persistentVolumeClaim:
