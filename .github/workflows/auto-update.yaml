@@ -23,7 +23,6 @@ jobs:
           - name: 'homarr'
             repo: 'homarr-labs/homarr'
             hub: 'ghcr'
-            strip_prefix: 'v'
           - name: 'jellyfin'
             repo: 'jellyfin/jellyfin'
             strip_prefix: 'v'
