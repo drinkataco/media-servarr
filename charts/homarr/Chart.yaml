@@ -19,5 +19,5 @@ maintainers:
     email: 'git@jo.shw.al'
     url: 'https://github.com/drinkataco/media-servarr/'
 sources:
-  - 'https://github.com/ajnart/homarr'
+  - 'https://github.com/homarr-labs/homarr'
   - 'https://github.com/drinkataco/media-servarr/tree/main/charts/homarr'

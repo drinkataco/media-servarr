@@ -21,7 +21,7 @@ jobs:
           - name: 'flaresolverr'
             repo: 'flaresolverr/flaresolverr'
           - name: 'homarr'
-            repo: 'ajnart/homarr'
+            repo: 'homarr-labs/homarr'
             hub: 'ghcr'
             strip_prefix: 'v'
           - name: 'jellyfin'
