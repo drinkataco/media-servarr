@@ -1,5 +1,9 @@
 # Readarr Helm Chart
 
+> [!WARNING]
+> The Readarr project has been [retired](https://github.com/Readarr/Readarr?tab=readme-ov-file#announcement-retirement-of-readarr)
+> However, there is a third-party metadata service named [rreading-glasses](https://github.com/blampe/rreading-glasses) to allow you to continue to use this version
+
 This Helm chart installs Readarr, a book collection manager, in a Kubernetes cluster.
 
 This README covers the basics of customising and installation
