@@ -1,0 +1,112 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+secrets:
+  - name: 'apiKey'
+    value: ''
+  # - name: 'sonarrApiKey'
+  #   value: ''
+  # - name: 'radarrApiKey'
+  #   value: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 11011
+  # Access url base
+  urlBase: 'cleanuparr'
+  # ConfigMap for core application settings
+  #config:
+    # Filename of configuration
+  #  filename: 'config.yaml'
+    # Configuration file contents
+  #  contents: |
+  #    ---
+      # We can set up a lot of extra settings, and providers, directly here
+      # To get an example of an exhaustive list of of possible values you could add here see:
+      #   ./config.example.yaml
+  #    analytics:
+  #      enabled: false
+  #    auth:
+  #      apiKey: '$apiKey'
+  #    general:
+  #      adaptive_searching: true
+  #      auto_update: false
+  #      base_url: '/bazarr'
+  #      port: 6767
+  #      use_radarr: false
+  #      use_sonarr: false
+        # radarr:
+        #   apiKey: '$radarrApiKey'
+        #   base_url: '/radarr'
+        #   ip: 'radarr.media-servarr.svc.cluster.local'
+        #   port: 7878
+        # sonarr:
+        #   apiKey: '$sonarrApiKey'
+        #   base_url: '/sonarr'
+        #   ip: 'sonarr.media-servarr.svc.cluster.local'
+        #   port: 8989
+    # Secrets to inject the config they must be defined as $secret
+  #  secrets:
+  #    - 'apiKey'
+      # - 'sonarrApiKey'
+      # - 'radarrApiKey'
+    # Path the file will be mounted to in the config
+  #  mountPath: '/config/config/config.yaml'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'ghcr.io/cleanuparr/cleanuparr'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+
+    livenessProbe:
+      httpGet:
+        path: '/cleanuparr/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/cleanuparr/health/ready'
+        port: 'http'
+      initialDelaySeconds: 15
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'cleanuparr-config'
+
+persistentVolumeClaims:
+  cleanuparr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+
+metrics:
+  enabled: false
+  app: 'cleanuparr'
+  port:
+    number: 9700
