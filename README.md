@@ -44,3 +44,4 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
 - Transmission - [transmissionbt.com](https://transmissionbt.com)
+- Cleanuparr - [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/)
