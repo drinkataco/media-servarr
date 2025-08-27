@@ -1,8 +1,6 @@
 # Cleanuparr Helm Chart
 
-This README is a placeholder and has mostly not been updated yet. The aim is to test in my repo, and then migrate to a fork of media-servarr and propose a PR. I'm developing here because testing will be easier.
-
-This Helm chart installs Cleanuparr, a companion application for [Radarr](../radarr/), [Lidarr](../lidarr/), [Whisparr](../whisparr/) and [Sonarr](../sonarr/) to manage unwanted or blocked files.
+This Helm chart installs Cleanuparr, a companion application for [Radarr](../radarr/), [Lidarr](../lidarr/), and [Sonarr](../sonarr/) to manage unwanted or blocked files.
 
 This README covers the basics of customising and installation
 

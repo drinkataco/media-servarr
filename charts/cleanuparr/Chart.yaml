@@ -1,6 +1,6 @@
 apiVersion: 'v2'
 name: 'cleanuparr'
-description: 'Companion application to Sonarr and Radarr to manage and download subtitles'
+description: 'Companion application to Sonarr and Radarr to clean up failed and completed downloads'
 home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/cleanuparr'
 keywords:
   - 'torrent'
@@ -25,5 +25,4 @@ maintainers:
     url: 'https://github.com/drinkataco/media-servarr/'
 sources:
   - 'https://github.com/Cleanuparr/Cleanuparr'
-  - 'https://ghcr.io/onedr0p/exportarr'
   - 'https://github.com/drinkataco/media-servarr/tree/main/charts/cleanuparr'
