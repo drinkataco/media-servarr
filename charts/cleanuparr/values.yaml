@@ -68,8 +68,3 @@ persistentVolumeClaims:
 ingress:
   enabled: true
 
-metrics:
-  enabled: false
-  app: 'cleanuparr'
-  port:
-    number: 9700
