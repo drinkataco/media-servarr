@@ -1,0 +1,70 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Secrets to create
+#
+secrets:
+  - name: 'apiKey'
+    value: ''
+  # - name: 'sonarrApiKey'
+  #   value: ''
+  # - name: 'radarrApiKey'
+  #   value: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 11011
+  # Access url base
+  urlBase: 'cleanuparr'
+  config: null
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'ghcr.io/cleanuparr/cleanuparr'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+
+    livenessProbe:
+      httpGet:
+        path: '/cleanuparr/health'
+        port: 'http'
+      initialDelaySeconds: 30
+    readinessProbe:
+      httpGet:
+        path: '/cleanuparr/health/ready'
+        port: 'http'
+      initialDelaySeconds: 15
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'cleanuparr-config'
+
+persistentVolumeClaims:
+  cleanuparr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+
