@@ -21,6 +21,7 @@ jobs:
           - name: 'cleanuparr'
             repo: 'cleanuparr/cleanuparr'
             hub: 'ghcr'
+            strip_prefix: 'v'
           - name: 'flaresolverr'
             repo: 'flaresolverr/flaresolverr'
           - name: 'homarr'
