@@ -18,6 +18,9 @@ jobs:
         include:
           - name: 'bazarr'
             repo: 'linuxserver/bazarr'
+          - name: 'cleanuparr'
+            repo: 'cleanuparr/cleanuparr'
+            hub: 'ghcr'
           - name: 'flaresolverr'
             repo: 'flaresolverr/flaresolverr'
           - name: 'homarr'
