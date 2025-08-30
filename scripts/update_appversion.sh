@@ -220,7 +220,7 @@ main() {
 
   if [[ "${latest_version}" == 'null' ]]; then
     echo "No Release Found for ${repo}" >&2
-    exit 1;
+    exit 0;
   fi
 
   echo "Release '${latest_version}' found for '${repo}'"
