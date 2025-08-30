@@ -34,6 +34,7 @@ helm search repo media-servarr
 There are a number of charts available under the [./charts](./charts) - each with indiviual README instructions to help you get started.
 
 - Bazarr - [bazarr.media](https://www.bazarr.media/)
+- Cleanuparr - [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/)
 - Flaresolverr - [Flaresolverr/Flaresolverr](https://github.com/FlareSolverr/FlareSolverr)
 - Homarr - [homarr.dev](https://homarr.dev/)
 - Jellyfin - [jellyfin.org](https://jellyfin.org/)
@@ -44,4 +45,3 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
 - Transmission - [transmissionbt.com](https://transmissionbt.com)
-- Cleanuparr - [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/)
