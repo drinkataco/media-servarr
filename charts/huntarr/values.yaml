@@ -1,0 +1,50 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 9705
+  # Access url base
+  urlBase: 'huntarr'
+  config: null
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'ghcr.io/plexguide/huntarr'
+
+    env:
+      - name: 'PGID'
+        value: '1000'
+      - name: 'PUID'
+        value: '1000'
+      - name: 'TZ'
+        value: 'America/New_York'
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'huntarr-config'
+
+persistentVolumeClaims:
+  huntarr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '1Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+

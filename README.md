@@ -36,6 +36,7 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Bazarr - [bazarr.media](https://www.bazarr.media/)
 - Cleanuparr - [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/)
 - Flaresolverr - [Flaresolverr/Flaresolverr](https://github.com/FlareSolverr/FlareSolverr)
+- Huntarr - [huntarr.io](https://huntarr.io)
 - Homarr - [homarr.dev](https://homarr.dev/)
 - Jellyfin - [jellyfin.org](https://jellyfin.org/)
 - Lidarr - [lidarr.audio](https://lidarr.audio/)
