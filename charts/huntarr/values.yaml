@@ -29,17 +29,6 @@ deployment:
       - name: 'TZ'
         value: 'America/New_York'
 
-    livenessProbe:
-      httpGet:
-        path: '/huntarr/health'
-        port: 'http'
-      initialDelaySeconds: 30
-    readinessProbe:
-      httpGet:
-        path: '/huntarr/health/ready'
-        port: 'http'
-      initialDelaySeconds: 15
-
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
       - name: 'config'
