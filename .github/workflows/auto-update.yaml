@@ -25,7 +25,7 @@ jobs:
           - name: 'flaresolverr'
             repo: 'flaresolverr/flaresolverr'
           - name: 'huntarr'
-            repo: 'plexguide/huntarr'
+            repo: 'plexguide/huntarr.io'
             hub: 'ghcr'
           - name: 'homarr'
             repo: 'homarr-labs/homarr'
