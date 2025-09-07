@@ -1,10 +1,10 @@
-# Cleanuparr Helm Chart
+# Huntarr Helm Chart
 
 This Helm chart installs Huntarr, a companion application for [Radarr](../radarr/), [Lidarr](../lidarr/), and [Sonarr](../sonarr/) to search for quality upgrades.
 
 This README covers the basics of customising and installation
 
-![Cleanuparr](./icon.png)
+![Huntarr](./icon.png)
 
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)

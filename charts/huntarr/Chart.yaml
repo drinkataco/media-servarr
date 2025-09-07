@@ -8,6 +8,7 @@ keywords:
   - 'radarr'
   - 'sonarr'
   - 'lidarr'
+  - 'prowlarr'
   - 'readarr'
   - 'whisparr'
 kubeversion: ">=1.24.0-0"
@@ -24,5 +25,5 @@ maintainers:
     email: 'git@jo.shw.al'
     url: 'https://github.com/drinkataco/media-servarr/'
 sources:
-  - 'https://github.com/huntarr/huntarr'
+  - 'https://github.com/plexguide/Huntarr.io'
   - 'https://github.com/drinkataco/media-servarr/tree/main/charts/huntarr'
