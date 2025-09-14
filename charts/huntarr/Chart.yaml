@@ -1,0 +1,29 @@
+apiVersion: 'v2'
+name: 'huntarr'
+description: 'Companion application to Sonarr and Radarr to clean up failed and completed downloads'
+home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/huntarr'
+keywords:
+  - 'torrent'
+  - 'bittorrent'
+  - 'radarr'
+  - 'sonarr'
+  - 'lidarr'
+  - 'prowlarr'
+  - 'readarr'
+  - 'whisparr'
+kubeversion: ">=1.24.0-0"
+type: 'application'
+version: 0.1.0
+appVersion: 8.2.10
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/huntarr/icon.png'
+dependencies:
+  - name: 'media-servarr-base'
+    version: 0.9.0
+    repository: "file://../.."
+maintainers:
+  - name: 'media-servarr'
+    email: 'git@jo.shw.al'
+    url: 'https://github.com/drinkataco/media-servarr/'
+sources:
+  - 'https://github.com/plexguide/Huntarr.io'
+  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/huntarr'
