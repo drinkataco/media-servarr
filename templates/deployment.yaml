@@ -148,7 +148,15 @@ spec:
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name 'apiKey' }}
+                    {{- if $element.value }}
                   name: '{{ include "media-servarr-base.fullname" . }}'
+                    {{- else }}
+                  name: '{{ $element.ref }}'
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
                   key: 'apiKey'
             {{- if .Values.metrics.env }}
             {{ toYaml .Values.metrics.env | nindent 12 }}
