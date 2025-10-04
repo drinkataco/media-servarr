@@ -43,9 +43,23 @@ application:
 # This is to set up and define the application deployment
 #
 deployment:
+
+# For Nvidia transcoding support
+  # nodeSelector:
+  #   nvidia.com/gpu.present: "true"
+
+  # runtimeClassName: "nvidia"
+
   container:
     image:
       repository: 'jellyfin/jellyfin'
+
+    # For Nvidia transcoding support
+    # env:
+    #   - name: 'NVIDIA_VISIBLE_DEVICES'
+    #     value: 'all'
+    #   - name: 'NVIDIA_DRIVER_CAPABILITIES'
+    #     value: 'all'
 
     # Additional volumeMounts on the output Deployment definition.
     volumeMounts:
