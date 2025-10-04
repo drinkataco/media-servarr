@@ -2,6 +2,7 @@
 {{- $context := . }}
 {{/* Set application config object to map */}}
 {{- $config := .Values.application.config }}
+{{- $conf_secrets := .Values.secrets }}
 {{- if and $config (ne (kindOf $config) "slice") }}
   {{- $config = list $config }}
 {{- end -}}
@@ -54,12 +55,21 @@ spec:
           env:
             {{- range $config }}
               {{- if .secrets }}
-                {{- range .secrets }}
-            - name: '{{ . }}'
+                {{- range $name := .secrets }}
+            - name: '{{ $name }}'
               valueFrom:
                 secretKeyRef:
+                # Look in conf_secrets for the current secret, {{ . }} and if it has a ref, set the env to look for that secret rather than the chart name
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name $name }}
+                    {{- if $element.value }}
                   name: '{{ include "media-servarr-base.fullname" $context }}'
-                  key: '{{ . }}'
+                    {{- else }}
+                  name: '{{ $element.ref }}'
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+                  key: '{{ $name }}'
                 {{- end }}
               {{- end }}
             {{- end }}
