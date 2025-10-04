@@ -6,8 +6,17 @@ fullnameOverride: ''
 # Secrets to create
 #
 secrets: []
+  # # This will create a secret when the chart is deployed. Exportarr, if supported, will look for this secret/key
   # - name: 'apiKey'
   #   value: 'e71e2f1da39e4918ba0a9c5355166268'
+  # # To reference a secret that already exists in the namespace, use "ref" to name the secret to look in for 'name'
+  # - name: 'externalSecret'
+  #   ref: 'myexternallydefinesecret'
+  # # To tell Exportarr to look for a different value for its API key, define a secret named {chart}exportarr.
+  # # For example, setting this secret would tell the Exportarr deployed by the Sonarr chart
+  # # to look for the apikey in "externalSecret"
+  # - name: 'sonarrexportarr'
+  #   value: 'externalSecret'
 
 #
 # Application Config
