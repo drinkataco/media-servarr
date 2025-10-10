@@ -147,14 +147,15 @@ spec:
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
-                {{- $app := include "media-servarr-base.fullname" . }}
+                # {{- $app := include "media-servarr-base.fullname" . }}
+                {{- $app := "sonarr" }}
                 {{- $lookup := printf "%s-exportarr" $app }}
                 {{- $keyname := "apiKey" }}
-                # {{- range $element := $conf_secrets }}
-                #   {{- if eq $element.name $lookup }}
-                #     {{- $keyname := $element.keyname }}
-                #   {{- end }}
-                # {{- end }}
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name $lookup }}
+                    {{- $keyname := $element.keyname }}
+                  {{- end }}
+                {{- end }}
                 {{- range $element := $conf_secrets }}
                   {{- if eq $element.name $keyname }}
                     {{- if $element.value }}
