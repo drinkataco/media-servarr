@@ -148,8 +148,9 @@ spec:
               valueFrom:
                 secretKeyRef:
                 # {{- $app := include "media-servarr-base.fullname" . }}
-                {{- $app := "sonarr" }}
-                {{- $lookup := printf "%s-exportarr" $app }}
+                # {{- $app := "sonarr" }}
+                # {{- $lookup := printf "%s-exportarr" $app }}
+                {{- $lookup := "sonarr-exportarr"}}
                 {{- $keyname := "apiKey" }}
                 {{- range $element := $conf_secrets }}
                   {{- if eq $element.name $lookup }}
