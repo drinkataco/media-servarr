@@ -154,7 +154,7 @@ spec:
                 {{- $keyname := "apiKey" }}
                 {{- range $element := $conf_secrets }}
                   {{- if eq $element.name $lookup }}
-                    {{- $keyname := $element.keyname }}
+                    {{- $keyname := $element.value }}
                   {{- end }}
                 {{- end }}
                 {{- range $element := $conf_secrets }}
