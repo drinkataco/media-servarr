@@ -2,6 +2,7 @@
 {{- $context := . }}
 {{/* Set application config object to map */}}
 {{- $config := .Values.application.config }}
+{{- $conf_secrets := .Values.secrets }}
 {{- if and $config (ne (kindOf $config) "slice") }}
   {{- $config = list $config }}
 {{- end -}}
@@ -54,12 +55,20 @@ spec:
           env:
             {{- range $config }}
               {{- if .secrets }}
-                {{- range .secrets }}
-            - name: '{{ . }}'
+                {{- range $name := .secrets }}
+            - name: '{{ $name }}'
               valueFrom:
                 secretKeyRef:
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name $name }}
+                    {{- if $element.value }}
                   name: '{{ include "media-servarr-base.fullname" $context }}'
-                  key: '{{ . }}'
+                    {{- else }}
+                  name: '{{ $element.ref }}'
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+                  key: '{{ $name }}'
                 {{- end }}
               {{- end }}
             {{- end }}
@@ -141,8 +150,23 @@ spec:
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
-                  name: '{{ include "media-servarr-base.fullname" . }}'
-                  key: 'apiKey'
+                {{- $lookup := printf "%sexportarr" .Values.metrics.app }}
+                {{- $secretname := include "media-servarr-base.fullname" $context }}
+                {{- $keyname := "apiKey" }}
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name $lookup }}
+                    {{- $keyname = $element.value }}
+                  {{- end }}
+                {{- end }}
+                {{- range $element := $conf_secrets }}
+                  {{- if eq $element.name $keyname }}
+                    {{- if $element.ref }}
+                      {{ $secretname = $element.ref }}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+                  name: '{{ $secretname }}'
+                  key: '{{ $keyname }}'
             {{- if .Values.metrics.env }}
             {{ toYaml .Values.metrics.env | nindent 12 }}
             {{- end }}
