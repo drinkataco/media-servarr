@@ -119,6 +119,8 @@ deployment:
 
   affinity: {}
 
+  runtimeClassName:
+
 persistentVolumeClaims: {}
   # app-config:
   #   accessMode: 'ReadWriteOnce'

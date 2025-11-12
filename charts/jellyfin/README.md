@@ -130,6 +130,10 @@ Prometheus metrics are enabled by placing `<EnableMetrics>true</EnableMetrics>` 
 
 Read more about this functionality in the [official documentation](https://jellyfin.org/docs/general/networking/monitoring/)
 
+### Hardware Acceleration for Transcoding
+
+If your cluster supports GPUs, you can use `runtimeClassName` to ensure you are using the correct runtime class, be sure `nodeSelector` to control app placement. You should review the [official documentation](https://jellyfin.org/docs/general/post-install/transcoding/hardware-acceleration/) to understand how the official docker image supports hardware acceleration for your hardware type, and review the docs for enabling hardware passthrough on your kubernetes cluster.
+
 ### Advanced
 
 Other supported deployment configuration include `deployment.nodeSelector`, `deployment.tolerations`, and `deployment.affinity`
