@@ -97,6 +97,9 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- end }}
+      {{- if .Values.deployment.runtimeClassName }}
+      runtimeClassName: {{ .Values.deployment.runtimeClassName }}
+      {{- end }}
       containers:
         {{- with .Values.deployment.sideCarContainers }}
           {{- toYaml . | nindent 8 }}

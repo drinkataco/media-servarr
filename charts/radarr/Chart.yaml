@@ -12,12 +12,12 @@ keywords:
   - 'radarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.18.0
-appVersion: 5.27.5
+version: 0.20.0
+appVersion: 5.28.0
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/radarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.9.0
+    version: 0.10.0
     repository: "file://../.."
 maintainers:
   - name: 'media-servarr'
