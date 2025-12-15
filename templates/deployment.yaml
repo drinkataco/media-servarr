@@ -150,23 +150,8 @@ spec:
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
-                {{- $lookup := printf "%sexportarr" .Values.metrics.app }}
-                {{- $secretname := include "media-servarr-base.fullname" $context }}
-                {{- $keyname := "apiKey" }}
-                {{- range $element := $conf_secrets }}
-                  {{- if eq $element.name $lookup }}
-                    {{- $keyname = $element.value }}
-                  {{- end }}
-                {{- end }}
-                {{- range $element := $conf_secrets }}
-                  {{- if eq $element.name $keyname }}
-                    {{- if $element.ref }}
-                      {{ $secretname = $element.ref }}
-                    {{- end }}
-                  {{- end }}
-                {{- end }}
-                  name: '{{ $secretname }}'
-                  key: '{{ $keyname }}'
+                  name: '{{ .Values.metrics.apiref.secret | default "media-servarr-base.fullname" }}'
+                  key: '{{ .Values.metrics.apiref.keyname | default 'apiKey' }}'
             {{- if .Values.metrics.env }}
             {{ toYaml .Values.metrics.env | nindent 12 }}
             {{- end }}
