@@ -150,7 +150,7 @@ spec:
             - name: 'APIKEY'
               valueFrom:
                 secretKeyRef:
-                  name: '{{ .Values.metrics.apiref.secret | default "media-servarr-base.fullname" }}'
+                  name: '{{ .Values.metrics.apiref.secret | default include "media-servarr-base.fullname" . }}'
                   key: '{{ .Values.metrics.apiref.keyname | default 'apiKey' }}'
             {{- if .Values.metrics.env }}
             {{ toYaml .Values.metrics.env | nindent 12 }}
