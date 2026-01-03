@@ -156,7 +156,7 @@ spec:
                   {{- else }}
                   name: '{{ include "media-servarr-base.fullname" . }}'
                   key: '{{ "apiKey" }}'
-                  {{- endif }}
+                  {{- end }}
             {{- if .Values.metrics.env }}
             {{ toYaml .Values.metrics.env | nindent 12 }}
             {{- end }}
