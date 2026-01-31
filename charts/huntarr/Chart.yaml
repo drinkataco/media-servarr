@@ -13,8 +13,8 @@ keywords:
   - 'whisparr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 1.0.0
-appVersion: 9.0.5
+version: 1.1.0
+appVersion: 9.1.3
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/huntarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
