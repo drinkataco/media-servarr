@@ -8,10 +8,13 @@ fullnameOverride: ''
 secrets:
   - name: 'apiKey'
     value: ''
+    # ref: 'my-existing-secret' # existing secret
   # - name: 'sonarrApiKey'
   #   value: ''
+  #   # ref: 'sonarr-api-secret' # existing secret
   # - name: 'radarrApiKey'
   #   value: ''
+  #   # ref: 'radarr-api-secret' # existing secret
 
 #
 # Application Config
@@ -67,4 +70,3 @@ persistentVolumeClaims:
 
 ingress:
   enabled: true
-
