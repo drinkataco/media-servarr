@@ -4,10 +4,13 @@
 secrets:
   - name: 'apiKey'
     value: 'apiKey'
+    # ref: 'sabnzbd-api' # existing secret
   - name: 'nzbKey'
     value: 'nzbKey'
+    # ref: 'sabnzbd-api' # existing secret
   - name: 'newsreaderServerPassword'
     value: 'password123'
+    # ref: 'sabnzbd-newsreader' # existing secret
 
 #
 # Application Config

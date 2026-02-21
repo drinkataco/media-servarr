@@ -42,9 +42,14 @@ To set up secrets, like API keys, use the following format. Use `openssl rand -h
 
 ```yaml
 secrets:
+  # inline value
   - name: 'apiKey'
     value: 'your-api-key-here'
+  # reference pre-existing Secret
+  # - name: 'apiKey'
+  #   ref: 'my-existing-secret'
 ```
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
 
 By not setting this value, and leaving it blank, prowlarr will automatically generate a key on start.
 
@@ -123,9 +128,14 @@ ingress:
 
 Enabling metrics enables a sidecar container being attached for [exportarr](https://github.com/onedr0p/exportarr/) - and a ServiceMonitor CRD to be consumed by the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) package.
 
+By default, Exportarr reads the `apiKey` from this chart's Secret. If you need Exportarr to read a different Secret/key, set `metrics.apiref`.
+
 ```yaml
 metrics:
   enabled: true
+  apiref:
+    secret: 'my-existing-secret'
+    keyname: 'apiKey'
   env:
     - name: 'PROWLARR__BACKFILL'
       value: 'true'

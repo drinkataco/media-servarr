@@ -6,8 +6,10 @@ fullnameOverride: ''
 # Secrets to create
 #
 secrets: []
+  # # inline value
   # - name: 'apiKey'
   #   value: 'e71e2f1da39e4918ba0a9c5355166268'
+  #   # ref: 'my-existing-secret' # existing secret
 
 #
 # Application Config
@@ -167,6 +169,10 @@ ingress:
 # For radarr, sonarr, readarr, lidarr
 metrics:
   enabled: false
+  # # Optional: point Exportarr at a different Secret/key instead of the chart secret `apiKey`.
+  # apiref:
+  #   secret: 'my-existing-secret'
+  #   keyname: 'apiKey'
   app: # Application to set up metrics for
   name: 'exportarr'
   image:

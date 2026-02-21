@@ -8,6 +8,7 @@ fullnameOverride: ''
 secrets:
   - name: 'rpcPassword'
     value: 'password'
+    # ref: 'my-existing-secret' # existing secret
 
 #
 # Application Config
