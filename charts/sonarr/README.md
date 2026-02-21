@@ -134,9 +134,14 @@ ingress:
 
 Enabling metrics enables a sidecar container being attached for [exportarr](https://github.com/onedr0p/exportarr/) - and a ServiceMonitor CRD to be consumed by the [kube-prometheus](https://github.com/prometheus-operator/kube-prometheus) package.
 
+By default, Exportarr reads the `apiKey` from this chart's Secret. If you need Exportarr to read a different Secret/key, set `metrics.apiref`.
+
 ```yaml
 metrics:
   enabled: true
+  apiref:
+    secret: 'my-existing-secret'
+    keyname: 'apiKey'
   env: []
 ```
 
