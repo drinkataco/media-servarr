@@ -42,9 +42,14 @@ To set up secrets, like API keys, use the following format. Use `openssl rand -h
 
 ```yaml
 secrets:
+  # inline value
   - name: 'apiKey'
     value: 'your-api-key-here'
+  # reference pre-existing Secret
+  # - name: 'apiKey'
+  #   ref: 'my-existing-secret'
 ```
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
 
 By not setting this value, and leaving it blank, prowlarr will automatically generate a key on start.
 

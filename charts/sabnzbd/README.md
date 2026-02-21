@@ -42,13 +42,21 @@ To set up secrets, like API keys, use the following format. Use `openssl rand -h
 
 ```yaml
 secrets:
+  # inline values
   - name: 'apiKey'
     value: 'apiKey'
   - name: 'nzbKey'
     value: 'nzbKey'
+
+  # reference pre-existing Secret
+  # - name: 'apiKey'
+  #   ref: 'sabnzbd-api'
+  # - name: 'nzbKey'
+  #   ref: 'sabnzbd-api'
   # - name: 'newsreaderServerPassword'
-  #   value: 'password123'
+  #   ref: 'sabnzbd-newsreader'
 ```
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
 
 If setting up a ConfigMap, you can also store any newsreader server passwords here, for example
 

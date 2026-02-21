@@ -44,13 +44,18 @@ Use `openssl rand -hex 16` to generate a key and replace the default value. If u
 
 ```yaml
 secrets:
+  # inline value
   - name: 'apiKey'
     value: 'your-api-key-here'
+
+  # reference pre-existing Secret
   - name: 'sonarrApiKey'
-    value: ''
+    ref: 'sonarr-api-key'
   - name: 'radarrApiKey'
-    value: ''
+    ref: 'radarr-api-key'
 ```
+
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
 
 By not setting this value, and leaving it blank, Bazarr will automatically generate a new key on start.
 

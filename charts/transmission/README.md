@@ -9,6 +9,7 @@ This README covers the basics of customising and installation
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)
 * [Configuration](#configuration)
+  * [Secrets](#secrets)
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress Configuration](#ingress-configuration)
@@ -34,6 +35,23 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 ## Configuration
 
 Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+
+### Secrets
+
+You can either define secret values directly in your chart values, or reference keys from an existing Secret.
+
+```yaml
+secrets:
+  # inline value
+  - name: 'rpcPassword'
+    value: 'password'
+
+  # reference pre-existing Secret
+  # - name: 'rpcPassword'
+  #   ref: 'my-existing-secret'
+```
+
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
 
 ### Application Configuration
 

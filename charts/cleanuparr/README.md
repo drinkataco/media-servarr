@@ -36,6 +36,27 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
 
+### Secrets
+
+Cleanuparr defines `apiKey` by default, and you can optionally define integration keys such as `sonarrApiKey` and `radarrApiKey`.
+
+You can either define secret values directly in your chart values, or reference keys from an existing Secret.
+
+```yaml
+secrets:
+  # inline value
+  - name: 'apiKey'
+    value: 'your-api-key-here'
+
+  # reference pre-existing Secret
+  - name: 'sonarrApiKey'
+    ref: 'sonarr-api-secret'
+  - name: 'radarrApiKey'
+    ref: 'radarr-api-secret'
+```
+
+When `ref` is set, the chart reads key `name` from the Secret named by `ref` in the same namespace.
+
 ### Application Configuration
 
 Application configuration is managed via the GUI and stored in the application database.

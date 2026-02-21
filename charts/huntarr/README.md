@@ -9,7 +9,6 @@ This README covers the basics of customising and installation
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)
 * [Configuration](#configuration)
-  * [Secrets](#secrets)
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
   * [Ingress](#ingress)
