@@ -6,7 +6,7 @@
 apiVersion: 'v1'
 kind: 'PersistentVolumeClaim'
 metadata:
-  name: '{{ $key }}'
+  name: '{{ $value.name | default $key }}'
   namespace: {{ $context.Release.Namespace }}
   labels:
     {{- include "media-servarr-base.labels" $context | nindent 4 }}
