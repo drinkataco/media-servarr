@@ -145,6 +145,8 @@ serviceAccount:
 
 service:
   type: 'ClusterIP'
+  annotations: {}
+    # example-annotation: "something"
   ports:
     - port: # by default uses application.port
       targetPort: 'http'
