@@ -125,6 +125,7 @@ deployment:
 
 persistentVolumeClaims: {}
   # app-config:
+  #   name: 'my-config-pvc' # optional, uses key name by default
   #   accessMode: 'ReadWriteOnce'
   #   requestStorage: '1Gi'
   #   storageClassName: 'manual'

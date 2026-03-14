@@ -184,7 +184,20 @@ spec:
         {{- range $key, $value := .Values.deployment.volumes }}
         - name: '{{ $key }}'
           {{- $volume := default (dict "emptyDir" dict) $value }}
+          {{- $pvc := get $volume "persistentVolumeClaim" }}
+          {{- if $pvc }}
+          {{- $pvcConfig := deepCopy $pvc }}
+          {{- $pvcKey := (get $pvcConfig "claimName") | default $key }}
+          {{- $claimName := $pvcKey }}
+          {{- if hasKey $context.Values.persistentVolumeClaims $pvcKey }}
+          {{- $claimName = (get (index $context.Values.persistentVolumeClaims $pvcKey) "name") | default $pvcKey }}
+          {{- end }}
+          {{- $_ := set $pvcConfig "claimName" $claimName }}
+          persistentVolumeClaim:
+            {{- toYaml $pvcConfig | nindent 12 }}
+          {{- else }}
           {{- toYaml $volume | nindent 10 }}
+          {{- end }}
         {{- end }}
         {{- if $config }}
         - name: 'config-map'
