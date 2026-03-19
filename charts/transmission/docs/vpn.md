@@ -32,40 +32,51 @@ Configuration specifics, in terms of environment variables, will be different fo
 ```yaml
 deployment:
    ...
-   sideCarContainers:
-    - name: 'gluetun'
-      image: 'qmcgaw/gluetun'
-      ports:
-        - containerPort: 8000
-      securityContext:
-        capabilities:
-          add:
-            - 'NET_ADMIN'
-      env:
-        # VPN connection
-        #  This is different depending on your provider. Consult Gluetun documentation
-        - name: 'VPN_SERVICE_PROVIDER'
-          value: 'protonvpn'
-        - name: 'VPN_TYPE'
-          value: 'wireguard'
-        - name: 'WIREGUARD_PRIVATE_KEY'
-          value: ''
-        - name: 'SERVER_COUNTRIES'
-          value: 'United Kingdom'
-        # Port Forwarding
-        #  A port
-        - name: 'VPN_PORT_FORWARDING'
-          value: 'on'
-        - name: 'PORT_FORWARD_ONLY'
-          value: 'on'
-        # Kubernetes specific config:
-        # DNS
-        - name: 'DNS_KEEP_NAMESERVER'
-          value: 'on'
-        # FIREWALL
-        - name: 'FIREWALL_OUTBOUND_SUBNETS'
-          value: '10.42.0.0/15'
+  sideCarContainers:
+  - name: 'gluetun'
+    image: 'qmcgaw/gluetun'
+    ports:
+      - containerPort: 8000
+    securityContext:
+      capabilities:
+        add:
+          - 'NET_ADMIN'
+    env:
+      # Gluetun API Key
+      # Read Note below
+      - name: 'HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE'
+        value: '{"auth":"none"}'
+      # VPN connection
+      #  This is different depending on your provider. Consult Gluetun documentation
+      - name: 'VPN_SERVICE_PROVIDER'
+        value: 'protonvpn'
+      - name: 'VPN_TYPE'
+        value: 'wireguard'
+      - name: 'WIREGUARD_PRIVATE_KEY'
+        value: ''
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: 'proton-wireguard'
+        #     key: 'privateKey'
+      - name: 'SERVER_COUNTRIES'
+        value: 'United Kingdom'
+      # Port Forwarding
+      #  A port
+      - name: 'VPN_PORT_FORWARDING'
+        value: 'on'
+      - name: 'PORT_FORWARD_ONLY'
+        value: 'on'
+      # Kubernetes specific config:
+      # DNS
+      - name: 'DNS_KEEP_NAMESERVER'
+        value: 'on'
+      # FIREWALL
+      - name: 'FIREWALL_OUTBOUND_SUBNETS'
+        value: '10.42.0.0/15'
 ```
+
+> ![WARNING]
+> It is generally recommended to [set up an API key](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/control-server.md#authentication) for accessing your Gluetun instance, as a toml file - mounted at `/gluetun/auth/config.yaml`. For simplicity, in this example, it is disabled with the `HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE` just for this example
 
 ## Deployment
 
@@ -120,23 +131,33 @@ deployment:
     ...
     - name: 'update-peer-port'
       image: 'alpine:latest'
+      # If using an API key for access (recommended)
+      env:
+        - name: 'GLUETUN_API_KEY'
+          valueFrom:
+            secretKeyRef:
+              name: 'gluetun-apikey'
+              key: 'apikey'
+      securityContext:
+        capabilities:
+          add:
+            - 'NET_ADMIN'
       command:
         - '/bin/sh'
         - '-c'
         - |
-          # Add dependencies
-          echo "nameserver 8.8.8.8" > /etc/resolv.conf # allow quick resolution
           apk update
           apk add --no-cache jq curl
+          sleep 30
 
           # Transmission RPC URL
-          TRANSMISSION_URL="http://localhost:9091/transmission/rpc/"
+          TRANSMISSION_URL="http://localhost:9092/transmission-vpn/rpc/"
           # Gluetun Control Server URL
           GLUETUN_URL="http://localhost:8000/v1"
           # Initial Transmission RPC request with an invalid session ID to start
           SESSION_ID=""
-          # How quickly to retry after a failure 
-          ERROR_RETRY_S=60 
+          # How quickly to retry after a failure
+          ERROR_RETRY_S=60
           # How often to check for updated ports
           UPDATE_CHECK_S=120
 
@@ -164,12 +185,13 @@ deployment:
             log "Transmission Session ID: $SESSION_ID"
 
             while true; do
-              log 'Fetching port from Gluetun'
+              log "Fetching port from Gluetun"
 
-              PORT=$(curl -s "${GLUETUN_URL}/openvpn/portforwarded" | jq -r '.port')
+              PORT_RESPONSE="$(curl -fsS -H "X-API-Key: ${GLUETUN_API_KEY}" "${GLUETUN_URL}/portforward" 2>&1)"
+              PORT="$(printf '%s' "$PORT_RESPONSE" | jq -r '.port // empty' 2>/dev/null)"
 
               if [ -z "$PORT" ]; then
-                err "Port forward not found. Trying again in ${ERROR_RETRY_S}s"
+                err "Port forward not found from Gluetun response: ${PORT_RESPONSE}. Trying again in ${ERROR_RETRY_S}s"
                 sleep $ERROR_RETRY_S
                 continue
               fi
@@ -178,14 +200,14 @@ deployment:
               log "Sending request to Transmission RPC..."
 
               RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$TRANSMISSION_URL" \
-                 -H "Content-Type: application/json" \
-                 -H "X-Transmission-Session-Id: $SESSION_ID" \
-                 -d "{\"arguments\":{\"peer-port\":$PORT},\"method\":\"session-set\"}")
+                -H "Content-Type: application/json" \
+                -H "X-Transmission-Session-Id: $SESSION_ID" \
+                -d "{\"arguments\":{\"peer-port\":$PORT},\"method\":\"session-set\"}")
 
               if [ "$RESPONSE" = "200" ]; then
                 log "Transmission RPC request successful. Peer port updated to $PORT."
               elif [ "$RESPONSE" = "409" ]; then
-                err 'Received 409 Conflict. Fetching new Transmission session ID...'
+                err "Received 409 Conflict. Fetching new Transmission session ID..."
                 break
               else
                 err "Unexpected response: $RESPONSE from Transmission. Trying again in ${ERROR_RETRY_S}s"
