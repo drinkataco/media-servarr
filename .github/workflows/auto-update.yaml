@@ -43,6 +43,8 @@ jobs:
             repo: 'linuxserver/sabnzbd'
           - name: 'sonarr'
             repo: 'linuxserver/sonarr'
+          - name: 'tinymediamanager'
+            repo: 'tinymediamanager/tinymediamanager'
           - name: 'transmission'
             repo: 'linuxserver/transmission'
     steps:
