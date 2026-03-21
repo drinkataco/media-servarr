@@ -1,0 +1,27 @@
+apiVersion: 'v2'
+name: 'tinymediamanager'
+description: 'Media manager for movies and TV shows'
+home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/tinymediamanager'
+keywords:
+  - 'media'
+  - 'metadata'
+  - 'movies'
+  - 'tv'
+  - 'tinymediamanager'
+kubeversion: ">=1.24.0-0"
+type: 'application'
+version: 0.1.0
+appVersion: 5.2.8
+icon: 'https://github.com/drinkataco/media-servarr/blob/main/icon.png'
+maintainers:
+  - name: 'media-servarr'
+    email: 'git@jo.shw.al'
+    url: 'https://github.com/drinkataco/media-servarr/'
+sources:
+  - 'https://www.tinymediamanager.org/'
+  - 'https://hub.docker.com/r/tinymediamanager/tinymediamanager'
+  - 'https://github.com/drinkataco/media-servarr/tree/main/charts/tinymediamanager'
+dependencies:
+  - name: 'media-servarr-base'
+    version: 0.12.0
+    repository: "file://../.."

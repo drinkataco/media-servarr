@@ -1,0 +1,63 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 4000
+  # tinyMediaManager does not fit cleanly behind a shared path prefix, so default to root
+  urlBase: ''
+  # ConfigMap for startup options
+  config:
+    filename: 'launcher-extra.yml'
+    contents: |
+      jvmOpts:
+        - "-Xmx1024m"
+    mountPath: '/app/launcher-extra.yml'
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'tinymediamanager/tinymediamanager'
+
+    ports:
+      - name: 'http'
+        containerPort: 4000
+        servicePort: 4000
+        protocol: 'TCP'
+      - name: 'api'
+        containerPort: 7878
+        servicePort: 7878
+        protocol: 'TCP'
+
+    # Additional volumeMounts on the output Deployment definition.
+    volumeMounts:
+      - name: 'data'
+        mountPath: '/data'
+      - name: 'film'
+        mountPath: '/media/movies'
+      - name: 'television'
+        mountPath: '/media/tvshows'
+
+  volumes:
+    data:
+      persistentVolumeClaim:
+        claimName: 'tinymediamanager-data'
+    film:
+    television:
+
+persistentVolumeClaims:
+  tinymediamanager-data:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '20Gi'
+    selector: {}
+
+ingress:
+  enabled: true

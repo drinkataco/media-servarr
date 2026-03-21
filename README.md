@@ -44,4 +44,5 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Readarr [DEPRECATED] - [readarr.com](https://readarr.com/)
 - Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
 - Sonarr - [sonarr.tv](https://sonarr.tv/)
+- tinyMediaManager - [tinymediamanager.org](https://www.tinymediamanager.org/)
 - Transmission - [transmissionbt.com](https://transmissionbt.com)
