@@ -1,0 +1,49 @@
+# Default library values
+nameOverride: ''
+fullnameOverride: ''
+
+#
+# Application Config
+#
+application:
+  # Main application web UI port
+  port: 6868
+  # Profilarr is best exposed at root on a dedicated host
+  urlBase: ''
+
+#
+# Resource - DEPLOYMENT
+# This is to set up and define the application deployment
+#
+deployment:
+  container:
+    image:
+      repository: 'santiagosayshey/profilarr'
+
+    env:
+      - name: 'TZ'
+        value: 'UTC'
+      # Set AUTH to 'off' or 'oidc' to use a different authentication mode.
+      # Consult the Profilarr docs for the required configuration when not using the default.
+      - name: 'AUTH'
+        value: 'on'
+
+    volumeMounts:
+      - name: 'config'
+        mountPath: '/config'
+
+  volumes:
+    config:
+      persistentVolumeClaim:
+        claimName: 'profilarr-config'
+
+persistentVolumeClaims:
+  profilarr-config:
+    accessMode: 'ReadWriteOnce'
+    requestStorage: '5Gi'
+    selector: {}
+
+ingress:
+  enabled: true
+  host: 'profilarr.local'
+  path: '/'

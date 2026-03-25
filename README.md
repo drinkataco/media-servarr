@@ -39,6 +39,7 @@ There are a number of charts available under the [./charts](./charts) - each wit
 - Homarr - [homarr.dev](https://homarr.dev/)
 - Jellyfin - [jellyfin.org](https://jellyfin.org/)
 - Lidarr - [lidarr.audio](https://lidarr.audio/)
+- Profilarr - [github.com/Dictionarry-Hub/profilarr](https://github.com/Dictionarry-Hub/profilarr)
 - Prowlarr - [prowlarr.com](https://prowlarr.com/)
 - Radarr - [radarr.video](https://radarr.video/)
 - Readarr [DEPRECATED] - [readarr.com](https://readarr.com/)
