@@ -12,8 +12,8 @@ keywords:
   - 'whisparr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.12.0
-appVersion: 2.8.1
+version: 0.12.1
+appVersion: 2.8.3
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/cleanuparr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
