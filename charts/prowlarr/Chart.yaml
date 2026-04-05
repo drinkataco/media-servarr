@@ -10,8 +10,8 @@ keywords:
   - 'prowlarr'
 kubeversion: ">=1.24.0-0"
 type: 'application'
-version: 0.22.0
-appVersion: 2.3.0
+version: 0.22.1
+appVersion: 2.3.5
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/prowlarr/icon.png'
 dependencies:
   - name: 'media-servarr-base'
