@@ -126,6 +126,7 @@ deployment:
 persistentVolumeClaims: {}
   # app-config:
   #   name: 'my-config-pvc' # optional, uses key name by default
+  #   volumeName: 'existing-pv-name' # optional, binds this claim to a specific PV
   #   accessMode: 'ReadWriteOnce'
   #   requestStorage: '1Gi'
   #   storageClassName: 'manual'

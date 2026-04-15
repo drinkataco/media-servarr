@@ -11,6 +11,9 @@ metadata:
   labels:
     {{- include "media-servarr-base.labels" $context | nindent 4 }}
 spec:
+  {{- if (hasKey $value "volumeName") }}
+  volumeName: '{{ $value.volumeName }}'
+  {{- end }}
   {{- if (hasKey $value "storageClassName")  }}
   storageClassName: '{{ $value.storageClassName }}'
   {{- end }}
