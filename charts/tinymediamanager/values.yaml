@@ -42,9 +42,9 @@ deployment:
       - name: 'data'
         mountPath: '/data'
       - name: 'film'
-        mountPath: '/media/movies'
+        mountPath: '/film'
       - name: 'television'
-        mountPath: '/media/tvshows'
+        mountPath: '/tv'
 
   volumes:
     data:
