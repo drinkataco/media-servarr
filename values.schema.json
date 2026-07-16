@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "media-servarr-base values",
+  "description": "Values schema for the media-servarr-base library chart and its consuming charts.",
+  "type": "object",
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in resource names and labels."
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the fully qualified resource name."
+    },
+
+    "secrets": {
+      "type": ["array", "null"],
+      "description": "Secrets referenced by application config or exposed to the container.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": ["string", "null"], "description": "Inline value. Mutually exclusive with `ref`." },
+          "ref": { "type": ["string", "null"], "description": "Name of a pre-existing Secret to source from. Mutually exclusive with `value`." }
+        },
+        "required": ["name"]
+      }
+    },
+
+    "application": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": ["integer", "null"],
+          "description": "Main application web UI port. Used as the default for container and service ports."
+        },
+        "urlBase": {
+          "type": ["string", "null"],
+          "description": "Base URL path the app is served under."
+        },
+        "config": {
+          "description": "ConfigMap-mounted configuration file(s). Accepts a single entry or a list.",
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/configEntry" },
+            { "type": "array", "items": { "$ref": "#/definitions/configEntry" } }
+          ]
+        }
+      }
+    },
+
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": ["object", "null"],
+          "description": "Deployment strategy. Defaults to `{type: Recreate}` when empty."
+        },
+        "podAnnotations": { "type": ["object", "null"] },
+        "podLabels": { "type": ["object", "null"] },
+        "podSecurityContext": { "type": ["object", "null"] },
+
+        "container": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "object",
+              "properties": {
+                "repository": { "type": "string" },
+                "tag": { "type": ["string", "null"], "description": "Image tag. Defaults to `.Chart.AppVersion` when empty." },
+                "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] }
+              },
+              "required": ["repository"]
+            },
+            "env": {
+              "type": ["array", "null"],
+              "items": { "type": "object" }
+            },
+            "ports": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "containerPort": { "type": ["integer", "null"], "description": "Defaults to `application.port` when empty." },
+                  "servicePort": { "type": ["integer", "null"], "description": "Defaults to `application.port` when empty." },
+                  "targetPort": { "type": ["string", "integer", "null"] },
+                  "protocol": { "type": "string", "enum": ["TCP", "UDP", "SCTP"] }
+                },
+                "required": ["name"]
+              }
+            },
+            "livenessProbe": { "type": ["object", "null"] },
+            "readinessProbe": { "type": ["object", "null"] },
+            "resources": { "type": ["object", "null"] },
+            "securityContext": { "type": ["object", "null"] },
+            "volumeMounts": {
+              "type": ["array", "null"],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "mountPath": { "type": "string" },
+                  "subPath": { "type": "string" },
+                  "readOnly": { "type": "boolean" }
+                },
+                "required": ["name", "mountPath"]
+              }
+            }
+          }
+        },
+
+        "sideCarContainers": {
+          "type": ["array", "null"],
+          "items": { "type": "object" }
+        },
+        "initContainers": {
+          "type": ["array", "null"],
+          "items": { "type": "object" }
+        },
+        "volumes": {
+          "type": ["object", "null"],
+          "description": "Map of volume name → volume spec. A null value defaults to `emptyDir: {}`.",
+          "additionalProperties": {
+            "type": ["object", "null"]
+          }
+        },
+        "nodeSelector": { "type": ["object", "null"] },
+        "tolerations": { "type": ["array", "null"] },
+        "affinity": { "type": ["object", "null"] },
+        "runtimeClassName": { "type": ["string", "null"] }
+      }
+    },
+
+    "persistentVolumeClaims": {
+      "type": ["object", "null"],
+      "description": "Map of PVC key → PVC spec. The key is used as the PVC name unless `name` overrides it.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "Override the PVC name. Defaults to the map key." },
+          "volumeName": { "type": "string", "description": "Bind this PVC to a specific pre-existing PV by name." },
+          "accessMode": { "type": "string", "description": "Single access mode string (singular). The chart wraps it into `accessModes` in the rendered PVC." },
+          "requestStorage": { "type": ["string", "integer"], "description": "Requested storage size, e.g. '1Gi'." },
+          "storageClassName": { "type": "string" },
+          "selector": { "type": ["object", "null"] }
+        }
+      }
+    },
+
+    "serviceAccount": {
+      "type": ["object", "null"],
+      "properties": {
+        "create": { "type": "boolean" },
+        "automount": { "type": "boolean" },
+        "annotations": { "type": ["object", "null"] },
+        "name": { "type": ["string", "null"] },
+        "imagePullSecrets": {
+          "description": "Either an empty map (default) or a list of `{name}` entries.",
+          "oneOf": [
+            { "type": "object" },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": { "name": { "type": "string" } },
+                "required": ["name"]
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"]
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "enum": ["Cluster", "Local"],
+          "description": "Only valid when service.type is NodePort or LoadBalancer."
+        },
+        "annotations": { "type": ["object", "null"] },
+        "ports": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "object",
+            "properties": {
+              "port": { "type": ["integer", "null"] },
+              "targetPort": { "type": ["string", "integer", "null"] },
+              "protocol": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": ["string", "null"] },
+        "annotations": { "type": ["object", "null"] },
+        "host": { "type": ["string", "null"] },
+        "path": { "type": ["string", "null"], "description": "Defaults to '/' + application.urlBase when empty." },
+        "pathType": {
+          "type": "string",
+          "enum": ["Exact", "Prefix", "ImplementationSpecific"]
+        },
+        "port": { "type": ["integer", "null"], "description": "Defaults to application.port when empty." },
+        "tls": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "object",
+            "properties": {
+              "secretName": { "type": "string" },
+              "hosts": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["secretName", "hosts"]
+          }
+        }
+      }
+    },
+
+    "metrics": {
+      "type": "object",
+      "description": "Exportarr sidecar for *arr applications (radarr, sonarr, lidarr, readarr).",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "apiref": {
+          "type": ["object", "null"],
+          "description": "Point Exportarr at a different Secret/key instead of the chart's own `apiKey`.",
+          "properties": {
+            "secret": { "type": "string" },
+            "keyname": { "type": "string" }
+          },
+          "required": ["secret", "keyname"]
+        },
+        "app": { "type": ["string", "null"], "description": "Which *arr app to scrape (radarr, sonarr, lidarr, readarr, prowlarr)." },
+        "name": { "type": "string" },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "tag": { "type": "string" },
+            "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] }
+          }
+        },
+        "env": {
+          "type": ["array", "null"],
+          "items": { "type": "object" }
+        },
+        "port": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "number": { "type": ["integer", "null"] }
+          }
+        },
+        "resources": { "type": ["object", "null"] },
+        "serviceMonitor": {
+          "type": "object",
+          "properties": {
+            "interval": { "type": "string" },
+            "scrapeTimeout": { "type": "string" },
+            "path": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "configEntry": {
+      "type": "object",
+      "properties": {
+        "filename": { "type": "string" },
+        "contents": { "type": "string" },
+        "secrets": {
+          "type": ["array", "null"],
+          "items": { "type": "string" },
+          "description": "Names of entries in the top-level `secrets` list to substitute into contents (via $name)."
+        },
+        "mountPath": { "type": "string" }
+      },
+      "required": ["filename", "contents", "mountPath"]
+    }
+  }
+}
