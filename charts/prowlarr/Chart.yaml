@@ -8,7 +8,7 @@ keywords:
   - 'download'
   - 'indexer'
   - 'prowlarr'
-kubeversion: ">=1.24.0-0"
+kubeVersion: ">=1.24.0-0"
 type: 'application'
 version: 0.24.0
 appVersion: 2.4.0

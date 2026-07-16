@@ -5,7 +5,7 @@ home: 'https://github.com/drinkataco/media-servarr/tree/main/charts/homarr'
 keywords:
   - 'dashboard'
   - 'homarr'
-kubeversion: ">=1.24.0-0"
+kubeVersion: ">=1.24.0-0"
 type: 'application'
 version: 0.44.0
 appVersion: v1.70.0

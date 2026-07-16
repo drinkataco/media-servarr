@@ -10,7 +10,7 @@ keywords:
   - 'usenet'
   - 'manager'
   - 'radarr'
-kubeversion: ">=1.24.0-0"
+kubeVersion: ">=1.24.0-0"
 type: 'application'
 version: 1.6.0
 appVersion: 6.2.1
