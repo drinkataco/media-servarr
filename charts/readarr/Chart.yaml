@@ -10,15 +10,15 @@ keywords:
   - 'usenet'
   - 'manager'
   - 'readarr'
-kubeversion: ">=1.24.0-0"
+kubeVersion: ">=1.24.0-0"
 type: 'application'
-version: 0.14.0
+version: 0.15.0
 appVersion: 0.4.19-nightly
 icon: 'https://github.com/drinkataco/media-servarr/blob/main/charts/readarr/icon.png'
 deprecated: true
 dependencies:
   - name: 'media-servarr-base'
-    version: 0.14.0
+    version: 0.15.0
     repository: "file://../.."
 maintainers:
   - name: 'media-servarr'

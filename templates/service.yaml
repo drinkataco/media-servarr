@@ -15,6 +15,9 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if (hasKey .Values.service "externalTrafficPolicy") }}
+  externalTrafficPolicy: '{{ .Values.service.externalTrafficPolicy }}'
+  {{- end }}
   ports:
     {{- range .Values.deployment.container.ports }}
     - port: {{ if .servicePort }}{{ .servicePort }}{{ else if .containerPort }}{{ .containerPort }}{{ else }}{{ $context.Values.application.port }}{{ end }}
