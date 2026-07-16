@@ -147,6 +147,7 @@ serviceAccount:
 
 service:
   type: 'ClusterIP'
+  # externalTrafficPolicy: 'Local' # optional, only valid for NodePort/LoadBalancer services
   annotations: {}
     # example-annotation: "something"
   ports:
