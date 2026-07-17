@@ -6,36 +6,34 @@
 
 ![media-servarr](./icon.png)
 
-A collection of opinionated Helm charts for self-hosted media automation on Kubernetes. All charts share a common base (`media-servarr-base`) so configuration patterns are consistent across every application.
+A collection of Helm charts for self-hosted media - primarily built around the [Servarr](https://wiki.servarr.com/) family of charts, with some complementary charts here and there.
 
-Covers the full [servarr](https://wiki.servarr.com/) stack — indexers, downloaders, and library managers for movies, TV, music, and books — plus supporting tools like a dashboard, subtitle manager, and media scraper.
+All charts share the common base (`media-servarr-base`) so configuration patterns are consistent across every application.
 
-<!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [The Charts](#the-charts)
 * [Prerequisites](#prerequisites)
 * [Usage](#usage)
 * [Base Chart Features](#base-chart-features)
 * [Configuration](#configuration)
-<!-- vim-md-toc END -->
 
 ## The Charts
 
 | Chart | Application | Description |
 |---|---|---|
-| `bazarr` | [Bazarr](https://www.bazarr.media/) | Automatic subtitle downloader; companion to Sonarr and Radarr |
-| `cleanuparr` | [Cleanuparr](https://cleanuparr.github.io/Cleanuparr/) | Removes stalled, orphaned, and unwanted items from download clients |
-| `flaresolverr` | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Proxy to bypass Cloudflare protection; used by Prowlarr |
-| `homarr` | [Homarr](https://homarr.dev/) | Dashboard for self-hosted services |
-| `jellyfin` | [Jellyfin](https://jellyfin.org/) | Open-source media server for movies, TV, and music |
-| `lidarr` | [Lidarr](https://lidarr.audio/) | Music library manager |
-| `profilarr` | [Profilarr](https://github.com/Dictionarry-Hub/profilarr) | Quality profile and custom format manager for the *arr stack |
-| `prowlarr` | [Prowlarr](https://prowlarr.com/) | Indexer manager and proxy for the *arr stack |
-| `radarr` | [Radarr](https://radarr.video/) | Movie library manager |
-| `readarr` _(deprecated)_ | [Readarr](https://readarr.com/) | Book library manager |
-| `sabnzbd` | [SABnzbd](https://sabnzbd.org/) | Usenet download client |
-| `sonarr` | [Sonarr](https://sonarr.tv/) | TV series library manager |
-| `tinymediamanager` | [tinyMediaManager](https://www.tinymediamanager.org/) | Media metadata scraper and manager |
-| `transmission` | [Transmission](https://transmissionbt.com) | BitTorrent download client |
+| [`bazarr`](./charts/bazarr) | [Bazarr](https://www.bazarr.media/) | Automatic subtitle downloader; companion to Sonarr and Radarr |
+| [`cleanuparr`](./charts/cleanuparr) | [Cleanuparr](https://cleanuparr.github.io/Cleanuparr/) | Removes stalled, orphaned, and unwanted items from download clients |
+| [`flaresolverr`](./charts/flaresolverr) | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Proxy to bypass Cloudflare protection; used by Prowlarr |
+| [`homarr`](./charts/homarr) | [Homarr](https://homarr.dev/) | Dashboard for self-hosted services |
+| [`jellyfin`](./charts/jellyfin) | [Jellyfin](https://jellyfin.org/) | Open-source media server for movies, TV, and music |
+| [`lidarr`](./charts/lidarr) | [Lidarr](https://lidarr.audio/) | Music library manager |
+| [`profilarr`](./charts/profilarr) | [Profilarr](https://github.com/Dictionarry-Hub/profilarr) | Quality profile and custom format manager for the *arr stack |
+| [`prowlarr`](./charts/prowlarr) | [Prowlarr](https://prowlarr.com/) | Indexer manager and proxy for the *arr stack |
+| [`radarr`](./charts/radarr) | [Radarr](https://radarr.video/) | Movie library manager |
+| [`readarr`](./charts/readarr) _(deprecated)_ | [Readarr](https://readarr.com/) | Book library manager |
+| [`sabnzbd`](./charts/sabnzbd) | [SABnzbd](https://sabnzbd.org/) | Usenet download client |
+| [`sonarr`](./charts/sonarr) | [Sonarr](https://sonarr.tv/) | TV series library manager |
+| [`tinymediamanager`](./charts/tinymediamanager) | [tinyMediaManager](https://www.tinymediamanager.org/) | Media metadata scraper and manager |
+| [`transmission`](./charts/transmission) | [Transmission](https://transmissionbt.com) | BitTorrent download client |
 
 Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with per-app installation and configuration details.
 
@@ -43,7 +41,7 @@ Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with per
 
 - Kubernetes `>=1.24`
 - [Helm](https://helm.sh/) `>=3.12`
-- (Optional) [Prometheus Operator](https://github.com/prometheus-operator/kube-prometheus) CRDs if enabling `metrics`
+- (Optional) [Prometheus Operator](https://github.com/prometheus-operator/kube-prometheus) CRDs if enabling `metrics` where available (see [exportarr](https://github.com/onedr0p/exportarr))
 
 ## Usage
 
