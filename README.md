@@ -15,15 +15,7 @@ Covers the full [servarr](https://wiki.servarr.com/) stack — indexers, downloa
 * [Prerequisites](#prerequisites)
 * [Usage](#usage)
 * [Base Chart Features](#base-chart-features)
-* [Configuration Reference](#configuration-reference)
-  * [Secrets](#secrets)
-  * [Application config (ConfigMap-backed)](#application-config-configmap-backed)
-  * [Volumes and PersistentVolumeClaims](#volumes-and-persistentvolumeclaims)
-  * [Ingress](#ingress)
-  * [Metrics (Exportarr)](#metrics-exportarr)
-  * [Service](#service)
-  * [Service Account](#service-account)
-  * [Pod scheduling](#pod-scheduling)
+* [Configuration](#configuration)
 <!-- vim-md-toc END -->
 
 ## The Charts
@@ -45,7 +37,7 @@ Covers the full [servarr](https://wiki.servarr.com/) stack — indexers, downloa
 | `tinymediamanager` | [tinyMediaManager](https://www.tinymediamanager.org/) | Media metadata scraper and manager |
 | `transmission` | [Transmission](https://transmissionbt.com) | BitTorrent download client |
 
-Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with installation and configuration details.
+Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with per-app installation and configuration details.
 
 ## Prerequisites
 
@@ -86,132 +78,34 @@ All charts are built on the shared `media-servarr-base` library. Key capabilitie
 
 - **Secret injection** — inline values or references to pre-existing Kubernetes Secrets; secrets can be substituted into ConfigMap-mounted config files at pod start via an init container
 - **Config-as-code** — application config files are managed as ConfigMaps and mounted read-write via an init container (to satisfy apps that crash on read-only mounts)
-- **PersistentVolumeClaims** — declarative PVC provisioning with support for `storageClassName`, `volumeName` (bind to a specific pre-existing PV), and label selectors
+- **PersistentVolumeClaims** — declarative PVC provisioning with `storageClassName`, label selectors, and `volumeName` for binding to a pre-existing PV
 - **Ingress** — single-host ingress with optional TLS and custom annotations (compatible with Traefik, nginx, etc.)
-- **Metrics / Exportarr** — optional [Exportarr](https://github.com/onedr0p/exportarr) sidecar and `ServiceMonitor` CRD for Prometheus scraping (supported on Radarr, Sonarr, Lidarr, Readarr, Prowlarr)
-- **Flexible volumes** — arbitrary volume types (NFS, emptyDir, ConfigMap, PVC, etc.) via the `deployment.volumes` map; a null entry defaults to `emptyDir: {}`
+- **Metrics / Exportarr** — optional [Exportarr](https://github.com/onedr0p/exportarr) sidecar and `ServiceMonitor` CRD for Prometheus scraping (Radarr, Sonarr, Lidarr, Readarr, Prowlarr)
+- **Flexible volumes** — arbitrary volume types (NFS, emptyDir, ConfigMap, PVC, etc.) via the `deployment.volumes` map
 - **Runtime customisation** — sidecar and init containers, node selectors, tolerations, affinity, pod/container security contexts, `runtimeClassName`, image pull secrets
 
-A JSON Schema for all values is provided at [`values.schema.json`](./values.schema.json). Editors with the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) (VS Code, nvim, etc.) will validate your values files against it automatically via the `yaml-language-server: $schema` modeline included in every `values.yaml`.
+## Configuration
 
-## Configuration Reference
+For the full list of value keys, their types, and inline documentation:
 
-All top-level keys are optional unless noted. The canonical reference is [`values.yaml`](./values.yaml); what follows is a summary of the main sections.
+- **Per-chart guides** — each chart has its own [`README.md`](./charts) with an installation walkthrough and worked examples.
+- **JSON Schema** — [`values.schema.json`](./values.schema.json) validates every value path. Editors with the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) pick it up automatically via the modeline at the top of each `values.yaml`.
+- **Default values** — [`values.yaml`](./values.yaml) is the canonical reference for defaults and shape.
 
-### Secrets
+The most distinctive pattern in this repo is **config-as-code with secret substitution**: application config lives in `values.yaml`, gets rendered to a ConfigMap, and secrets are substituted at pod start:
 
 ```yaml
 secrets:
-  - name: 'apiKey'          # key name used in config substitution ($apiKey) and Secret data
-    value: 'abc123'          # inline value — generates a Secret in-cluster
-  # - name: 'apiKey'
-  #   ref: 'my-k8s-secret'  # reference a pre-existing Secret instead
-```
+  - name: apiKey
+    value: 'abc123'          # or: ref: 'my-existing-secret'
 
-When `value` is set the chart creates a Kubernetes `Secret`. When `ref` is set the chart reads from a Secret you manage externally (e.g. via External Secrets Operator).
-
-### Application config (ConfigMap-backed)
-
-```yaml
 application:
-  port: 8989
-  urlBase: 'sonarr'
-  config:                     # null to disable ConfigMap management
-    filename: 'config.xml'
-    mountPath: '/config/config.xml'
-    secrets: ['apiKey']       # names to substitute as $apiKey in contents
+  config:
+    filename: config.xml
+    mountPath: /config/config.xml
+    secrets: [apiKey]        # substituted as $apiKey in contents
     contents: |
       <Config>
         <ApiKey>$apiKey</ApiKey>
       </Config>
-```
-
-`config` can also be a list of entries to mount multiple config files.
-
-### Volumes and PersistentVolumeClaims
-
-```yaml
-deployment:
-  volumes:
-    config:                          # volume name; null → emptyDir
-      persistentVolumeClaim:
-        claimName: 'sonarr-config'
-    media:
-      nfs:
-        server: fileserver
-        path: /srv/media
-
-persistentVolumeClaims:
-  sonarr-config:
-    storageClassName: longhorn
-    accessMode: ReadWriteOnce        # singular string, not a list
-    requestStorage: 5Gi
-    volumeName: existing-pv-name     # optional: bind to a specific pre-existing PV
-```
-
-### Ingress
-
-```yaml
-ingress:
-  enabled: true
-  className: traefik
-  host: example.com
-  path: /sonarr                      # defaults to /urlBase
-  pathType: Prefix
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-  tls:
-    - secretName: example-tls
-      hosts: [example.com]
-```
-
-### Metrics (Exportarr)
-
-Supported on: Radarr, Sonarr, Lidarr, Readarr, Prowlarr.
-
-```yaml
-metrics:
-  enabled: true
-  app: sonarr                        # which *arr app to scrape
-  # apiref:                          # omit to use this chart's own apiKey secret
-  #   secret: my-existing-secret
-  #   keyname: apiKey
-```
-
-Requires Prometheus Operator CRDs (`ServiceMonitor`). Install [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first.
-
-### Service
-
-```yaml
-service:
-  type: ClusterIP                    # ClusterIP | NodePort | LoadBalancer | ExternalName
-  # externalTrafficPolicy: Local     # NodePort/LoadBalancer only
-  annotations: {}
-```
-
-### Service Account
-
-```yaml
-serviceAccount:
-  create: false
-  automount: true
-  name: default
-  imagePullSecrets:
-    - name: my-registry-secret
-```
-
-### Pod scheduling
-
-```yaml
-deployment:
-  runtimeClassName: nvidia
-  nodeSelector:
-    kubernetes.io/arch: amd64
-  tolerations:
-    - key: gpu
-      operator: Exists
-  affinity:
-    nodeAffinity: {}
-  podSecurityContext:
-    fsGroup: 1000
 ```
