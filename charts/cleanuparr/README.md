@@ -25,7 +25,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install cleanuparr media-servarr/cleanuparr
 ```
@@ -73,7 +73,7 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'cleanuparr-config'
+        claimName: 'cleanuparr-config'
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config` named `cleanuparr-config`.

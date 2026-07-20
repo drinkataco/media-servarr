@@ -23,7 +23,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install homarr media-servarr/homarr
 ```
@@ -58,7 +58,7 @@ deployment:
     # Dashboard (config) files
     app-data-configs:
       persistentVolumeClaim:
-        name: 'my-pv-claim1'
+        claimName: 'my-pv-claim1'
     # Dashboard Icons
     app-data-icons:
       # Example direct NFS mount without need for PV

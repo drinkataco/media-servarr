@@ -25,7 +25,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install bazarr media-servarr/bazarr
 ```
@@ -117,7 +117,7 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'bazarr-config'
+        claimName: 'bazarr-config'
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config` named `bazarr-config`.
