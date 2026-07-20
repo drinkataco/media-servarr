@@ -1,0 +1,98 @@
+name: 'Auto-approve and auto-merge app version updates'
+
+# Approves PRs opened by the auto-update workflow, and (for patch or
+# minor chart bumps) enables auto-merge so they merge once CI is green.
+# Major bumps are approved but require manual merge, so a human can
+# review the upstream release notes for breaking changes.
+#
+# Requires a repo secret named `AUTO_APPROVE_TOKEN`: a fine-grained PAT
+# (or GitHub App installation token) owned by a *different* account than
+# `github-actions[bot]`, with `pull-requests: write` and `contents: write`
+# on this repo. GitHub blocks a bot from approving its own PRs, which is
+# why the default GITHUB_TOKEN can't be used here.
+
+on:
+  pull_request_target:
+    types: ['opened', 'reopened', 'synchronize']
+
+permissions:
+  contents: 'read'
+  pull-requests: 'read'
+
+jobs:
+  approve-and-merge:
+    name: 'Approve and auto-merge'
+    runs-on: 'ubuntu-latest'
+    if: |
+      github.event.pull_request.user.login == 'github-actions[bot]' &&
+      startsWith(github.event.pull_request.title, '⭐️ New App Version:')
+    steps:
+      - name: 'Checkout PR head'
+        uses: 'actions/checkout@v4'
+        with:
+          ref: '${{ github.event.pull_request.head.sha }}'
+          fetch-depth: 0
+
+      - name: 'Determine chart version bump'
+        id: 'bump'
+        run: |
+          # Extract chart name from the PR title:
+          #   "⭐️ New App Version: Update <chart>"
+          chart="$(echo "${{ github.event.pull_request.title }}" | sed -E 's/^⭐️ New App Version: Update //')"
+          chart_file="charts/${chart}/Chart.yaml"
+
+          if [[ ! -f "$chart_file" ]]; then
+            echo "Chart file not found: $chart_file" >&2
+            exit 1
+          fi
+
+          # Fetch the base branch so we can diff versions
+          git fetch origin '${{ github.event.pull_request.base.ref }}' --depth=1
+
+          old_version="$(git show 'origin/${{ github.event.pull_request.base.ref }}:'"$chart_file" | awk '/^version:/ {print $2}')"
+          new_version="$(awk '/^version:/ {print $2}' "$chart_file")"
+
+          IFS='.' read -r old_major old_minor old_patch <<< "$old_version"
+          IFS='.' read -r new_major new_minor new_patch <<< "$new_version"
+
+          if [[ "$new_major" -gt "$old_major" ]]; then
+            bump='major'
+          elif [[ "$new_minor" -gt "$old_minor" ]]; then
+            bump='minor'
+          elif [[ "$new_patch" -gt "$old_patch" ]]; then
+            bump='patch'
+          else
+            bump='none'
+          fi
+
+          echo "Chart '$chart': $old_version -> $new_version ($bump)"
+
+          {
+            echo "chart=$chart"
+            echo "old=$old_version"
+            echo "new=$new_version"
+            echo "bump=$bump"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 'Approve PR'
+        uses: 'hmarr/auto-approve-action@v4'
+        with:
+          github-token: '${{ secrets.AUTO_APPROVE_TOKEN }}'
+          review-message: |
+            Automated approval — ${{ steps.bump.outputs.chart }} ${{ steps.bump.outputs.old }} → ${{ steps.bump.outputs.new }} (${{ steps.bump.outputs.bump }} bump).
+
+      - name: 'Enable auto-merge (patch or minor only)'
+        if: steps.bump.outputs.bump == 'patch' || steps.bump.outputs.bump == 'minor'
+        env:
+          GH_TOKEN: '${{ secrets.AUTO_APPROVE_TOKEN }}'
+        run: |
+          gh pr merge --auto --squash '${{ github.event.pull_request.number }}'
+          echo "Auto-merge enabled — will merge once required checks pass."
+
+      - name: 'Note: manual merge required (major bump)'
+        if: steps.bump.outputs.bump == 'major'
+        env:
+          GH_TOKEN: '${{ secrets.AUTO_APPROVE_TOKEN }}'
+        run: |
+          gh pr comment '${{ github.event.pull_request.number }}' \
+            --body 'Approved automatically, but this is a **major** bump (${{ steps.bump.outputs.old }} → ${{ steps.bump.outputs.new }}). Auto-merge is disabled — please review upstream release notes and merge manually.'
