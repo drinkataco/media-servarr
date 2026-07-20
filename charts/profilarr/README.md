@@ -72,6 +72,7 @@ persistentVolumeClaims:
     accessMode: 'ReadWriteOnce'
     requestStorage: '5Gi'
     storageClassName: 'manual'
+    # volumeName: 'existing-pv-name'  # optional: bind this PVC to a specific pre-existing PV
     selector:
       matchLabels:
         type: 'local'
