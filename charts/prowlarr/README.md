@@ -25,7 +25,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install prowlarr media-servarr/prowlarr
 ```
@@ -34,7 +34,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -75,7 +75,7 @@ application:
     mountPath: '/config/config.xml'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:
@@ -85,10 +85,9 @@ application:
 
 ### Volumes
 
-Three volumes are available by default:
+Only one volume is mounted by default:
 
-- **config** - General config data, where the sqlite database exists, for example
-- **downloads** - Downloads folder for monitoring
+- **config** — General config data, where the sqlite database lives
 
 ```yaml
 deployment:
@@ -96,7 +95,7 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'prowlarr-config'
+        claimName: 'prowlarr-config'
 ```
 
 By default, a PersistentVolumeClaim will be provisioned for the `config`.
@@ -107,6 +106,7 @@ persistentVolumeClaims:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
     storageClassName: 'manual'
+    # volumeName: 'existing-pv-name'  # optional: bind this PVC to a specific pre-existing PV
     selector:
       matchLabels:
         type: 'local'

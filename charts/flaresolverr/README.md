@@ -11,6 +11,7 @@ This README covers the basics of customising and installation
 * [Configuration](#configuration)
   * [Access](#access)
   * [Usage](#usage)
+  * [Ingress](#ingress)
   * [Metrics](#metrics)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
@@ -23,14 +24,14 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
-helm install radarr media-servarr/flaresolverr
+helm install flaresolverr media-servarr/flaresolverr
 ```
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 Unlike other charts in this collection, configuration options are a lot more limited due to the nature of this application.
 
@@ -46,9 +47,23 @@ This application is useful alongside [prowlarr](../prowlarr), allowing you to ac
 
 By default, the internal URL will be `http://flaresolverr.{namespace}.svc.cluster.local:8191`
 
+### Ingress
+
+Flaresolverr is typically consumed in-cluster (by Prowlarr etc.) rather than externally, but ingress is enabled by default. Override host and TLS as needed:
+
+```yaml
+ingress:
+  enabled: true
+  host: 'example.com'
+  tls:
+    # Your TLS settings...
+```
+
+Disable ingress entirely with `ingress.enabled: false` if you only need in-cluster access.
+
 ### Metrics
 
-Flaresolver comes with out-of-the-box support for prometheus. Just enable by setting the following enviornment variables:
+Flaresolverr exposes Prometheus metrics natively (not via Exportarr). Enable it by setting the following environment variables on the container:
 
 ```yaml
 deployment:
@@ -60,9 +75,7 @@ deployment:
       value: '9702'
 ```
 
-It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
-
-Unless changed with `metrics.port.number` you can then consume metrics over port `9704`.
+Metrics are then available on port `9702` (or whatever `PROMETHEUS_PORT` you set). To have Prometheus scrape them, install the [kube-prometheus](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) chart first and add a `ServiceMonitor` for this Service.
 
 ### Advanced
 

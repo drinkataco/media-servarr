@@ -23,7 +23,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install profilarr media-servarr/profilarr
 ```
@@ -32,7 +32,7 @@ By default, this chart exposes Profilarr at `http://profilarr.local/`
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Application Configuration
 
@@ -72,6 +72,7 @@ persistentVolumeClaims:
     accessMode: 'ReadWriteOnce'
     requestStorage: '5Gi'
     storageClassName: 'manual'
+    # volumeName: 'existing-pv-name'  # optional: bind this PVC to a specific pre-existing PV
     selector:
       matchLabels:
         type: 'local'

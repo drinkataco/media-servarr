@@ -25,7 +25,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install radarr media-servarr/radarr
 ```
@@ -34,7 +34,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -62,6 +62,7 @@ application:
   port: 7878 # default UI port
   urlBase: 'radarr' # default web base path
   config:
+    filename: 'config.xml'
     contents: |
       <Config>
         ...
@@ -70,9 +71,11 @@ application:
         <Port>7878</Port>
         ...
       </Config>
+    secrets: [ 'apiKey' ]
+    mountPath: '/config/config.xml'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:
@@ -94,7 +97,7 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'radarr-config'
+        claimName: 'radarr-config'
     downloads:
       nfs:
         server: 'fileserver.local'
@@ -113,6 +116,7 @@ persistentVolumeClaims:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
     storageClassName: 'manual'
+    # volumeName: 'existing-pv-name'  # optional: bind this PVC to a specific pre-existing PV
     selector:
       matchLabels:
         type: 'local'

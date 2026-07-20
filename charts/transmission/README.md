@@ -12,7 +12,8 @@ This README covers the basics of customising and installation
   * [Secrets](#secrets)
   * [Application Configuration](#application-configuration)
   * [Volumes](#volumes)
-  * [Ingress Configuration](#ingress-configuration)
+  * [Service](#service)
+  * [Ingress](#ingress)
   * [VPN Sidecar](#vpn-sidecar)
   * [Advanced](#advanced)
 * [Upgrading](#upgrading)
@@ -25,7 +26,7 @@ This README covers the basics of customising and installation
 Install this helm chart using the following command:
 
 ```bash
-helm repo add mediar-servarr https://media-servarr.shw.al/charts
+helm repo add media-servarr https://media-servarr.shw.al/charts
 
 helm install transmission media-servarr/transmission
 ```
@@ -34,7 +35,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -74,7 +75,7 @@ application:
     mountPath: '/config/settings.json'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:
@@ -84,10 +85,10 @@ application:
 
 ### Volumes
 
-Three volumes are available by default:
+Two volumes are used by default:
 
-- **config** - General config data - where settings exist
-- **downloads** - Downloads folder
+- **config** — General config data, where settings live
+- **downloads** — Downloads folder
 
 ```yaml
 deployment:
@@ -95,7 +96,7 @@ deployment:
   volumes:
     config: # The key will be the volume name
       persistentVolumeClaim:
-        name: 'transmission-config'
+        claimName: 'transmission-config'
     downloads:
       nfs:
         server: 'fileserver.local'
@@ -110,18 +111,32 @@ persistentVolumeClaims:
     accessMode: 'ReadWriteOnce'
     requestStorage: '1Gi'
     storageClassName: 'manual'
+    # volumeName: 'existing-pv-name'  # optional: bind this PVC to a specific pre-existing PV
     selector:
       matchLabels:
         type: 'local'
 ```
 
-### Ingress Configuration
+### Service
 
-If ingress is enabled, you can customise the host, paths, and TLS settings:
+This chart defaults `service.type` to `LoadBalancer` (unlike the other charts, which default to `ClusterIP`). This is so the BitTorrent peer port can be reached externally, not just the RPC UI. If your cluster doesn't have a `LoadBalancer` provider (e.g. MetalLB, a cloud LB), change it to `NodePort` or `ClusterIP`:
+
+```yaml
+service:
+  type: 'NodePort'
+  # externalTrafficPolicy: 'Local'   # optional; preserves client source IP for NodePort/LoadBalancer
+```
+
+### Ingress
+
+Ingress is disabled by default and typically not needed since the RPC UI is exposed through the LoadBalancer Service. If you want ingress for the UI, enable it and set host/TLS:
 
 ```yaml
 ingress:
   enabled: true
+  host: 'example.com'
+  tls:
+    # Your TLS settings...
 ```
 
 ### VPN Sidecar
@@ -151,7 +166,7 @@ helm upgrade transmission media-servarr/transmission -f myvalues.yaml
 To uninstall/delete the `transmission` deployment:
 
 ```bash
-helm delete transmission
+helm uninstall transmission
 ```
 
 ## Support

@@ -6,44 +6,93 @@
 
 ![media-servarr](./icon.png)
 
-This repository contains a collection of similar applications under the [servarr](https://wiki.servarr.com/) family, and some other useful related applications.
+A collection of Helm charts for self-hosted media - primarily built around the [Servarr](https://wiki.servarr.com/) family of charts, with some complementary charts here and there.
 
-The aim of this repository is to be featureful, use repeatable code, and to be a testbed for me to play with a kubernetes helm chart.
+All charts share the common base (`media-servarr-base`) so configuration patterns are consistent across every application.
 
-<!-- vim-md-toc format=bullets ignore=^TODO$ -->
-* [Usage](#usage)
 * [The Charts](#the-charts)
-<!-- vim-md-toc END -->
+* [Prerequisites](#prerequisites)
+* [Usage](#usage)
+* [Configuration](#configuration)
+
+## The Charts
+
+| Chart | Description |
+|---|---|
+| [`bazarr`](./charts/bazarr) | Automatic subtitle downloader; companion to Sonarr and Radarr — [bazarr.media](https://www.bazarr.media/) |
+| [`cleanuparr`](./charts/cleanuparr) | Removes stalled, orphaned, and unwanted items from download clients — [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/) |
+| [`flaresolverr`](./charts/flaresolverr) | Proxy to bypass Cloudflare protection; used by Prowlarr — [github.com/FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) |
+| [`homarr`](./charts/homarr) | Dashboard for self-hosted services — [homarr.dev](https://homarr.dev/) |
+| [`jellyfin`](./charts/jellyfin) | Open-source media server for movies, TV, and music — [jellyfin.org](https://jellyfin.org/) |
+| [`lidarr`](./charts/lidarr) | Music library manager — [lidarr.audio](https://lidarr.audio/) |
+| [`profilarr`](./charts/profilarr) | Quality profile and custom format manager for the *arr stack — [github.com/Dictionarry-Hub/profilarr](https://github.com/Dictionarry-Hub/profilarr) |
+| [`prowlarr`](./charts/prowlarr) | Indexer manager and proxy for the *arr stack — [prowlarr.com](https://prowlarr.com/) |
+| [`radarr`](./charts/radarr) | Movie library manager — [radarr.video](https://radarr.video/) |
+| [`readarr`](./charts/readarr) _(deprecated)_ | Book library manager — [readarr.com](https://readarr.com/) |
+| [`sabnzbd`](./charts/sabnzbd) | Usenet download client — [sabnzbd.org](https://sabnzbd.org/) |
+| [`sonarr`](./charts/sonarr) | TV series library manager — [sonarr.tv](https://sonarr.tv/) |
+| [`tinymediamanager`](./charts/tinymediamanager) | Media metadata scraper and manager — [tinymediamanager.org](https://www.tinymediamanager.org/) |
+| [`transmission`](./charts/transmission) | BitTorrent download client — [transmissionbt.com](https://transmissionbt.com) |
+
+Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with per-app installation and configuration details.
+
+## Prerequisites
+
+- Kubernetes `>=1.24`
+- [Helm](https://helm.sh/) `>=3.12`
+- (Optional) [Prometheus Operator](https://github.com/prometheus-operator/kube-prometheus) CRDs if enabling `metrics` where available (see [exportarr](https://github.com/onedr0p/exportarr))
 
 ## Usage
 
-Add the repository using:
+Add the Helm repository:
 
 ```bash
 helm repo add media-servarr https://media-servarr.shw.al/charts
+helm repo update
 ```
 
-And then view all available charts with
+List available charts:
 
 ```bash
 helm search repo media-servarr
 ```
 
-## The Charts
+Install a chart (Sonarr as an example):
 
-There are a number of charts available under the [./charts](./charts) - each with indiviual README instructions to help you get started.
+```bash
+helm install sonarr media-servarr/sonarr -f my-values.yaml
+```
 
-- Bazarr - [bazarr.media](https://www.bazarr.media/)
-- Cleanuparr - [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/)
-- Flaresolverr - [Flaresolverr/Flaresolverr](https://github.com/FlareSolverr/FlareSolverr)
-- Homarr - [homarr.dev](https://homarr.dev/)
-- Jellyfin - [jellyfin.org](https://jellyfin.org/)
-- Lidarr - [lidarr.audio](https://lidarr.audio/)
-- Profilarr - [github.com/Dictionarry-Hub/profilarr](https://github.com/Dictionarry-Hub/profilarr)
-- Prowlarr - [prowlarr.com](https://prowlarr.com/)
-- Radarr - [radarr.video](https://radarr.video/)
-- Readarr [DEPRECATED] - [readarr.com](https://readarr.com/)
-- Sabnzbd - [sabnzbd.org](https://sabnzbd.org/)
-- Sonarr - [sonarr.tv](https://sonarr.tv/)
-- tinyMediaManager - [tinymediamanager.org](https://www.tinymediamanager.org/)
-- Transmission - [transmissionbt.com](https://transmissionbt.com)
+Upgrade an existing release:
+
+```bash
+helm upgrade sonarr media-servarr/sonarr -f my-values.yaml
+```
+
+## Configuration
+
+The `media-servarr-base` library gives every chart the same building blocks: secret injection (inline or by reference), config-as-code via a ConfigMap-mounted config file, declarative PersistentVolumeClaims (including binding to a pre-existing PV via `volumeName`), ingress with optional TLS, an optional [Exportarr](https://github.com/onedr0p/exportarr) metrics sidecar for the *arr apps, and the usual pod-scheduling knobs.
+
+For the full list of value keys, their types, and inline documentation:
+
+- **Per-chart guides** — each chart has its own [`README.md`](./charts) with an installation walkthrough and worked examples.
+- **JSON Schema** — [`values.schema.json`](./values.schema.json) validates every value path. Editors with the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) pick it up automatically via the modeline at the top of each `values.yaml`.
+- **Default values** — [`values.yaml`](./values.yaml) is the canonical reference for defaults and shape.
+
+A distinctive pattern used in these charts is the **config-as-code with secret substitution**: application config lives in `values.yaml`, gets rendered to a ConfigMap, and secrets are substituted at pod start, allowing use to use secrets and configmap without having to commit their values:
+
+```yaml
+secrets:
+  - name: apiKey
+    ref: 'my-api-key'
+
+application:
+  config:
+    filename: config.xml
+    mountPath: /config/config.xml
+    secrets: [apiKey]        # substituted as $apiKey in contents
+    contents: |
+      <Config>
+        <ApiKey>$apiKey</ApiKey>
+      </Config>
+```
