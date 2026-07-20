@@ -13,7 +13,6 @@ All charts share the common base (`media-servarr-base`) so configuration pattern
 * [The Charts](#the-charts)
 * [Prerequisites](#prerequisites)
 * [Usage](#usage)
-* [Base Chart Features](#base-chart-features)
 * [Configuration](#configuration)
 
 ## The Charts
@@ -70,19 +69,9 @@ Upgrade an existing release:
 helm upgrade sonarr media-servarr/sonarr -f my-values.yaml
 ```
 
-## Base Chart Features
-
-All charts are built on the shared `media-servarr-base` library. Key capabilities:
-
-- **Secret injection** — inline values or references to pre-existing Kubernetes Secrets; secrets can be substituted into ConfigMap-mounted config files at pod start via an init container
-- **Config-as-code** — application config files are managed as ConfigMaps and mounted read-write via an init container (to satisfy apps that crash on read-only mounts)
-- **PersistentVolumeClaims** — declarative PVC provisioning with `storageClassName`, label selectors, and `volumeName` for binding to a pre-existing PV
-- **Ingress** — single-host ingress with optional TLS and custom annotations (compatible with Traefik, nginx, etc.)
-- **Metrics / Exportarr** — optional [Exportarr](https://github.com/onedr0p/exportarr) sidecar and `ServiceMonitor` CRD for Prometheus scraping (Radarr, Sonarr, Lidarr, Readarr, Prowlarr)
-- **Flexible volumes** — arbitrary volume types (NFS, emptyDir, ConfigMap, PVC, etc.) via the `deployment.volumes` map
-- **Runtime customisation** — sidecar and init containers, node selectors, tolerations, affinity, pod/container security contexts, `runtimeClassName`, image pull secrets
-
 ## Configuration
+
+The `media-servarr-base` library gives every chart the same building blocks: secret injection (inline or by reference), config-as-code via a ConfigMap-mounted config file, declarative PersistentVolumeClaims (including binding to a pre-existing PV via `volumeName`), ingress with optional TLS, an optional [Exportarr](https://github.com/onedr0p/exportarr) metrics sidecar for the *arr apps, and the usual pod-scheduling knobs.
 
 For the full list of value keys, their types, and inline documentation:
 
@@ -90,12 +79,12 @@ For the full list of value keys, their types, and inline documentation:
 - **JSON Schema** — [`values.schema.json`](./values.schema.json) validates every value path. Editors with the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) pick it up automatically via the modeline at the top of each `values.yaml`.
 - **Default values** — [`values.yaml`](./values.yaml) is the canonical reference for defaults and shape.
 
-The most distinctive pattern in this repo is **config-as-code with secret substitution**: application config lives in `values.yaml`, gets rendered to a ConfigMap, and secrets are substituted at pod start:
+A distinctive pattern used in these charts is the **config-as-code with secret substitution**: application config lives in `values.yaml`, gets rendered to a ConfigMap, and secrets are substituted at pod start, allowing use to use secrets and configmap without having to commit their values:
 
 ```yaml
 secrets:
   - name: apiKey
-    value: 'abc123'          # or: ref: 'my-existing-secret'
+    ref: 'my-api-key'
 
 application:
   config:
