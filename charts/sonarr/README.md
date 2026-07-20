@@ -34,7 +34,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -72,7 +72,7 @@ application:
       </Config>
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:

@@ -34,7 +34,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -69,8 +69,8 @@ The following example expects to have secrets set up for Radarr and Sonarr API k
 
 ```yaml
 application:
-  port: 8686 # default UI port
-  urlBase: 'radarr' # default web base path
+  port: 6767 # default UI port
+  urlBase: 'bazarr' # default web base path
   config:
     contents: |
       general:
@@ -97,7 +97,7 @@ application:
       - 'radarrApiKey'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:
@@ -162,7 +162,7 @@ metrics:
 
 It is recommended to install [kube-prometheus chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) first for the CRD to be supported. It is not included as a dependency by default in this package!
 
-Unless changed with `metrics.port.number` you can then consume metrics over port `9702`.
+Unless changed with `metrics.port.number` you can then consume metrics over port `9700`.
 
 ### Advanced
 

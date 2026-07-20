@@ -32,7 +32,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Application Configuration
 
@@ -65,9 +65,13 @@ deployment:
       nfs:
         server: 'fileserver'
         path: '/srv/homarr/icons'
+    # DB files — a PVC is provisioned by default (see below)
+    data:
+      persistentVolumeClaim:
+        claimName: 'homarr-data'
 ```
 
-By default, a PersistentVolumeClaim will be provisioned for the `data`, but `emptyDir: {}` will be used for config and icons, unless otherwise specified in your `values.yaml`
+By default a PersistentVolumeClaim is provisioned for `data`; `emptyDir: {}` is used for the other two unless overridden in your `values.yaml`.
 
 ```yaml
 persistentVolumeClaims:
@@ -83,12 +87,13 @@ persistentVolumeClaims:
 
 ### Ingress
 
-Ingress can be enabled, and you can customise the default host, path, and TLS settings:
+Ingress is enabled by default and Homarr is served from the root path (`/`). Override host and TLS as needed:
 
 ```yaml
 ingress:
   enabled: true
   host: 'example.com'
+  path: '/'
   tls:
     # Your TLS settings...
 ```

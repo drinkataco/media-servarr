@@ -34,7 +34,7 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Secrets
 
@@ -60,13 +60,13 @@ By default, base configuration is defined using a ConfigMap - defined by default
 ```yaml
 application:
   port: 8686 # default UI port
-  urlBase: 'radarr' # default web base path
+  urlBase: 'lidarr' # default web base path
   config:
     filename: 'config.xml'
     contents: |
       <Config>
         ...
-        <UrlBase>music</UrlBase>
+        <UrlBase>lidarr</UrlBase>
         <ApiKey>$apiKey</ApiKey>
         <Port>8686</Port>
         ...
@@ -75,7 +75,7 @@ application:
     mountPath: '/config/config.xml'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:

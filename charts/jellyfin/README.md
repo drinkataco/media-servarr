@@ -33,13 +33,13 @@ Pointing the host `media-servarr.local` to your kubernetes cluster will then all
 
 ## Configuration
 
-Here is some example of some configuration you may want to override (and include in installation with `-f myvalues.yaml`
+Here are some examples of configuration you may want to override (and include in installation with `-f myvalues.yaml`).
 
 ### Application Configuration
 
 By default, base configuration is defined using a ConfigMap - defined by default in `./values.yaml` in `application.config`. You can change values in the contents, such as the url base in your custom `values.yaml`
 
-Jellyfin has multiple config files which we can create ConfigMaps for. By default, we manage network.xml and system.xml, but we could also encoding.xml.
+Jellyfin has multiple config files which we can create ConfigMaps for. By default, we manage network.xml and system.xml, but we could also add encoding.xml.
 
 ```yaml
 application:
@@ -65,7 +65,7 @@ application:
       mountPath: '/config/config/encoding.xml'
 ```
 
-You can prevent a ConfigMap being create and the configuration being managed as a kubernetes resource by defing the config as null. For example;
+You can prevent a ConfigMap being created and the configuration being managed as a kubernetes resource by defining the config as null. For example:
 
 ```yaml
 application:
