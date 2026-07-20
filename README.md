@@ -17,22 +17,22 @@ All charts share the common base (`media-servarr-base`) so configuration pattern
 
 ## The Charts
 
-| Chart | Application | Description |
-|---|---|---|
-| [`bazarr`](./charts/bazarr) | [Bazarr](https://www.bazarr.media/) | Automatic subtitle downloader; companion to Sonarr and Radarr |
-| [`cleanuparr`](./charts/cleanuparr) | [Cleanuparr](https://cleanuparr.github.io/Cleanuparr/) | Removes stalled, orphaned, and unwanted items from download clients |
-| [`flaresolverr`](./charts/flaresolverr) | [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Proxy to bypass Cloudflare protection; used by Prowlarr |
-| [`homarr`](./charts/homarr) | [Homarr](https://homarr.dev/) | Dashboard for self-hosted services |
-| [`jellyfin`](./charts/jellyfin) | [Jellyfin](https://jellyfin.org/) | Open-source media server for movies, TV, and music |
-| [`lidarr`](./charts/lidarr) | [Lidarr](https://lidarr.audio/) | Music library manager |
-| [`profilarr`](./charts/profilarr) | [Profilarr](https://github.com/Dictionarry-Hub/profilarr) | Quality profile and custom format manager for the *arr stack |
-| [`prowlarr`](./charts/prowlarr) | [Prowlarr](https://prowlarr.com/) | Indexer manager and proxy for the *arr stack |
-| [`radarr`](./charts/radarr) | [Radarr](https://radarr.video/) | Movie library manager |
-| [`readarr`](./charts/readarr) _(deprecated)_ | [Readarr](https://readarr.com/) | Book library manager |
-| [`sabnzbd`](./charts/sabnzbd) | [SABnzbd](https://sabnzbd.org/) | Usenet download client |
-| [`sonarr`](./charts/sonarr) | [Sonarr](https://sonarr.tv/) | TV series library manager |
-| [`tinymediamanager`](./charts/tinymediamanager) | [tinyMediaManager](https://www.tinymediamanager.org/) | Media metadata scraper and manager |
-| [`transmission`](./charts/transmission) | [Transmission](https://transmissionbt.com) | BitTorrent download client |
+| Chart | Description |
+|---|---|
+| [`bazarr`](./charts/bazarr) | Automatic subtitle downloader; companion to Sonarr and Radarr — [bazarr.media](https://www.bazarr.media/) |
+| [`cleanuparr`](./charts/cleanuparr) | Removes stalled, orphaned, and unwanted items from download clients — [cleanuparr.github.io](https://cleanuparr.github.io/Cleanuparr/) |
+| [`flaresolverr`](./charts/flaresolverr) | Proxy to bypass Cloudflare protection; used by Prowlarr — [github.com/FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) |
+| [`homarr`](./charts/homarr) | Dashboard for self-hosted services — [homarr.dev](https://homarr.dev/) |
+| [`jellyfin`](./charts/jellyfin) | Open-source media server for movies, TV, and music — [jellyfin.org](https://jellyfin.org/) |
+| [`lidarr`](./charts/lidarr) | Music library manager — [lidarr.audio](https://lidarr.audio/) |
+| [`profilarr`](./charts/profilarr) | Quality profile and custom format manager for the *arr stack — [github.com/Dictionarry-Hub/profilarr](https://github.com/Dictionarry-Hub/profilarr) |
+| [`prowlarr`](./charts/prowlarr) | Indexer manager and proxy for the *arr stack — [prowlarr.com](https://prowlarr.com/) |
+| [`radarr`](./charts/radarr) | Movie library manager — [radarr.video](https://radarr.video/) |
+| [`readarr`](./charts/readarr) _(deprecated)_ | Book library manager — [readarr.com](https://readarr.com/) |
+| [`sabnzbd`](./charts/sabnzbd) | Usenet download client — [sabnzbd.org](https://sabnzbd.org/) |
+| [`sonarr`](./charts/sonarr) | TV series library manager — [sonarr.tv](https://sonarr.tv/) |
+| [`tinymediamanager`](./charts/tinymediamanager) | Media metadata scraper and manager — [tinymediamanager.org](https://www.tinymediamanager.org/) |
+| [`transmission`](./charts/transmission) | BitTorrent download client — [transmissionbt.com](https://transmissionbt.com) |
 
 Each chart has its own `README.md` under [`./charts/<name>/`](./charts) with per-app installation and configuration details.
 
