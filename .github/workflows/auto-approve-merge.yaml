@@ -1,27 +1,25 @@
-name: 'Auto-approve and auto-merge app version updates'
+name: 'Auto-merge app version updates'
 
-# Approves PRs opened by the auto-update workflow, and (for patch or
-# minor chart bumps) enables auto-merge so they merge once CI is green.
-# Major bumps are approved but require manual merge, so a human can
-# review the upstream release notes for breaking changes.
+# Enables auto-merge on PRs opened by the nightly auto-update workflow
+# for patch and minor chart bumps. Major bumps get a comment flagging
+# that a human should review upstream release notes before merging.
 #
-# Requires a repo secret named `AUTO_APPROVE_TOKEN`: a fine-grained PAT
-# (or GitHub App installation token) owned by a *different* account than
-# `github-actions[bot]`, with `pull-requests: write` and `contents: write`
-# on this repo. GitHub blocks a bot from approving its own PRs, which is
-# why the default GITHUB_TOKEN can't be used here.
+# Uses the default GITHUB_TOKEN — no PAT required. Main's branch
+# protection doesn't require an approving review, only that lint-helm
+# and lint-shell pass, so auto-merge (`gh pr merge --auto --squash`)
+# will fire the moment those checks go green.
 
 on:
   pull_request_target:
     types: ['opened', 'reopened', 'synchronize']
 
 permissions:
-  contents: 'read'
-  pull-requests: 'read'
+  contents: 'write'
+  pull-requests: 'write'
 
 jobs:
-  approve-and-merge:
-    name: 'Approve and auto-merge'
+  auto-merge:
+    name: 'Enable auto-merge (patch/minor only)'
     runs-on: 'ubuntu-latest'
     if: |
       github.event.pull_request.user.login == 'github-actions[bot]' &&
@@ -74,25 +72,18 @@ jobs:
             echo "bump=$bump"
           } >> "$GITHUB_OUTPUT"
 
-      - name: 'Approve PR'
-        uses: 'hmarr/auto-approve-action@v4'
-        with:
-          github-token: '${{ secrets.AUTO_APPROVE_TOKEN }}'
-          review-message: |
-            Automated approval — ${{ steps.bump.outputs.chart }} ${{ steps.bump.outputs.old }} → ${{ steps.bump.outputs.new }} (${{ steps.bump.outputs.bump }} bump).
-
       - name: 'Enable auto-merge (patch or minor only)'
         if: steps.bump.outputs.bump == 'patch' || steps.bump.outputs.bump == 'minor'
         env:
-          GH_TOKEN: '${{ secrets.AUTO_APPROVE_TOKEN }}'
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           gh pr merge --auto --squash '${{ github.event.pull_request.number }}'
-          echo "Auto-merge enabled — will merge once required checks pass."
+          echo "Auto-merge enabled — will merge once lint-helm and lint-shell pass."
 
       - name: 'Note: manual merge required (major bump)'
         if: steps.bump.outputs.bump == 'major'
         env:
-          GH_TOKEN: '${{ secrets.AUTO_APPROVE_TOKEN }}'
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           gh pr comment '${{ github.event.pull_request.number }}' \
-            --body 'Approved automatically, but this is a **major** bump (${{ steps.bump.outputs.old }} → ${{ steps.bump.outputs.new }}). Auto-merge is disabled — please review upstream release notes and merge manually.'
+            --body 'This is a **major** bump (${{ steps.bump.outputs.old }} → ${{ steps.bump.outputs.new }}). Auto-merge is disabled — please review upstream release notes and merge manually.'
