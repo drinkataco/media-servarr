@@ -53,6 +53,7 @@ jobs:
       - uses: 'actions/checkout@v4'
         with:
           fetch-depth: 0
+          token: ${{ secrets.AUTO_UPDATE_PAT }}
 
       - name: 'Update AppVersion and ChartVersion'
         run: |
@@ -94,6 +95,7 @@ jobs:
         if: env.CHANGES_FOUND == 'true'
         uses: 'peter-evans/create-pull-request@v7'
         with:
+          token: ${{ secrets.AUTO_UPDATE_PAT }}
           commit-message: ${{ env.COMMIT_MSG }}
           title: "⭐️ New App Version: Update ${{ matrix.name }}"
           body: 'Automated Workflow. New App Version found for Chart'
