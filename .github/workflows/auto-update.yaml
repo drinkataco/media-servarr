@@ -57,16 +57,11 @@ jobs:
 
       - name: 'Update AppVersion and ChartVersion'
         run: |
-          # Capture the current appVersion before the update script rewrites it,
-          # so we can classify the bump type after.
-          OLD_APP_VERSION=$(awk '/^appVersion:/ {print $2}' "./charts/${{ matrix.name }}/Chart.yaml")
-          echo "OLD_APP_VERSION=${OLD_APP_VERSION}" >> "$GITHUB_ENV"
-
           # Set global script settings
           export ALLOW_PRERELEASE='${{ matrix.allow_prerelease }}'
           export STRIP_VERSION_PREFIX='${{ matrix.strip_prefix }}'
 
-          # Call main script to fetch newest app version
+          # The script writes VERSION_TYPE (major|minor|patch) to $GITHUB_ENV.
           ./scripts/update_appversion.sh \
             '${{ matrix.name }}' \
             '${{ matrix.repo }}' \
@@ -95,29 +90,10 @@ jobs:
           COMMIT_MSG="New app version found for ${{ matrix.name }}"
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
           echo "COMMIT_MSG=$BRANCH_NAME" >> "$GITHUB_ENV"
-          echo "NEW_APP_VERSION=$app_version" >> "$GITHUB_ENV"
 
-      - name: 'Classify version bump'
-        if: env.CHANGES_FOUND == 'true'
-        run: |
-          # Extract the semver core (major.minor.patch) from each version, ignoring
-          # any prefix (e.g. 'v') or build metadata (e.g. '-ls123').
-          old=$(echo "$OLD_APP_VERSION" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
-          new=$(echo "$NEW_APP_VERSION" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
-
-          IFS='.' read -r old_major old_minor _ <<< "$old"
-          IFS='.' read -r new_major new_minor _ <<< "$new"
-
-          if [[ "$new_major" -gt "$old_major" ]]; then
-            BUMP_TYPE=major
-          elif [[ "$new_minor" -gt "$old_minor" ]]; then
-            BUMP_TYPE=minor
-          else
-            BUMP_TYPE=patch
+          if [[ "$VERSION_TYPE" != "major" ]]; then
+            echo "AUTOMERGE=true" >> "$GITHUB_ENV"
           fi
-
-          echo "Bump: $old -> $new ($BUMP_TYPE)"
-          echo "BUMP_TYPE=$BUMP_TYPE" >> "$GITHUB_ENV"
 
       - name: 'Create Pull Request'
         id: create-pr
@@ -131,8 +107,8 @@ jobs:
           branch: ${{ env.BRANCH_NAME }}
           base: ${{ github.event.repository.default_branch }}
 
-      - name: 'Enable auto-merge for minor/patch bumps'
-        if: env.CHANGES_FOUND == 'true' && env.BUMP_TYPE != 'major' && steps.create-pr.outputs.pull-request-number
+      - name: 'Enable auto-merge for non-major bumps'
+        if: env.AUTOMERGE == 'true' && steps.create-pr.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ secrets.AUTO_UPDATE_PAT }}
           PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}

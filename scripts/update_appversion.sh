@@ -150,43 +150,58 @@ update_appversion() {
   echo "Updated '${chart_file}' appVersion to '${latest_version}'"
 }
 
-# Increments the Helm chart's 'version' based on the difference between old and new appVersion.
+# Classifies the semver bump between two versions.
+# Arguments:
+#   version_old: The previous version.
+#   version_new: The new version.
+# Outputs:
+#   Writes one of "major", "minor", or "patch" to stdout.
+get_version_type() {
+  local old_semver
+  local new_semver
+
+  old_semver=$(echo "$1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+  new_semver=$(echo "$2" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+
+  IFS='.' read -r old_major old_minor _ <<< "$old_semver"
+  IFS='.' read -r new_major new_minor _ <<< "$new_semver"
+
+  if [[ "$new_major" -gt "$old_major" ]]; then
+    echo "major"
+  elif [[ "$new_minor" -gt "$old_minor" ]]; then
+    echo "minor"
+  else
+    # patch, build metadata, or no-op — treat all as patch for chart bumping
+    echo "patch"
+  fi
+}
+
+# Increments the Helm chart's 'version' based on the type of appVersion bump.
 # Arguments:
 #   chart_file: The path to the Chart.yaml file.
-#   appversion_old: The old appVersion.
-#   appversion_new: The new appVersion.
-# Outputs:
-#   Writes the new chart version to stdout.
+#   version_type: One of "major", "minor", or "patch".
 update_chartversion() {
   local chart_file="$1"
-  local appversion_old
-  local appversion_new
+  local version_type="$2"
   local chart_version
 
-  # Start by identifying what type of update the appVersion was
-  appversion_old=$(echo "$2" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-  appversion_new=$(echo "$3" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-
-  IFS='.' read -r major_old minor_old patch_old <<< "$appversion_old"
-  IFS='.' read -r major_new minor_new patch_new <<< "$appversion_new"
-
-  # Now let's update the chart_version with the same type of upgrade
   chart_version=$(grep -E '^version:' "$chart_file" | sed -E 's/version: *//')
   IFS='.' read -r chart_major chart_minor chart_patch <<< "$chart_version"
 
-  if [[ "$major_new" -gt "$major_old" ]]; then
-    chart_major=$(expr "$chart_major" + 1)
-    chart_minor=0
-    chart_patch=0
-  elif [[ "$minor_new" -gt "$minor_old" ]]; then
-    chart_minor=$(expr "$chart_minor" + 1)
-    chart_patch=0
-  elif [[ "$patch_new" -gt "$patch_old" ]]; then
-    chart_patch=$(expr "$chart_patch" + 1)
-  else
-    ## This could be a build update, so we'll assume patch also
-    chart_patch=$(expr "$chart_patch" + 1)
-  fi
+  case "$version_type" in
+    major)
+      chart_major=$(expr "$chart_major" + 1)
+      chart_minor=0
+      chart_patch=0
+      ;;
+    minor)
+      chart_minor=$(expr "$chart_minor" + 1)
+      chart_patch=0
+      ;;
+    *)
+      chart_patch=$(expr "$chart_patch" + 1)
+      ;;
+  esac
 
   new_chart_version="${chart_major}.${chart_minor}.${chart_patch}"
 
@@ -234,9 +249,17 @@ main() {
 
   echo "Current chart uses appVersion '${current_version}'"
 
+  version_type=$(get_version_type "${current_version}" "${latest_version}")
+  echo "Version bump type: '${version_type}'"
+
+  # Expose the classification to GitHub Actions when running in that context.
+  if [[ -n "${GITHUB_ENV:-}" ]]; then
+    echo "VERSION_TYPE=${version_type}" >> "${GITHUB_ENV}"
+  fi
+
   update_appversion "${chart_file}" "${latest_version}"
 
-  update_chartversion "${chart_file}" "${current_version}" "${latest_version}"
+  update_chartversion "${chart_file}" "${version_type}"
 }
 
 main "$@"
