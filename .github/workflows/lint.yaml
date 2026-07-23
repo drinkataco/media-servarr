@@ -29,12 +29,6 @@ jobs:
         with:
           version: 'v3.12.0'
 
-      - name: 'Install kubeconform'
-        uses: 'yokawasa/action-setup-kube-tools@v0.11.2'
-        with:
-          setup-tools: 'kubeconform'
-          kubeconform: '0.7.0'
-
       # Validate every YAML file listed in the schemas config against its
       # declared schema. To add or remove a check, edit that file — no changes
       # here needed.
@@ -54,26 +48,34 @@ jobs:
             echo "::endgroup::"
           done
 
-      # Render radarr under each scenario and validate the resulting Kubernetes
-      # manifests. Radarr acts as the representative consumer — the templates
-      # come from the shared media-servarr-base chart, so if radarr renders
-      # valid manifests across scenarios, the base is sound. CRDs (currently
-      # ServiceMonitor) are resolved from datreeio's catalog.
-      - name: 'Validate rendered manifests'
+      # Render radarr under each scenario to a file so kubeconform can validate
+      # them all in one pass. Radarr acts as the representative consumer — the
+      # templates come from the shared media-servarr-base chart, so if radarr
+      # renders valid manifests across scenarios, the base is sound.
+      - name: 'Render manifests for each scenario'
         run: |
           set -euo pipefail
           helm dependency update ./charts/radarr
+          mkdir -p .rendered
           for values_file in ./.github/workflows/assets/schema-validation/radarr/*.yaml; do
-            echo "::group::$(basename "$values_file")"
-            helm template test-release ./charts/radarr -f "$values_file" \
-              | kubeconform \
-                  -summary \
-                  -strict \
-                  -kubernetes-version 1.29.0 \
-                  -schema-location default \
-                  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
-            echo "::endgroup::"
+            name=$(basename "$values_file" .yaml)
+            helm template test-release ./charts/radarr -f "$values_file" > ".rendered/${name}.yaml"
           done
+
+      # Validate the rendered manifests via the official kubeconform container.
+      # Uses the maintainer's own image, no third-party installer action. CRDs
+      # (currently ServiceMonitor) are resolved from datreeio's catalog.
+      - name: 'Validate rendered manifests with kubeconform'
+        uses: 'docker://ghcr.io/yannh/kubeconform:v0.8.0'
+        with:
+          entrypoint: '/kubeconform'
+          args: >-
+            -summary
+            -strict
+            -kubernetes-version 1.29.0
+            -schema-location default
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+            .rendered/
 
   lint-helm:
     runs-on: 'ubuntu-latest'
