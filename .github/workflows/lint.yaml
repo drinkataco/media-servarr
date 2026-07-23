@@ -12,6 +12,33 @@ jobs:
       - name: 'Run ShellCheck'
         uses: 'ludeeus/action-shellcheck@master'
 
+  lint-schemas:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - uses: 'actions/setup-python@v5'
+        with:
+          python-version: '3.12'
+
+      - name: 'Install check-jsonschema'
+        run: 'pip install check-jsonschema'
+
+      - name: 'Validate consumer values.yaml against values.schema.json'
+        run: 'check-jsonschema --schemafile values.schema.json charts/*/values.yaml'
+
+      - name: 'Validate Chart.yaml files against the Helm chart schema'
+        run: 'check-jsonschema --schemafile https://json.schemastore.org/chart.json Chart.yaml charts/*/Chart.yaml'
+
+      - name: 'Validate GitHub Actions workflows'
+        run: 'check-jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yaml'
+
+      - name: 'Validate GitHub issue forms'
+        run: 'check-jsonschema --builtin-schema vendor.github-issue-forms .github/ISSUE_TEMPLATE/bug-report.yml .github/ISSUE_TEMPLATE/feature-request.yml'
+
+      - name: 'Validate GitHub issue template config'
+        run: 'check-jsonschema --builtin-schema vendor.github-issue-config .github/ISSUE_TEMPLATE/config.yml'
+
   lint-helm:
     runs-on: 'ubuntu-latest'
     steps:
@@ -55,3 +82,40 @@ jobs:
       - name: 'Lint Helm charts'
         if: env.CHANGED_CHARTS != ''
         run: 'make lint CHARTS="$CHANGED_CHARTS"'
+
+  lint-manifests:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - name: 'Set up Helm'
+        uses: 'azure/setup-helm@v3.5'
+        with:
+          version: 'v3.12.0'
+
+      - name: 'Install kubeconform'
+        uses: 'yokawasa/action-setup-kube-tools@v0.11.2'
+        with:
+          setup-tools: 'kubeconform'
+          kubeconform: '0.7.0'
+
+      - name: 'Update dependencies for radarr'
+        run: 'helm dependency update ./charts/radarr'
+
+      # Render every ci/*-values.yaml scenario and validate the resulting
+      # manifests against the built-in Kubernetes schemas plus datreeio's
+      # CRD catalog (for ServiceMonitor and any other CRDs used).
+      - name: 'Validate rendered manifests'
+        run: |
+          set -euo pipefail
+          for values_file in ./charts/radarr/ci/*-values.yaml; do
+            echo "::group::Validating $(basename "$values_file")"
+            helm template test-release ./charts/radarr -f "$values_file" \
+              | kubeconform \
+                  -summary \
+                  -strict \
+                  -kubernetes-version 1.29.0 \
+                  -schema-location default \
+                  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+            echo "::endgroup::"
+          done

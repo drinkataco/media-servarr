@@ -1,0 +1,50 @@
+# Exercises the optional feature branches of the base chart's templates:
+# metrics/ServiceMonitor, ingress with TLS, an external-secret ref, service
+# account creation, init containers, sidecars, and resource limits. A regression
+# in any of these would render invalid Kubernetes manifests and fail lint-manifests.
+
+secrets:
+  - name: 'apiKey'
+    ref: 'radarr-external-apikey'
+
+serviceAccount:
+  create: true
+  name: ''
+
+ingress:
+  enabled: true
+  className: 'nginx'
+  host: 'radarr.example.com'
+  tls:
+    - secretName: 'radarr-tls'
+      hosts:
+        - 'radarr.example.com'
+
+metrics:
+  enabled: true
+  app: 'radarr'
+  port:
+    number: 9704
+
+deployment:
+  podSecurityContext:
+    fsGroup: 2000
+  container:
+    resources:
+      requests:
+        cpu: '250m'
+        memory: '64Mi'
+      limits:
+        cpu: '500m'
+        memory: '128Mi'
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+  initContainers:
+    - name: 'init-config'
+      image: 'busybox:1.36'
+      command: ['sh', '-c', 'echo ready']
+  sideCarContainers:
+    - name: 'sidecar-example'
+      image: 'busybox:1.36'
+      command: ['sh', '-c', 'sleep infinity']
