@@ -12,7 +12,7 @@ jobs:
       - name: 'Run ShellCheck'
         uses: 'ludeeus/action-shellcheck@master'
 
-  lint-schemas:
+  schema-validation:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: 'actions/checkout@v4'
@@ -24,20 +24,56 @@ jobs:
       - name: 'Install check-jsonschema'
         run: 'pip install check-jsonschema'
 
-      - name: 'Validate consumer values.yaml against values.schema.json'
-        run: 'check-jsonschema --schemafile values.schema.json charts/*/values.yaml'
+      - name: 'Set up Helm'
+        uses: 'azure/setup-helm@v3.5'
+        with:
+          version: 'v3.12.0'
 
-      - name: 'Validate Chart.yaml files against the Helm chart schema'
-        run: 'check-jsonschema --schemafile https://json.schemastore.org/chart.json Chart.yaml charts/*/Chart.yaml'
+      - name: 'Install kubeconform'
+        uses: 'yokawasa/action-setup-kube-tools@v0.11.2'
+        with:
+          setup-tools: 'kubeconform'
+          kubeconform: '0.7.0'
 
-      - name: 'Validate GitHub Actions workflows'
-        run: 'check-jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yaml'
+      # Validate every YAML file listed in .github/schemas.yaml against its
+      # declared schema. To add or remove a check, edit that file — no changes
+      # here needed.
+      - name: 'Validate YAML files against declared schemas'
+        run: |
+          set -euo pipefail
+          yq eval -o=json -I=0 '.[]' .github/schemas.yaml | while read -r entry; do
+            files=$(echo "$entry" | jq -r '.files')
+            schema=$(echo "$entry" | jq -r '.schema // ""')
+            builtin=$(echo "$entry" | jq -r '.builtin // ""')
+            echo "::group::$files"
+            if [[ -n "$schema" ]]; then
+              check-jsonschema --schemafile "$schema" $files
+            else
+              check-jsonschema --builtin-schema "$builtin" $files
+            fi
+            echo "::endgroup::"
+          done
 
-      - name: 'Validate GitHub issue forms'
-        run: 'check-jsonschema --builtin-schema vendor.github-issue-forms .github/ISSUE_TEMPLATE/bug-report.yml .github/ISSUE_TEMPLATE/feature-request.yml'
-
-      - name: 'Validate GitHub issue template config'
-        run: 'check-jsonschema --builtin-schema vendor.github-issue-config .github/ISSUE_TEMPLATE/config.yml'
+      # Render radarr under each scenario and validate the resulting Kubernetes
+      # manifests. Radarr acts as the representative consumer — the templates
+      # come from the shared media-servarr-base chart, so if radarr renders
+      # valid manifests across scenarios, the base is sound. CRDs (currently
+      # ServiceMonitor) are resolved from datreeio's catalog.
+      - name: 'Validate rendered manifests'
+        run: |
+          set -euo pipefail
+          helm dependency update ./charts/radarr
+          for values_file in ./.github/schema-validation/radarr/*.yaml; do
+            echo "::group::$(basename "$values_file")"
+            helm template test-release ./charts/radarr -f "$values_file" \
+              | kubeconform \
+                  -summary \
+                  -strict \
+                  -kubernetes-version 1.29.0 \
+                  -schema-location default \
+                  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+            echo "::endgroup::"
+          done
 
   lint-helm:
     runs-on: 'ubuntu-latest'
@@ -82,40 +118,3 @@ jobs:
       - name: 'Lint Helm charts'
         if: env.CHANGED_CHARTS != ''
         run: 'make lint CHARTS="$CHANGED_CHARTS"'
-
-  lint-manifests:
-    runs-on: 'ubuntu-latest'
-    steps:
-      - uses: 'actions/checkout@v4'
-
-      - name: 'Set up Helm'
-        uses: 'azure/setup-helm@v3.5'
-        with:
-          version: 'v3.12.0'
-
-      - name: 'Install kubeconform'
-        uses: 'yokawasa/action-setup-kube-tools@v0.11.2'
-        with:
-          setup-tools: 'kubeconform'
-          kubeconform: '0.7.0'
-
-      - name: 'Update dependencies for radarr'
-        run: 'helm dependency update ./charts/radarr'
-
-      # Render every ci/*-values.yaml scenario and validate the resulting
-      # manifests against the built-in Kubernetes schemas plus datreeio's
-      # CRD catalog (for ServiceMonitor and any other CRDs used).
-      - name: 'Validate rendered manifests'
-        run: |
-          set -euo pipefail
-          for values_file in ./charts/radarr/ci/*-values.yaml; do
-            echo "::group::Validating $(basename "$values_file")"
-            helm template test-release ./charts/radarr -f "$values_file" \
-              | kubeconform \
-                  -summary \
-                  -strict \
-                  -kubernetes-version 1.29.0 \
-                  -schema-location default \
-                  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
-            echo "::endgroup::"
-          done
