@@ -35,13 +35,13 @@ jobs:
           setup-tools: 'kubeconform'
           kubeconform: '0.7.0'
 
-      # Validate every YAML file listed in .github/schemas.yaml against its
+      # Validate every YAML file listed in the schemas config against its
       # declared schema. To add or remove a check, edit that file — no changes
       # here needed.
       - name: 'Validate YAML files against declared schemas'
         run: |
           set -euo pipefail
-          yq eval -o=json -I=0 '.[]' .github/schemas.yaml | while read -r entry; do
+          yq eval -o=json -I=0 '.[]' .github/workflows/assets/schemas.yaml | while read -r entry; do
             files=$(echo "$entry" | jq -r '.files')
             schema=$(echo "$entry" | jq -r '.schema // ""')
             builtin=$(echo "$entry" | jq -r '.builtin // ""')
@@ -63,7 +63,7 @@ jobs:
         run: |
           set -euo pipefail
           helm dependency update ./charts/radarr
-          for values_file in ./.github/schema-validation/radarr/*.yaml; do
+          for values_file in ./.github/workflows/assets/schema-validation/radarr/*.yaml; do
             echo "::group::$(basename "$values_file")"
             helm template test-release ./charts/radarr -f "$values_file" \
               | kubeconform \
