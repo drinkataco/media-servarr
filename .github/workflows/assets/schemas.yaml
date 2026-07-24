@@ -1,0 +1,19 @@
+# File-pattern to schema mapping consumed by the schema-validation CI job
+# (.github/workflows/lint.yaml). Add an entry per file group that should be
+# validated. Provide exactly one of `schema` (URL or local path) or `builtin`
+# (a check-jsonschema vendor.* name).
+
+- files: 'charts/*/values.yaml'
+  schema: 'values.schema.json'
+
+- files: 'Chart.yaml charts/*/Chart.yaml'
+  schema: 'https://json.schemastore.org/chart.json'
+
+- files: '.github/workflows/*.yaml'
+  builtin: 'vendor.github-workflows'
+
+- files: '.github/ISSUE_TEMPLATE/bug-report.yml .github/ISSUE_TEMPLATE/feature-request.yml'
+  builtin: 'vendor.github-issue-forms'
+
+- files: '.github/ISSUE_TEMPLATE/config.yml'
+  builtin: 'vendor.github-issue-config'

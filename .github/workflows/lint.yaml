@@ -12,6 +12,71 @@ jobs:
       - name: 'Run ShellCheck'
         uses: 'ludeeus/action-shellcheck@master'
 
+  schema-validation:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - uses: 'actions/setup-python@v5'
+        with:
+          python-version: '3.12'
+
+      - name: 'Install check-jsonschema'
+        run: 'pip install check-jsonschema'
+
+      - name: 'Set up Helm'
+        uses: 'azure/setup-helm@v3.5'
+        with:
+          version: 'v3.12.0'
+
+      # Validate every YAML file listed in the schemas config against its
+      # declared schema. To add or remove a check, edit that file — no changes
+      # here needed.
+      - name: 'Validate YAML files against declared schemas'
+        run: |
+          set -euo pipefail
+          yq eval -o=json -I=0 '.[]' .github/workflows/assets/schemas.yaml | while read -r entry; do
+            files=$(echo "$entry" | jq -r '.files')
+            schema=$(echo "$entry" | jq -r '.schema // ""')
+            builtin=$(echo "$entry" | jq -r '.builtin // ""')
+            echo "::group::$files"
+            if [[ -n "$schema" ]]; then
+              check-jsonschema --schemafile "$schema" $files
+            else
+              check-jsonschema --builtin-schema "$builtin" $files
+            fi
+            echo "::endgroup::"
+          done
+
+      # Render radarr under each scenario to a file so kubeconform can validate
+      # them all in one pass. Radarr acts as the representative consumer — the
+      # templates come from the shared media-servarr-base chart, so if radarr
+      # renders valid manifests across scenarios, the base is sound.
+      - name: 'Render manifests for each scenario'
+        run: |
+          set -euo pipefail
+          helm dependency update ./charts/radarr
+          mkdir -p .rendered
+          for values_file in ./.github/workflows/assets/schema-validation/radarr/*.yaml; do
+            name=$(basename "$values_file" .yaml)
+            helm template test-release ./charts/radarr -f "$values_file" > ".rendered/${name}.yaml"
+          done
+
+      # Validate the rendered manifests via the official kubeconform container.
+      # Uses the maintainer's own image, no third-party installer action. CRDs
+      # (currently ServiceMonitor) are resolved from datreeio's catalog.
+      - name: 'Validate rendered manifests with kubeconform'
+        uses: 'docker://ghcr.io/yannh/kubeconform:v0.8.0'
+        with:
+          entrypoint: '/kubeconform'
+          args: >-
+            -summary
+            -strict
+            -kubernetes-version 1.29.0
+            -schema-location default
+            -schema-location https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json
+            .rendered/
+
   lint-helm:
     runs-on: 'ubuntu-latest'
     steps:
